@@ -8,7 +8,6 @@
 #ifndef image_hpp
 #define image_hpp
 
-class Shader;
 class Image {
 public:
     Image();
@@ -20,7 +19,6 @@ private:
     unsigned int _VAO;
     unsigned int _VBO;
     unsigned int _EBO;
-    Shader* _shader;
 };
 
 #endif /* image_hpp */

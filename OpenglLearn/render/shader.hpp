@@ -9,6 +9,7 @@
 #define shader_hpp
 
 #include <string>
+#include <map>
 
 class Shader {
 public:
@@ -25,6 +26,21 @@ public:
 private:
     // 程序ID
     unsigned int _ID;
+};
+
+enum class ShaderType {
+    Invalid = -1,
+    Image,
+};
+
+class ShaderCache {
+public:
+    static ShaderCache& GetInstance();
+    Shader* GetShader(ShaderType type);
+private:
+    ShaderCache();
+private:
+    std::map<ShaderType, Shader*> m_map_shader;
 };
 
 #endif /* shader_hpp */

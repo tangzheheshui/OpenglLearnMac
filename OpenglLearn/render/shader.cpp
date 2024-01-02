@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "shader_string.h"
 
 Shader::Shader(const char* strVertex, const char* strFragment) {
     if (!strVertex || !strFragment) {
@@ -74,3 +75,22 @@ void Shader::setInt(const std::string &name, int value) const {
 void Shader::setFloat(const std::string &name, float value) const {
     glUniform1f(glGetUniformLocation(_ID, name.c_str()), value);
 }
+
+// 目前存在多线程问题，暂不考虑
+ShaderCache& ShaderCache::GetInstance() {
+    static ShaderCache instance;
+    return instance;
+}
+
+ShaderCache::ShaderCache() {
+    m_map_shader.insert(std::make_pair(ShaderType::Image, new Shader(vertexShaderSource, fragmentShaderSource)));
+}
+
+Shader* ShaderCache::GetShader(ShaderType type) {
+    auto iter = m_map_shader.find(type);
+    if (iter != m_map_shader.end()) {
+        return iter->second;
+    }
+    return nullptr;
+}
+
