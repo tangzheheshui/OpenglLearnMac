@@ -11,12 +11,31 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "shader_string.h"
 
-Shader::Shader(const char* strVertex, const char* strFragment) {
-    if (!strVertex || !strFragment) {
+const std::string g_file_path = "/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/render/shaders/";
+
+Shader::Shader(const std::string &vertPath, const std::string &fragPath) {
+    std::ifstream vertFile;
+    std::ifstream fragFile;
+    vertFile.open(g_file_path + vertPath);
+    fragFile.open(g_file_path + fragPath);
+    std::string strVert;
+    std::string strFrag;
+    if (vertFile.is_open() && fragFile.is_open()) {
+        std::stringstream vShaderStream;
+        std::stringstream fShaderStream;
+        vShaderStream << vertFile.rdbuf();
+        fShaderStream << fragFile.rdbuf();
+        strVert = vShaderStream.str();
+        strFrag = fShaderStream.str();
+        vertFile.close();
+        fragFile.close();
+    } else {
         return;
     }
+
+    const char* strVertex = strVert.c_str();
+    const char* strFragment = strFrag.c_str();
     
     int success = 0;
     char infoLog[512] = {0};
@@ -83,7 +102,9 @@ ShaderCache& ShaderCache::GetInstance() {
 }
 
 ShaderCache::ShaderCache() {
-    m_map_shader.insert(std::make_pair(ShaderType::Image, new Shader(vertexShaderSource, fragmentShaderSource)));
+    if (auto shader = new Shader("vert_image", "frag_image")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Image, shader));
+    }
 }
 
 Shader* ShaderCache::GetShader(ShaderType type) {

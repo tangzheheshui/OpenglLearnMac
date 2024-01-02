@@ -13,7 +13,7 @@
 
 class Shader {
 public:
-    Shader(const char* strVertex, const char* strFragment);
+    Shader(const std::string &vertPath, const std::string &fragPath);
     ~Shader();
     // use
     void use();

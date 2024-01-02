@@ -47,10 +47,11 @@
 		651EFBF92B3F324000620837 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glad.c; path = glad/src/glad.c; sourceTree = SOURCE_ROOT; };
 		65D475B42B42D355004AE289 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		65D475B52B42D355004AE289 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
-		65D475B72B42D5C4004AE289 /* shader_string.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_string.h; sourceTree = "<group>"; };
 		65D475B82B42EFBB004AE289 /* image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
 		65D475B92B42EFBB004AE289 /* image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
 		65D475BC2B42F287004AE289 /* stb_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		65FD8F0C2B43F7E700A06A38 /* vert_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_image; sourceTree = "<group>"; };
+		65FD8F0D2B43F83400A06A38 /* frag_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_image; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +87,7 @@
 		651EFBEA2B3F308C00620837 /* OpenglLearn */ = {
 			isa = PBXGroup;
 			children = (
+				65FD8F0A2B43F77A00A06A38 /* resources */,
 				65D475BB2B42F257004AE289 /* third */,
 				65D475B32B42D323004AE289 /* render */,
 				651EFBEB2B3F308C00620837 /* main.cpp */,
@@ -106,9 +108,9 @@
 		65D475B32B42D323004AE289 /* render */ = {
 			isa = PBXGroup;
 			children = (
+				65FD8F0B2B43F7A300A06A38 /* shaders */,
 				65D475B42B42D355004AE289 /* shader.cpp */,
 				65D475B52B42D355004AE289 /* shader.hpp */,
-				65D475B72B42D5C4004AE289 /* shader_string.h */,
 				65D475B82B42EFBB004AE289 /* image.cpp */,
 				65D475B92B42EFBB004AE289 /* image.hpp */,
 			);
@@ -121,6 +123,22 @@
 				65D475BC2B42F287004AE289 /* stb_image.h */,
 			);
 			path = third;
+			sourceTree = "<group>";
+		};
+		65FD8F0A2B43F77A00A06A38 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		65FD8F0B2B43F7A300A06A38 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				65FD8F0D2B43F83400A06A38 /* frag_image */,
+				65FD8F0C2B43F7E700A06A38 /* vert_image */,
+			);
+			path = shaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
