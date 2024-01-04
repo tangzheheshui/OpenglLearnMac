@@ -95,6 +95,10 @@ void Shader::setFloat(const std::string &name, float value) const {
     glUniform1f(glGetUniformLocation(_ID, name.c_str()), value);
 }
 
+void Shader::setMat4(const std::string &name, const glm::mat4 &value) const {
+    glUniformMatrix4fv(glGetUniformLocation(_ID, name.c_str()), 1, GL_FALSE, &value[0][0]);
+}
+
 // 目前存在多线程问题，暂不考虑
 ShaderCache& ShaderCache::GetInstance() {
     static ShaderCache instance;
@@ -104,6 +108,10 @@ ShaderCache& ShaderCache::GetInstance() {
 ShaderCache::ShaderCache() {
     if (auto shader = new Shader("vert_image", "frag_image")) {
         m_map_shader.insert(std::make_pair(ShaderType::Image, shader));
+    }
+    
+    if (auto shader = new Shader("vert_model", "frag_model")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Model, shader));
     }
 }
 

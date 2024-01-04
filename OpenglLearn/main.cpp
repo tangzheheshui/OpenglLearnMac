@@ -12,6 +12,7 @@
 #include <filesystem>
 
 #include "render/image.hpp"
+#include "render/model.hpp"
  
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -56,8 +57,10 @@ int main()
  
  
     Image image;
-    image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/3.jpg");
+    image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/3.jpg");
  
+    Model model;
+    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/spider.fbx");
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -67,7 +70,8 @@ int main()
         processInput(window);
  
         // render
-        image.draw();
+        //image.draw();
+        model.draw();
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
