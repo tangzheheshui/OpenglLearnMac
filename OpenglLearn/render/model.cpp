@@ -178,6 +178,9 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         }
         else {
             size_t pos = filename.find_last_of('\\');
+            if (pos == std::string::npos) {
+                pos = filename.find_last_of('/');
+            }
             auto name = filename.substr(pos+1, filename.length() - pos);
             texture.filepath = m_filepath + name;
         }
