@@ -26,6 +26,8 @@ private:
 private:
     std::vector<std::shared_ptr<Mesh>> m_mesh;
     std::map<std::string, ImageBuffer> m_map_image;
+    std::map<std::string, Texture> m_map_tempTexture;
+    std::string m_filepath;
 };
 
 #endif /* model_hpp */

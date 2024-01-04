@@ -25,8 +25,12 @@ struct Vertex {
 };
 
 struct Texture {
+    std::string name; // 直接用作uniform纹理的名字
+    std::string filepath;
     std::shared_ptr<std::vector<char>> data;
 };
+
+class Shader;
 
 class Mesh {
 public:
@@ -38,7 +42,8 @@ public:
     bool Draw();
 private:        
     unsigned int _VAO, _VBO, _EBO;
-    void setupMesh();
+    unsigned int _texture;
+    void setupMesh(Shader* shader);
 }; 
 
 #endif /* mesh_hpp */

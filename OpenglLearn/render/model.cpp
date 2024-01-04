@@ -8,6 +8,7 @@
 #include "model.hpp"
 #include "image.hpp"
 #include <iostream>
+#include <filesystem>
 
 Model::Model() {
 }
@@ -25,12 +26,12 @@ void Model::LoadFile(const std::string &path) {
     }
     
     // retrieve the directory path of the filepath
-    auto directory = path.substr(0, path.find_last_of('/'));
+    m_filepath = path.substr(0, path.find_last_of('/') + 1);
+    
+    processTexture(scene);
     
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
-    
-    processTexture(scene);
 }
 
 void Model::processTexture(const aiScene* scene) {
@@ -159,13 +160,29 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
     {
         aiString str;
         mat->GetTexture(type, i, &str);
-        auto name = str.C_Str();
-        std::cout << "model materail tex name = " << name << std::endl;
+        std::string filename = str.C_Str();
         
-        auto iter = m_map_image.find(name);
-        if (iter != m_map_image.end()) {
-            textures.push_back({iter->second});
+        Texture texture;
+        texture.name = typeName + std::to_string(i);
+        
+        auto iterCache = m_map_tempTexture.find(filename);
+        if (iterCache != m_map_tempTexture.end()) {
+            continue; // 是不是需要记录一些东西啊？？
         }
+        
+        std::cout << "model materail tex name = " << filename << std::endl;
+        auto iter = m_map_image.find(std::string(str.C_Str()));
+        if (iter != m_map_image.end()) { 
+            // 从内存中获取
+            texture.data = iter->second;
+        }
+        else {
+            size_t pos = filename.find_last_of('\\');
+            auto name = filename.substr(pos+1, filename.length() - pos);
+            texture.filepath = m_filepath + name;
+        }
+        m_map_tempTexture[filename] = texture;
+        textures.push_back(texture);
     }
     return textures;
 }

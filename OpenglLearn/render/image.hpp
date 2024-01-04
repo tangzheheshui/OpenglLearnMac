@@ -17,6 +17,7 @@ public:
     bool setPath(const char* filepath);
     bool draw();
     static unsigned int TextureFromFile(const std::string &filename);
+    static unsigned int TextureFromMem(unsigned char* buffer, int len);
 private:
     void setData();
     unsigned int _texture;

@@ -60,7 +60,7 @@ int main()
     image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/3.jpg");
  
     Model model;
-    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/spider.fbx");
+    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/fbx/spider.fbx");
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
