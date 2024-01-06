@@ -18,9 +18,16 @@ public:
     void setUp(glm::vec3 up);
     void setYaw(float yaw);
     void setPitch(float pitch);
-    void caculate();
-    glm::mat4 GetViewMatrix();
+    void setFov(float fov);
     
+    float getUp();
+    float getYaw() { return _yaw; }
+    float getPitch() { return _pitch; }
+    float getFov() { return _fov; }
+    
+    void caculate();
+    glm::mat4 GetVPMatrix();
+    static Camera& GetCamera();
 private:
     glm::vec3 _position;
     glm::vec3 _front;
@@ -30,6 +37,8 @@ private:
     // euler Angles
     float _yaw;
     float _pitch;
+    float _fov;
+    bool _needCal = true;
 };
 
 #endif /* camera_hpp */

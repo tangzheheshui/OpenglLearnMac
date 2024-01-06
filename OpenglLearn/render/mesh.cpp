@@ -13,6 +13,7 @@
 
 #include "shader.hpp"
 #include "image.hpp"
+#include "camera.hpp"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
     _vertices = vertices;
@@ -71,15 +72,12 @@ bool Mesh::Draw() {
         shader->setInt(texUnifromName, i);
     }
     
-    glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    glm::mat4 view          = glm::mat4(1.0f);
-    glm::mat4 projection    = glm::mat4(1.0f);
+    glm::mat4 model         = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(0.01, 0.01, 0.01));
-    view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
+    //model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+    auto mpMatrix = Camera::GetCamera().GetVPMatrix();
 
-    shader->setMat4("uMvp", projection * view * model);
+    shader->setMat4("uMvp", mpMatrix * model);
     
     // 绘制网格
     glBindVertexArray(_VAO);
