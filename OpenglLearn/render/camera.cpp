@@ -7,7 +7,7 @@
     
 #include "camera.hpp"
 
-const float YAW         = -90.0f;
+const float YAW         = 0.0f;
 const float PITCH       =  0.0f;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -17,7 +17,7 @@ Camera::Camera()
 , _pitch(PITCH)
 , _fov(45)
 {
-    _position = {0, 0, 3};
+    _position = {0, 0, 0};
     _worldUp = {0, 1, 0};
 }
 
@@ -50,6 +50,13 @@ glm::mat4 Camera::GetVPMatrix() {
     caculate();
     
     glm::mat4 view = glm::lookAt(_position, _position + _front, _up);
+    
+    float r = std::sqrt(_position.x*_position.x + _position.y*_position.y + _position.z*_position.z);
+    float y = r * sin(glm::radians(_pitch));
+    float x = r * cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
+    float z = r * cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
+    view = glm::lookAt({x, y, z}, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0)); 
+    
     glm::mat4 projection = glm::perspective(glm::radians(_fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     return projection * view;
 }

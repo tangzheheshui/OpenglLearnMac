@@ -73,8 +73,8 @@ bool Mesh::Draw() {
     }
     
     glm::mat4 model         = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    //model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+    model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
 
     shader->setMat4("uMvp", mpMatrix * model);

@@ -80,7 +80,8 @@ int main()
     image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/3.jpg");
  
     Model model;
-    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/BoxTextured.glb");
+    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.fbx");
+    Camera::GetCamera().setPosition({-20,0,0});
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -91,6 +92,10 @@ int main()
  
         // render
         //image.draw();
+        
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        
         model.draw();
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -161,11 +166,11 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     pitch += yoffset;
 
     // make sure that when pitch is out of bounds, screen doesn't get flipped
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
+//    if (pitch > 89.0f)
+//        pitch = 89.0f;
+//    if (pitch < -89.0f)
+//        pitch = -89.0f;
+    
     Camera::GetCamera().setPitch(pitch);
     Camera::GetCamera().setYaw(yaw);
 }
@@ -176,10 +181,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     float fov = Camera::GetCamera().getFov();
     fov += (float)yoffset;
-    if (fov < 1.0f)
-        fov = 1.0f;
-    if (fov > 45.0f)
-        fov = 45.0f;
+    if (fov < 10.0f)
+        fov = 10.0f;
+    if (fov > 90.0f)
+        fov = 90.0f;
+    printf("yoffset = %f\n", yoffset);
     
     Camera::GetCamera().setFov(fov);
     return;
