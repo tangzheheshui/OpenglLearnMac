@@ -111,7 +111,11 @@ ShaderCache::ShaderCache() {
     }
     
     if (auto shader = new Shader("vert_model", "frag_model")) {
-        m_map_shader.insert(std::make_pair(ShaderType::Model, shader));
+        m_map_shader.insert(std::make_pair(ShaderType::Model_Texture, shader));
+    }
+    
+    if (auto shader = new Shader("vert_model_color", "frag_model_color")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Model_Color, shader));
     }
 }
 

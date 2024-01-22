@@ -94,6 +94,11 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
             //std::cout << "Normal = (%f, %f, %f)" << vector.x << vector.y << vector.z << std::endl;
         }
         
+        // color
+        if (mesh->HasVertexColors(i)) {
+            vertex.color = { mesh->mColors[i]->r, mesh->mColors[i]->g, mesh->mColors[i]->b, mesh->mColors[i]->a};
+        }
+        
         // texture coordinates
         if(mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
         {

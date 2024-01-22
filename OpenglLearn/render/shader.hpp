@@ -33,7 +33,8 @@ private:
 enum class ShaderType {
     Invalid = -1,
     Image,
-    Model,
+    Model_Color,
+    Model_Texture,
 };
 
 class ShaderCache {

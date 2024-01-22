@@ -14,36 +14,28 @@
 #include "../third/assimp/Importer.hpp"
 #include "../third/assimp/scene.h"
 #include "../third/assimp/postprocess.h"
+#include "PassColor.hpp"
+#include "PassTexture.hpp"
 #include "../third/glm/glm.hpp"
 
 struct Vertex {
     glm::vec3 Position;
     glm::vec3 Normal;
+    glm::vec4 color;
     glm::vec2 TexCoords;
     //glm::vec3 Tangent;
     //glm::vec3 Bitangent;
-};
-
-struct Texture {
-    std::string name; // 直接用作uniform纹理的名字
-    std::string filepath;
-    std::shared_ptr<std::vector<char>> data;
 };
 
 class Shader;
 
 class Mesh {
 public:
-    std::vector<Vertex> _vertices;
-    std::vector<unsigned int> _indices;
-    std::vector<Texture> _textures;
-        
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     bool Draw();
 private:        
-    unsigned int _VAO, _VBO, _EBO;
     unsigned int _texture;
-    void setupMesh(Shader* shader);
+    std::shared_ptr<RenderPass> m_pass;
 }; 
 
 #endif /* mesh_hpp */
