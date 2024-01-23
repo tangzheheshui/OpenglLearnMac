@@ -52,7 +52,7 @@ void Model::processTexture(const aiScene* scene) {
         char* buf = (char*)texture->pcData;
         std::shared_ptr<std::vector<char>> pData = std::make_shared<std::vector<char>>();
         pData->assign(buf, buf + texture->mWidth);
-        m_map_image[name] = pData;
+        m_model_data.map_image[name] = pData;
     }
 }
 
@@ -65,28 +65,28 @@ void Model::processMaterail(const aiScene* scene) {
         if (!mat) {
             continue;
         }
-        Materail tmpMat;
+        std::shared_ptr<Materail> tmpMat = std::make_shared<Materail>();
         aiColor4D diffuse;
         aiColor4D specular;
         aiColor4D ambient;
         aiColor4D emission;
         
         if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
-            tmpMat.diffuse = {diffuse.r, diffuse.g, diffuse.b, diffuse.a};
+            tmpMat->diffuse = {diffuse.r, diffuse.g, diffuse.b, diffuse.a};
         }
            
         if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_AMBIENT, &ambient)) {
-            tmpMat.ambient = {ambient.r, ambient.g, ambient.b, ambient.a};
+            tmpMat->ambient = {ambient.r, ambient.g, ambient.b, ambient.a};
         }
         
         if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_SPECULAR, &specular)) {
-            tmpMat.specular = {specular.r, specular.g, specular.b, specular.a};
+            tmpMat->specular = {specular.r, specular.g, specular.b, specular.a};
         }
         
         if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_EMISSIVE, &emission)) {
-            tmpMat.emission = {emission.r, emission.g, emission.b, emission.a};
+            tmpMat->emission = {emission.r, emission.g, emission.b, emission.a};
         }
-        m_vec_materail.push_back(tmpMat);
+        m_model_data.materails.push_back(tmpMat);
     }
 }
 
@@ -104,63 +104,47 @@ void Model::processNode(aiNode* node, const aiScene* scene) {
 }
 
 std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
-    
-    // walk through each of the mesh's vertices
-    for(unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
-        Vertex vertex;
-        glm::vec3 vector;
-        
+    std::shared_ptr<MeshData> meshData = std::make_shared<MeshData>();
+    int numVertices = mesh->mNumVertices;
+    meshData->positions.reserve(numVertices);
+    meshData->normals.reserve(numVertices);
+    meshData->coords.reserve(numVertices);
+  
+    for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
         // positions
         float x = mesh->mVertices[i].x;
         float y = mesh->mVertices[i].y;
         float z = mesh->mVertices[i].z;
-        //std::cout << "pos=(" << mesh->mVertices[i].x << ", " << mesh->mVertices[i].y << ", " << mesh->mVertices[i].z << ")" << std::endl;
-        vertex.Position = {x, y, z};
+        meshData->positions.push_back({x, y, z});
         
         // normals
         if (mesh->HasNormals())
         {
-            vector.x = mesh->mNormals[i].x;
-            vector.y = mesh->mNormals[i].y;
-            vector.z = mesh->mNormals[i].z;
-            vertex.Normal = vector;
-            //std::cout << "Normal = (%f, %f, %f)" << vector.x << vector.y << vector.z << std::endl;
-        }
-        
-        // color
-        if (mesh->HasVertexColors(i)) {
-            vertex.color = { mesh->mColors[i]->r, mesh->mColors[i]->g, mesh->mColors[i]->b, mesh->mColors[i]->a};
+            x = mesh->mNormals[i].x;
+            y = mesh->mNormals[i].y;
+            z = mesh->mNormals[i].z;
+            meshData->normals.push_back({x, y, z});
         }
         
         // texture coordinates
         if(mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
         {
-            glm::vec2 vec;
-            // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-            // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-            vec.x = mesh->mTextureCoords[0][i].x; 
-            vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = vec;
-            //std::cout << "TexCoords = (%f, %f)" << vec.x << vec.y << std::endl;
+            x = mesh->mTextureCoords[0][i].x; 
+            y = mesh->mTextureCoords[0][i].y;
+            meshData->coords.push_back({x, y});
+            
             // tangent
-            vector.x = mesh->mTangents[i].x;
-            vector.y = mesh->mTangents[i].y;
-            vector.z = mesh->mTangents[i].z;
+            x = mesh->mTangents[i].x;
+            y = mesh->mTangents[i].y;
+            z = mesh->mTangents[i].z;
             //vertex.Tangent = vector;
+            
             // bitangent
-            vector.x = mesh->mBitangents[i].x;
-            vector.y = mesh->mBitangents[i].y;
-            vector.z = mesh->mBitangents[i].z;
+            x = mesh->mBitangents[i].x;
+            y = mesh->mBitangents[i].y;
+            z = mesh->mBitangents[i].z;
             //vertex.Bitangent = vector;
         }
-        else
-            vertex.TexCoords = glm::vec2(0.0f, 0.0f);
-        
-        vertices.push_back(vertex);
     }
     // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
     for(unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -168,7 +152,7 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         aiFace face = mesh->mFaces[i];
         // retrieve all indices of the face and store them in the indices vector
         for(unsigned int j = 0; j < face.mNumIndices; j++)
-            indices.push_back(face.mIndices[j]);        
+            meshData->indices.push_back(face.mIndices[j]);        
     }
     // process materials
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];    
@@ -181,23 +165,20 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     
     // 1. diffuse maps
     std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    meshData->textures.insert(meshData->textures.end(), diffuseMaps.begin(), diffuseMaps.end());
     // 2. specular maps
     std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    meshData->textures.insert(meshData->textures.end(), specularMaps.begin(), specularMaps.end());
     // 3. normal maps
     std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    meshData->textures.insert(meshData->textures.end(), normalMaps.begin(), normalMaps.end());
     // 4. height maps
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    meshData->textures.insert(meshData->textures.end(), heightMaps.begin(), heightMaps.end());
     
-    // return a mesh object created from the extracted mesh data
-    auto pMesh = std::make_shared<Mesh>(vertices, indices, textures);
-    if (mesh->mMaterialIndex < m_vec_materail.size()) {
-        pMesh->setMaterail(m_vec_materail.at(mesh->mMaterialIndex));
-    }
-    
+    // 材质索引
+    meshData->index_materail = mesh->mMaterialIndex;
+    auto pMesh = std::make_shared<Mesh>(meshData, m_model_data.materails[mesh->mMaterialIndex]);
     return pMesh;
 }
 
@@ -218,8 +199,8 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         }
         
         std::cout << "model materail tex name = " << filename << std::endl;
-        auto iter = m_map_image.find(std::string(str.C_Str()));
-        if (iter != m_map_image.end()) { 
+        auto iter = m_model_data.map_image.find(std::string(str.C_Str()));
+        if (iter != m_model_data.map_image.end()) { 
             // 从内存中获取
             texture.data = iter->second;
         }
@@ -235,6 +216,10 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         textures.push_back(texture);
     }
     return textures;
+}
+
+void Model::genMesh() {
+    
 }
 
 void Model::draw() {

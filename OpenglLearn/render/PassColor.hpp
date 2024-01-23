@@ -13,12 +13,11 @@
 struct BufferPassColor {
     glm::vec3 m_pos;
     glm::vec3 m_normal;
-    glm::vec4 m_color;
 };
 
 class PassColor : public RenderPass {
 public:
-    PassColor(const std::vector<BufferPassColor> &data, std::vector<unsigned int> indexs);
+    PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
     
     virtual bool Draw() override;
     
@@ -27,7 +26,6 @@ private:
 private:
     unsigned int _VAO, _VBO, _EBO;
     std::vector<BufferPassColor> m_buffer;
-    std::vector<unsigned int> m_indexs;
 };
 
 #endif /* PassColor_hpp */

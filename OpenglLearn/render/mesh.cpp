@@ -15,35 +15,18 @@
 #include "image.hpp"
 #include "camera.hpp"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
-    
-    if (textures.empty()) {
-        std::vector<BufferPassColor> buffer;
-        buffer.reserve(vertices.size());
-        for (auto v : vertices) {
-            BufferPassColor data;
-            data.m_pos = v.Position;
-            data.m_normal = v.Normal;
-            data.m_color = v.color;
-            buffer.push_back(data);
-        }
-        m_pass = std::make_shared<PassColor>(buffer, indices);
+Mesh::Mesh(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) {
+    if (!meshData) {
+        return;
+    }
+    if (meshData->textures.empty()) {
+        m_pass = std::make_shared<PassColor>(meshData, matData);
     } else {
-        std::vector<BufferPassTexture> buffer;
-        buffer.reserve(vertices.size());
-        for (auto v : vertices) {
-            BufferPassTexture data;
-            data.m_pos = v.Position;
-            data.m_normal = v.Normal;
-            data.m_coord = v.TexCoords;
-            buffer.push_back(data);
-        }
-        m_pass = std::make_shared<PassTexture>(buffer, indices, textures);
+        m_pass = std::make_shared<PassTexture>(meshData, matData);
     }
 }
 
 bool Mesh::Draw() {
-    m_pass->setMaterail(m_materail);
     if (m_pass) {
          m_pass->Draw();
     }

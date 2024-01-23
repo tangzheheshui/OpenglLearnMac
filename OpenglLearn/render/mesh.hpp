@@ -17,6 +17,7 @@
 #include "PassColor.hpp"
 #include "PassTexture.hpp"
 #include "../third/glm/glm.hpp"
+#include "model_data.h"
 
 struct Vertex {
     glm::vec3 Position;
@@ -29,14 +30,12 @@ struct Vertex {
 
 class Mesh {
 public:
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    Mesh(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
     bool Draw();
-    void setMaterail(const Materail &mat) { m_materail = mat; }
     
 private:        
     unsigned int _texture;
     std::shared_ptr<RenderPass> m_pass;
-    Materail m_materail;
 }; 
 
 #endif /* mesh_hpp */

@@ -8,10 +8,17 @@
 #include "PassTexture.hpp"
 #include "image.hpp"
 
-PassTexture::PassTexture(const std::vector<BufferPassTexture> &data, std::vector<unsigned int> indexs, const std::vector<Texture> &textures) {
-    m_buffer = data;
-    m_indexs = indexs;
-    _textures = textures;
+PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) { 
+    m_mesh_data = meshData; 
+    m_materail = matData; 
+    m_buffer.reserve(meshData->positions.size());
+    for (int i = 0; i < meshData->positions.size(); i++) {
+        BufferPassTexture data;
+        data.m_pos = meshData->positions[i];
+        data.m_normal = meshData->normals[i];
+        data.m_coord = meshData->coords[i];
+        m_buffer.push_back(data);
+    }
 }
 
 bool PassTexture::Draw() {
@@ -29,8 +36,8 @@ bool PassTexture::Draw() {
     unsigned int normalNr   = 0;
     unsigned int heightNr   = 0;
     
-    for (int i = 0; i < _textures.size(); i++) {
-        auto tex = _textures[i];
+    for (int i = 0; i < m_mesh_data->textures.size(); i++) {
+        auto tex = m_mesh_data->textures[i];
         int texID = 0;
         std::string texUnifromName = tex.name;
         if (!tex.filepath.empty()) {
@@ -65,7 +72,9 @@ bool PassTexture::Draw() {
     
     // 绘制网格
     glBindVertexArray(_VAO);
-    glDrawElements(GL_TRIANGLES, (GLsizei)m_indexs.size(), GL_UNSIGNED_INT, 0);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glDrawElements(GL_TRIANGLES, (GLsizei)m_mesh_data->indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
     return true;
 }
@@ -81,15 +90,13 @@ void PassTexture::setup() {
     glBufferData(GL_ARRAY_BUFFER, m_buffer.size() * sizeof(BufferPassTexture), m_buffer.data() , GL_STATIC_DRAW);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexs.size() * sizeof(unsigned int), m_indexs.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)0);
     glEnableVertexAttribArray(0);
     
-    
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    
     
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);

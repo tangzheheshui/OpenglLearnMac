@@ -80,7 +80,7 @@ int main()
     image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/3.jpg");
  
     Model model;
-    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/WusonOBJ.obj");
+    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.fbx");
     Camera::GetCamera().setPosition({-20,0,0});
     // render loop
     // -----------
@@ -94,7 +94,7 @@ int main()
         //image.draw();
         
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         model.draw();
  
@@ -166,10 +166,10 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     pitch += yoffset;
 
     // make sure that when pitch is out of bounds, screen doesn't get flipped
-//    if (pitch > 89.0f)
-//        pitch = 89.0f;
-//    if (pitch < -89.0f)
-//        pitch = -89.0f;
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
     
     Camera::GetCamera().setPitch(pitch);
     Camera::GetCamera().setYaw(yaw);
