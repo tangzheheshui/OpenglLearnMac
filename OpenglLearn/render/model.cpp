@@ -30,6 +30,9 @@ void Model::LoadFile(const std::string &path) {
     
     processTexture(scene);
     
+    // 解析材质
+    processMaterail(scene);
+    
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
 }
@@ -50,6 +53,40 @@ void Model::processTexture(const aiScene* scene) {
         std::shared_ptr<std::vector<char>> pData = std::make_shared<std::vector<char>>();
         pData->assign(buf, buf + texture->mWidth);
         m_map_image[name] = pData;
+    }
+}
+
+void Model::processMaterail(const aiScene* scene) {
+    if (!scene || !scene->HasMaterials()) {
+        return;
+    }
+    for (unsigned int i = 0; i < scene->mNumMaterials; i++) {
+        aiMaterial *mat = scene->mMaterials[i];
+        if (!mat) {
+            continue;
+        }
+        Materail tmpMat;
+        aiColor4D diffuse;
+        aiColor4D specular;
+        aiColor4D ambient;
+        aiColor4D emission;
+        
+        if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
+            tmpMat.diffuse = {diffuse.r, diffuse.g, diffuse.b, diffuse.a};
+        }
+           
+        if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_AMBIENT, &ambient)) {
+            tmpMat.ambient = {ambient.r, ambient.g, ambient.b, ambient.a};
+        }
+        
+        if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_SPECULAR, &specular)) {
+            tmpMat.specular = {specular.r, specular.g, specular.b, specular.a};
+        }
+        
+        if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_EMISSIVE, &emission)) {
+            tmpMat.emission = {emission.r, emission.g, emission.b, emission.a};
+        }
+        m_vec_materail.push_back(tmpMat);
     }
 }
 
@@ -156,7 +193,12 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     
     // return a mesh object created from the extracted mesh data
-    return std::make_shared<Mesh>(vertices, indices, textures);
+    auto pMesh = std::make_shared<Mesh>(vertices, indices, textures);
+    if (mesh->mMaterialIndex < m_vec_materail.size()) {
+        pMesh->setMaterail(m_vec_materail.at(mesh->mMaterialIndex));
+    }
+    
+    return pMesh;
 }
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName) {

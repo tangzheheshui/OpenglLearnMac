@@ -80,7 +80,7 @@ int main()
     image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/3.jpg");
  
     Model model;
-    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.fbx");
+    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/WusonOBJ.obj");
     Camera::GetCamera().setPosition({-20,0,0});
     // render loop
     // -----------

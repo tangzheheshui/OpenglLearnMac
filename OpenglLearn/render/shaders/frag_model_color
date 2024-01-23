@@ -1,9 +1,12 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec4 FinalColor;
+uniform vec4 u_diffuse;
+uniform vec4 u_specular;
+uniform vec4 u_ambient;
+uniform vec4 u_emission;
 
 void main()
 {
-    FragColor = FinalColor;
+    FragColor = u_diffuse + u_specular + u_ambient + u_emission;
 }

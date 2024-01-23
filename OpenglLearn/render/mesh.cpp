@@ -43,6 +43,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 }
 
 bool Mesh::Draw() {
+    m_pass->setMaterail(m_materail);
     if (m_pass) {
          m_pass->Draw();
     }

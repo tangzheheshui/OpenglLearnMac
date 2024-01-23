@@ -27,15 +27,16 @@ struct Vertex {
     //glm::vec3 Bitangent;
 };
 
-class Shader;
-
 class Mesh {
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     bool Draw();
+    void setMaterail(const Materail &mat) { m_materail = mat; }
+    
 private:        
     unsigned int _texture;
     std::shared_ptr<RenderPass> m_pass;
+    Materail m_materail;
 }; 
 
 #endif /* mesh_hpp */

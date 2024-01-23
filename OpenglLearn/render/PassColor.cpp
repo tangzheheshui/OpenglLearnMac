@@ -28,7 +28,11 @@ bool PassColor::Draw() {
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
 
     shader->setMat4("uMvp", mpMatrix * model);
-    
+    shader->setFloat4("u_diffuse", m_materail.diffuse.r, m_materail.diffuse.g, m_materail.diffuse.b, m_materail.diffuse.a);
+    shader->setFloat4("u_specular", m_materail.specular.r, m_materail.specular.g, m_materail.specular.b, m_materail.specular.a);
+    shader->setFloat4("u_ambient", m_materail.ambient.r, m_materail.ambient.g, m_materail.ambient.b, m_materail.ambient.a);
+    shader->setFloat4("u_emission", m_materail.emission.r, m_materail.emission.g, m_materail.emission.b, m_materail.emission.a);
+  
     // 绘制网格
     glBindVertexArray(_VAO);
     glDrawElements(GL_TRIANGLES, (GLsizei)m_indexs.size(), GL_UNSIGNED_INT, 0);
