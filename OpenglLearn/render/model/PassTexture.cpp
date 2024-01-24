@@ -7,6 +7,7 @@
 
 #include "PassTexture.hpp"
 #include "image.hpp"
+#include "../Light.h"
 
 PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) { 
     m_mesh_data = meshData; 
@@ -21,7 +22,7 @@ PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Mat
     }
 }
 
-bool PassTexture::Draw() {
+bool PassTexture::Draw(const glm::mat4 &matModel) {
     setup();
     
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Texture);
@@ -63,12 +64,28 @@ bool PassTexture::Draw() {
         shader->setInt(texUnifromName, i);
     }
     
-    glm::mat4 model         = glm::mat4(1.0f);
-    //model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
 
-    shader->setMat4("uMvp", mpMatrix * model);
+    shader->setMat4("uMatrixM", matModel);
+    shader->setMat4("uMatrixVP", mpMatrix);
+    
+    // 灯光
+    auto light = Light::GlobalLight();
+    shader->setFloat3("uLight.direction", light.direction.x, light.direction.y, light.direction.z);
+    shader->setFloat3("uLight.ambient", light.ambient.x, light.ambient.y, light.ambient.z);
+    shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
+    shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);
+    
+    // 材质
+    shader->setFloat3("uMaterail.ambient", m_materail->ambient.r, m_materail->ambient.g, m_materail->ambient.b);
+    shader->setFloat3("uMaterail.diffuse", m_materail->diffuse.r, m_materail->diffuse.g, m_materail->diffuse.b);
+    shader->setFloat3("uMaterail.specular", m_materail->specular.r, m_materail->specular.g, m_materail->specular.b);
+    shader->setFloat("uMaterail.shininess", m_materail->shininess);
+    shader->setFloat("uMaterail.shininess_strength", m_materail->shininess_strength);
+    
+    // 相机位置
+    auto cam_pos = Camera::GetCamera().getPossition();
+    shader->setFloat3("uCameraPos", cam_pos.x, cam_pos.y, cam_pos.z);
     
     // 绘制网格
     glBindVertexArray(_VAO);

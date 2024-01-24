@@ -20,7 +20,7 @@ public:
     RenderPass() {}
     virtual ~RenderPass() {}
     
-    virtual bool Draw() = 0;
+    virtual bool Draw(const glm::mat4 &matModel) = 0;
 public:
     std::shared_ptr<Materail> m_materail;
     std::shared_ptr<MeshData> m_mesh_data;

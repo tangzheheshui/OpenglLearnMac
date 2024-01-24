@@ -29,8 +29,8 @@ struct Materail {
     glm::vec4 diffuse;
     glm::vec4 specular;
     glm::vec4 ambient;
-    float shininess;
-    float shininess_strength;
+    float shininess = 0.f;
+    float shininess_strength = 0.f;
 };
 
 struct ModelData {

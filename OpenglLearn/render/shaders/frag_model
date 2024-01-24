@@ -1,12 +1,52 @@
 #version 330 core
 out vec4 FragColor;
 
+in vec3 pFragPos;
+in vec3 pNormal; 
 in vec2 TexCoord;
 
+struct Materail {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+    float shininess_strength;
+};
+
+struct Light {
+    //vec3 position;
+    vec3 direction;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform Materail uMaterail;
+uniform Light uLight;
+uniform vec3 uCameraPos;
 uniform sampler2D texture1;
 
 void main()
 {
-    FragColor = texture(texture1, TexCoord);
-    //FragColor = vec4(1, 0, 0, 1);
+    vec3 color = texture(texture1, TexCoord).xyz;
+    
+    // 计算光照
+    vec3 normal = normalize(pNormal);
+
+    // ambient
+    vec3 ambient = uLight.ambient * color;
+    
+    // diffuse
+    vec3 dirLight = normalize(-uLight.direction);
+    vec3 diffuse = uLight.diffuse * color * dot(dirLight, normal);
+    
+    // specular
+    vec3 viewDir = normalize(uCameraPos - pFragPos);
+    vec3 reflectDir = reflect(-dirLight, normal);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterail.shininess);
+    vec3 specular = uLight.specular * (spec * uMaterail.specular * uMaterail.shininess_strength);
+    
+    vec3 result =  (ambient + diffuse);
+    FragColor = vec4(result, 1.0);
 }

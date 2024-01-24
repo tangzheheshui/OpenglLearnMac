@@ -26,9 +26,9 @@ Mesh::Mesh(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData
     }
 }
 
-bool Mesh::Draw() {
+bool Mesh::Draw(const glm::mat4 &matModel) {
     if (m_pass) {
-         m_pass->Draw();
+         m_pass->Draw(matModel);
     }
     
     return true;

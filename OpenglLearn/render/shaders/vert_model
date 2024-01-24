@@ -1,14 +1,19 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aNormal;
+layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
 
-out vec2 TexCoord;
+uniform mat4 uMatrixM;
+uniform mat4 uMatrixVP;
 
-uniform mat4 uMvp;
+out vec3 pFragPos;
+out vec3 pNormal; 
+out vec2 TexCoord;
 
 void main()
 {
-    gl_Position = uMvp * vec4(aPos, 1.0);
+    pFragPos = (uMatrixM * vec4(aPos, 1.0)).xyz;
+    pNormal = (uMatrixM * vec4(aNormal, 1.0)).xyz;
     TexCoord = aTexCoord;
+    gl_Position = uMatrixVP * uMatrixM * vec4(aPos, 1.0);
 }

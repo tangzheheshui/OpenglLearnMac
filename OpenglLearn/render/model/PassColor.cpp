@@ -20,7 +20,7 @@ PassColor::PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materai
     m_materail = matData;
 }
 
-bool PassColor::Draw() {
+bool PassColor::Draw(const glm::mat4 &matModel) {
     setup();
     
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Color);
@@ -30,21 +30,17 @@ bool PassColor::Draw() {
     
     shader->use();
     
-    glm::mat4 model         = glm::mat4(1.0f);
-    //model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+    // 矩阵
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
-
+    shader->setMat4("uMatrixM", matModel);
+    shader->setMat4("uMatrixVP", mpMatrix);
+    
     // 灯光
     auto light = Light::GlobalLight();
-    
     shader->setFloat3("uLight.direction", light.direction.x, light.direction.y, light.direction.z);
     shader->setFloat3("uLight.ambient", light.ambient.x, light.ambient.y, light.ambient.z);
     shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
     shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);
-    
-    // 矩阵
-    shader->setMat4("uMvp", mpMatrix * model);
     
     // 材质
     shader->setFloat3("uMaterail.ambient", m_materail->ambient.r, m_materail->ambient.g, m_materail->ambient.b);

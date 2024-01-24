@@ -78,7 +78,14 @@ void Model::processMaterail(const aiScene* scene) {
         }
            
         if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_AMBIENT, &ambient)) {
-            tmpMat->ambient = {ambient.r, ambient.g, ambient.b, ambient.a};
+            // 防止模型导出时，丢失ambient
+            aiColor4D color(0.0, 0.0, 0.0, ambient.a);
+            if (ambient == color) {
+                tmpMat->ambient = tmpMat->diffuse;
+            } 
+            else {
+                tmpMat->ambient = {ambient.r, ambient.g, ambient.b, ambient.a};
+            }
         }
         
         if(AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_SPECULAR, &specular)) {
@@ -210,7 +217,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
             continue; // 是不是需要记录一些东西啊？？
         }
         
-        std::cout << "model materail tex name = " << filename << std::endl;
+        std::cout << "model materail tex name = " << filename << "typeName = " << texture.name << std::endl;
         auto iter = m_model_data.map_image.find(std::string(str.C_Str()));
         if (iter != m_model_data.map_image.end()) { 
             // 从内存中获取
@@ -236,6 +243,10 @@ void Model::genMesh() {
 
 void Model::draw() {
     for (auto mesh : m_mesh) {
-        mesh->Draw();
+        mesh->Draw(m_matModel);
     }
+}
+
+void Model::setScale(float scale) {
+    m_matModel = glm::scale(m_matModel, glm::vec3(scale, scale, scale));
 }

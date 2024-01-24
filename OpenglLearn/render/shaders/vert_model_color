@@ -2,14 +2,15 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 
-uniform mat4 uMvp;
+uniform mat4 uMatrixM;
+uniform mat4 uMatrixVP;
 
 out vec3 pFragPos;
 out vec3 pNormal; 
 
 void main()
 {
-    pFragPos = aPos;
-    pNormal = aNormal;
-    gl_Position = uMvp * vec4(aPos, 1.0);
+    pFragPos = (uMatrixM * vec4(aPos, 1.0)).xyz;
+    pNormal = (uMatrixM * vec4(aNormal, 1.0)).xyz;
+    gl_Position = uMatrixVP * uMatrixM * vec4(aPos, 1.0);
 }

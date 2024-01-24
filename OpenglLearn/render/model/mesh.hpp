@@ -31,7 +31,7 @@ struct Vertex {
 class Mesh {
 public:
     Mesh(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
-    bool Draw();
+    bool Draw(const glm::mat4 &matModel);
     
 private:        
     unsigned int _texture;
