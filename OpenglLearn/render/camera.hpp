@@ -24,6 +24,7 @@ public:
     float getYaw() { return _yaw; }
     float getPitch() { return _pitch; }
     float getFov() { return _fov; }
+    glm::vec3 getPossition() { return _position; }
     
     void caculate();
     glm::mat4 GetVPMatrix();

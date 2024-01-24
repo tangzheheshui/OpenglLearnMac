@@ -63,6 +63,7 @@
 		651EFBF42B3F320900620837 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = "glfw/lib-x86_64/libglfw3.a"; sourceTree = "<group>"; };
 		651EFBF92B3F324000620837 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glad.c; path = glad/src/glad.c; sourceTree = SOURCE_ROOT; };
 		65ABD0012B5FED75007552FD /* model_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_data.h; sourceTree = "<group>"; };
+		65ABD02C2B60DF2B007552FD /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		65D475B42B42D355004AE289 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		65D475B52B42D355004AE289 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		65D475B82B42EFBB004AE289 /* image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
@@ -135,16 +136,9 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		65D475B32B42D323004AE289 /* render */ = {
+		65ABD02A2B60DCF8007552FD /* model */ = {
 			isa = PBXGroup;
 			children = (
-				65FD8F0B2B43F7A300A06A38 /* shaders */,
-				65D475B42B42D355004AE289 /* shader.cpp */,
-				65D475B52B42D355004AE289 /* shader.hpp */,
-				65D475B82B42EFBB004AE289 /* image.cpp */,
-				65D475B92B42EFBB004AE289 /* image.hpp */,
-				65FD8F0E2B44588A00A06A38 /* camera.cpp */,
-				65FD8F0F2B44588A00A06A38 /* camera.hpp */,
 				65FD8F192B45141E00A06A38 /* model.cpp */,
 				65FD8F1A2B45141E00A06A38 /* model.hpp */,
 				65FD8F222B452BFC00A06A38 /* mesh.cpp */,
@@ -156,6 +150,22 @@
 				650751C62B5EA62D00BB2098 /* PassTexture.cpp */,
 				650751C72B5EA62D00BB2098 /* PassTexture.hpp */,
 				65ABD0012B5FED75007552FD /* model_data.h */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		65D475B32B42D323004AE289 /* render */ = {
+			isa = PBXGroup;
+			children = (
+				65ABD02A2B60DCF8007552FD /* model */,
+				65FD8F0B2B43F7A300A06A38 /* shaders */,
+				65D475B42B42D355004AE289 /* shader.cpp */,
+				65D475B52B42D355004AE289 /* shader.hpp */,
+				65D475B82B42EFBB004AE289 /* image.cpp */,
+				65D475B92B42EFBB004AE289 /* image.hpp */,
+				65FD8F0E2B44588A00A06A38 /* camera.cpp */,
+				65FD8F0F2B44588A00A06A38 /* camera.hpp */,
+				65ABD02C2B60DF2B007552FD /* Light.h */,
 			);
 			path = render;
 			sourceTree = "<group>";

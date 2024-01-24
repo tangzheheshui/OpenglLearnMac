@@ -9,7 +9,7 @@
 #define image_hpp
 
 #include <string>
-
+#include <map>
 class Image {
 public:
     Image();
@@ -25,6 +25,7 @@ private:
     unsigned int _VBO;
     unsigned int _EBO;
     std::string _filename;
+    static std::map<const std::string, unsigned int> s_map_texture_cache;
 };
 
 #endif /* image_hpp */

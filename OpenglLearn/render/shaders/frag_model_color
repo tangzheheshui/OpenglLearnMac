@@ -1,12 +1,47 @@
 #version 330 core
 out vec4 FragColor;
 
-uniform vec4 u_diffuse;
-uniform vec4 u_specular;
-uniform vec4 u_ambient;
-uniform vec4 u_emission;
+in vec3 pFragPos;
+in vec3 pNormal; 
+
+struct Materail {
+    vec3 diffuse;
+    vec3 specular;
+    vec3 ambient;
+    float shininess;
+    float shininess_strength;
+};
+
+struct Light {
+    //vec3 position;
+    vec3 direction;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform Materail uMaterail;
+uniform Light uLight;
+uniform vec3 uCameraPos;
 
 void main()
 {
-    FragColor = u_diffuse + u_specular + u_ambient + u_emission;
+    vec3 normal = normalize(pNormal);
+
+    // ambient
+    vec3 ambient = uLight.ambient * uMaterail.ambient;
+    
+    // diffuse
+    vec3 dirLight = -uLight.direction;
+    vec3 diffuse = uLight.diffuse * uMaterail.diffuse * dot(dirLight, normal);
+    
+    // specular
+    vec3 viewDir = normalize(uCameraPos - pFragPos);
+    vec3 reflectDir = reflect(-dirLight, normal);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterail.shininess);
+    vec3 specular = uLight.specular * (spec * uMaterail.specular * uMaterail.shininess_strength);
+    
+    vec3 result =  (ambient + diffuse + specular);
+    FragColor = vec4(result, 1.0);
 }

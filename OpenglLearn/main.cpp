@@ -12,7 +12,7 @@
 #include <filesystem>
 
 #include "render/image.hpp"
-#include "render/model.hpp"
+#include "render/model/model.hpp"
 #include "camera.hpp"
  
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -75,12 +75,11 @@ int main()
         return -1;
     }
  
- 
     Image image;
     image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/3.jpg");
  
     Model model;
-    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.fbx");
+    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
     Camera::GetCamera().setPosition({-20,0,0});
     // render loop
     // -----------

@@ -17,6 +17,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../third/stb_image.h"
 
+std::map<const std::string, unsigned int> Image::s_map_texture_cache;
+
 Image::Image() {
     
 }
@@ -103,6 +105,11 @@ bool Image::draw() {
 
 unsigned int Image::TextureFromFile(const std::string &filename)
 {
+    auto iter = s_map_texture_cache.find(filename);
+    if (iter != s_map_texture_cache.end()) {
+        return iter->second;
+    }
+    
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
@@ -136,6 +143,7 @@ unsigned int Image::TextureFromFile(const std::string &filename)
         stbi_image_free(data);
     }
 
+    s_map_texture_cache[filename] = textureID;
     return textureID;
 }
 
