@@ -13,6 +13,7 @@
 
 #include "render/image.hpp"
 #include "render/model/model.hpp"
+#include "render/scene.hpp"
 #include "camera.hpp"
  
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -96,6 +97,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        Scene::getScene().draw();
         model.draw();
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

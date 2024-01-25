@@ -68,6 +68,7 @@ Shader::Shader(const std::string &vertPath, const std::string &fragPath) {
     if (!success) {
         glGetProgramInfoLog(_ID, 512, nullptr, infoLog);
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+        assert(0);
     }
     
     // del
@@ -114,6 +115,10 @@ ShaderCache& ShaderCache::GetInstance() {
 }
 
 ShaderCache::ShaderCache() {
+    if (auto shader = new Shader("vert_color", "frag_color")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Color, shader));
+    }
+    
     if (auto shader = new Shader("vert_image", "frag_image")) {
         m_map_shader.insert(std::make_pair(ShaderType::Image, shader));
     }
