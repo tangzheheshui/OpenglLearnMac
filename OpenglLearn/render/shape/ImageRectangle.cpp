@@ -64,69 +64,33 @@ void ImageRectangle::setSetp(float w, float h) {
 void ImageRectangle::calculate() {
     // 1 2 3 4为左下右上的顺序
     auto x = _pos2 - _pos1;
-    float lenx = glm::length(x);
-    int xCount = std::max((int)(lenx / m_step.x), 1);
+    float xCount = std::max((glm::length(x) / m_step.x), 1.f);
     auto y = _pos3 - _pos2;
-    float leny = glm::length(y);
-    int yCount = std::max((int)(leny / m_step.y), 1);
+    float yCount = std::max((glm::length(y) / m_step.y), 1.f);
     
-    glm::vec3 setp_x = {x.x/xCount, x.y/xCount, x.z/xCount};
-    glm::vec3 setp_y = {y.x/yCount, y.y/yCount, y.z/yCount};
-    int index = 0;
-    
-    glm::vec3 vec1, vec2, vec3, vec4; 
+    m_indices.push_back(0);
+    m_indices.push_back(1);
+    m_indices.push_back(3);
+    m_indices.push_back(1);
+    m_indices.push_back(2);
+    m_indices.push_back(3);
+    // push
     Buffer cur_rect;
-    for (int i = 0; i < xCount; i++) {
-        vec1 = _pos1 + glm::vec3(setp_x.x * i, setp_x.y * i, setp_x.z * i);
-        index = i+1;
-        vec2 = _pos1 + glm::vec3(setp_x.x * index, setp_x.y * index, setp_x.z * index);
-        if (index == xCount) {
-            vec2 = _pos2;
-        } 
-        
-        vec3 = vec2;
-        vec4 = vec1;
-        
-        for (int j = 0; j < yCount; j++) {
-            // 索引
-            int cur_index = (int)m_buffer.size();
-            m_indices.push_back(cur_index);
-            m_indices.push_back(cur_index+1);
-            m_indices.push_back(cur_index+3);
-            m_indices.push_back(cur_index+1);
-            m_indices.push_back(cur_index+2);
-            m_indices.push_back(cur_index+3);
-            // push
-            cur_rect.pos = vec4;
-            cur_rect.coord = {0, 0};
-            m_buffer.push_back(cur_rect);
-            
-            cur_rect.pos = vec3;
-            cur_rect.coord = {1, 0};
-            m_buffer.push_back(cur_rect);
-            
-            printf("i = %d, j = %d, p1=(%f, %f)\n", i, j, vec4.x, vec4.z);
-            printf("i = %d, j = %d, p2=(%f, %f)\n", i, j, vec3.x, vec3.z);
-            
-            // 
-            vec3 += glm::vec3(setp_y.x, setp_y.y, setp_y.z);
-            vec4 += glm::vec3(setp_y.x, setp_y.y, setp_y.z);
-            if ((j+1) == yCount) {
-                vec4 = vec1 + (_pos4 - _pos1);
-                vec3 = vec2 + (_pos4 - _pos1);
-            }
-            cur_rect.pos = vec3;
-            cur_rect.coord = {1, 1};
-            m_buffer.push_back(cur_rect);
-            
-            cur_rect.pos = vec4;
-            cur_rect.coord = {0, 1};
-            m_buffer.push_back(cur_rect);
-            
-            printf("i = %d, j = %d, p3=(%f, %f)\n", i, j, vec3.x, vec3.z);
-            printf("i = %d, j = %d, p4=(%f, %f)\n", i, j, vec4.x, vec4.z);
-        }
-    }
+    cur_rect.pos = _pos1;
+    cur_rect.coord = {0, 0};
+    m_buffer.push_back(cur_rect);
+    
+    cur_rect.pos = _pos2;
+    cur_rect.coord = {xCount, 0};
+    m_buffer.push_back(cur_rect);
+    
+    cur_rect.pos = _pos3;
+    cur_rect.coord = {xCount, yCount};
+    m_buffer.push_back(cur_rect);
+    
+    cur_rect.pos = _pos4;
+    cur_rect.coord = {0, yCount};
+    m_buffer.push_back(cur_rect);
 }
 
 ImageRectangle::~ImageRectangle() {

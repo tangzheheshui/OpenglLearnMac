@@ -40,7 +40,7 @@ void Scene::calculate() {
     // 地面
     float ground_width = 10;
     m_ground.setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/wood.png");
-    m_ground.setSetp(10, 10);
+    m_ground.setSetp(5, 5);
     glm::vec3 p1(-ground_width, 0,  ground_width);
     glm::vec3 p2(ground_width, 0,  ground_width);
     glm::vec3 p3(ground_width, 0, -ground_width);
