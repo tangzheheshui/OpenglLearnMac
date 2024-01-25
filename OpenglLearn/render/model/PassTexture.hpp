@@ -25,7 +25,6 @@ public:
 private:
     void setup();
 private:
-    unsigned int _VAO, _VBO, _EBO;
     std::vector<BufferPassTexture> m_buffer;
 };
 

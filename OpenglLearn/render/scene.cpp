@@ -15,9 +15,10 @@ Scene& Scene::getScene() {
 }
 
 void Scene::calculate() {
+    // 绘制坐标轴
     std::vector<unsigned int> indices = {0, 1};
     
-    float len = 10;
+    float len = 15;
     glm::vec3 pZero = {0, 0, 0};
     glm::vec3 pX = {len, 0, 0};
     glm::vec3 pY = {0, len, 0};
@@ -35,10 +36,23 @@ void Scene::calculate() {
     // 宽度
     float width = 5;
     m_line_x.setWidth(width);
+    
+    // 地面
+    float ground_width = 10;
+    m_ground.setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/wood.png");
+    m_ground.setSetp(10, 10);
+    glm::vec3 p1(-ground_width, 0,  ground_width);
+    glm::vec3 p2(ground_width, 0,  ground_width);
+    glm::vec3 p3(ground_width, 0, -ground_width);
+    glm::vec3 p4(-ground_width, 0, -ground_width);
+    m_ground.setPoints(p1, p2, p3, p4);
+    m_ground.calculate();
 }
 
 void Scene::draw() {
     m_line_x.draw();
     m_line_y.draw();
     m_line_z.draw();
+    
+    m_ground.draw();
 }

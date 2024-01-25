@@ -24,7 +24,6 @@ public:
 private:
     void setup();
 private:
-    unsigned int _VAO, _VBO, _EBO;
     std::vector<BufferPassColor> m_buffer;
 };
 

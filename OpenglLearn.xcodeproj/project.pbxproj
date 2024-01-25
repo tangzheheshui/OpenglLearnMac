@@ -19,6 +19,7 @@
 		65D475BA2B42EFBB004AE289 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B82B42EFBB004AE289 /* image.cpp */; };
 		65FA241E2B623321006062DB /* Line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FA241C2B623321006062DB /* Line.cpp */; };
 		65FA24222B623DE5006062DB /* scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FA24202B623DE5006062DB /* scene.cpp */; };
+		65FA24282B625981006062DB /* ImageRectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FA24262B625980006062DB /* ImageRectangle.cpp */; };
 		65FD8F102B44588A00A06A38 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FD8F0E2B44588A00A06A38 /* camera.cpp */; };
 		65FD8F1B2B45141E00A06A38 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FD8F192B45141E00A06A38 /* model.cpp */; };
 		65FD8F242B452BFC00A06A38 /* mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FD8F222B452BFC00A06A38 /* mesh.cpp */; };
@@ -78,6 +79,8 @@
 		65FA24232B6240E0006062DB /* frag_color */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_color; sourceTree = "<group>"; };
 		65FA24242B6240E0006062DB /* vert_color */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_color; sourceTree = "<group>"; };
 		65FA24252B6241B6006062DB /* BaseDraw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseDraw.h; sourceTree = "<group>"; };
+		65FA24262B625980006062DB /* ImageRectangle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ImageRectangle.cpp; sourceTree = "<group>"; };
+		65FA24272B625980006062DB /* ImageRectangle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ImageRectangle.hpp; sourceTree = "<group>"; };
 		65FD8F0C2B43F7E700A06A38 /* vert_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_image; sourceTree = "<group>"; };
 		65FD8F0D2B43F83400A06A38 /* frag_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_image; sourceTree = "<group>"; };
 		65FD8F0E2B44588A00A06A38 /* camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
@@ -197,6 +200,8 @@
 			children = (
 				65FA241C2B623321006062DB /* Line.cpp */,
 				65FA241D2B623321006062DB /* Line.hpp */,
+				65FA24262B625980006062DB /* ImageRectangle.cpp */,
+				65FA24272B625980006062DB /* ImageRectangle.hpp */,
 			);
 			path = shape;
 			sourceTree = "<group>";
@@ -282,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				650751C22B5E96CB00BB2098 /* pass.cpp in Sources */,
+				65FA24282B625981006062DB /* ImageRectangle.cpp in Sources */,
 				65D475B62B42D355004AE289 /* shader.cpp in Sources */,
 				65D475BA2B42EFBB004AE289 /* image.cpp in Sources */,
 				65FA241E2B623321006062DB /* Line.cpp in Sources */,

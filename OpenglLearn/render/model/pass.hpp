@@ -14,8 +14,9 @@
 #include "camera.hpp"
 #include "shader.hpp"
 #include "model_data.h"
+#include "../BaseDraw.h"
 
-class RenderPass {
+class RenderPass : public BaseDraw {
 public:
     RenderPass() {}
     virtual ~RenderPass() {}

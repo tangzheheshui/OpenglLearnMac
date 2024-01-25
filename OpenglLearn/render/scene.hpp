@@ -9,6 +9,7 @@
 #define scene_hpp
 
 #include "shape/Line.hpp"
+#include "shape/ImageRectangle.hpp"
 
 class Scene {
 private:
@@ -21,6 +22,7 @@ private:
     Line m_line_x;
     Line m_line_y;
     Line m_line_z;
+    ImageRectangle m_ground;
 };
 
 #endif /* scene_hpp */

@@ -61,7 +61,7 @@ void Image::setData() {
 }
 
 Image::~Image() {
-    
+    glDeleteTextures(1, &_texture);
 }
 
 bool Image::setPath(const char* filepath) {

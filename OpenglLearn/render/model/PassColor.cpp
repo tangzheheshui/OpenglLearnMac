@@ -64,9 +64,11 @@ bool PassColor::Draw(const glm::mat4 &matModel) {
 }
 
 void PassColor::setup() {
-    glGenVertexArrays(1, &_VAO);
-    glGenBuffers(1, &_VBO);
-    glGenBuffers(1, &_EBO);
+    if (_VBO == 0) {
+        glGenVertexArrays(1, &_VAO);
+        glGenBuffers(1, &_VBO);
+        glGenBuffers(1, &_EBO);
+    }
     
     glBindVertexArray(_VAO);
     
