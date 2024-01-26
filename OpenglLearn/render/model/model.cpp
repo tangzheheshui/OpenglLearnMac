@@ -241,10 +241,11 @@ void Model::genMesh() {
     
 }
 
-void Model::draw() {
+bool Model::draw() {
     for (auto mesh : m_mesh) {
         mesh->Draw(m_matModel);
     }
+    return true;
 }
 
 void Model::setScale(float scale) {

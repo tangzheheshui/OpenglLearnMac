@@ -8,21 +8,26 @@
 #ifndef scene_hpp
 #define scene_hpp
 
-#include "shape/Line.hpp"
-#include "shape/ImageRectangle.hpp"
+#include <vector>
+
+class BaseDraw;
 
 class Scene {
 private:
-    Scene() { calculate(); }
-    void calculate();
+    Scene() { createObjs(); }
+    void createObjs();
 public:
     static Scene& getScene();
+    
+    void beginDrawShadow();
+    void endDrawShadow();
+    void drawShadow();
+    
+    void beginDraw();
+    void endDraw();
     void draw();
 private:
-    Line m_line_x;
-    Line m_line_y;
-    Line m_line_z;
-    ImageRectangle m_ground;
+    std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
 };
 
 #endif /* scene_hpp */

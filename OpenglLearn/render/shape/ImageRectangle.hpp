@@ -17,7 +17,7 @@ class ImageRectangle : public BaseDraw {
 public:
     ImageRectangle() {}
     ~ImageRectangle();
-    void draw();
+    virtual bool draw() override;
     void setPoints(const glm::vec3 &pos1, const glm::vec3 &pos2, const glm::vec3 &pos3, const glm::vec3 &pos4);
     void setImagePath(const std::string &file) { m_image_path = file; }
     void setSetp(float w, float h);

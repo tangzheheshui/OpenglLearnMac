@@ -15,10 +15,10 @@ void Line::setData(const std::vector<glm::vec3> &points, const std::vector<unsig
     m_indices = indices;
 }
 
-void Line::draw() {
+bool Line::draw() {
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Color);
     if (!shader) {
-        return;
+        return false;
     }
     
     shader->use();
@@ -34,6 +34,7 @@ void Line::draw() {
     
     glLineWidth(m_fWidth);
     glDrawElements(GL_LINES, (int)m_indices.size(), GL_UNSIGNED_INT, 0);
+    return true;
 }
 
 void Line::calculate() {

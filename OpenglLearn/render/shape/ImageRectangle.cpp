@@ -10,7 +10,7 @@
 #include "../shader.hpp"
 #include "../camera.hpp"
 
-void ImageRectangle::draw() {
+bool ImageRectangle::draw() {
     if (_VBO == 0) {
         glGenVertexArrays(1, &_VAO);
         glGenBuffers(1, &_VBO);
@@ -34,7 +34,7 @@ void ImageRectangle::draw() {
     
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Image);
     if (!shader) {
-        return ;
+        return false;
     }
     
     shader->use();
@@ -48,6 +48,7 @@ void ImageRectangle::draw() {
     shader->setMat4("uMvp", mpMatrix);
     
     glDrawElements(GL_TRIANGLES, (GLsizei)m_indices.size(), GL_UNSIGNED_INT, 0);
+    return true;
 }
 
 void ImageRectangle::setPoints(const glm::vec3 &pos1, const glm::vec3 &pos2, const glm::vec3 &pos3, const glm::vec3 &pos4) {

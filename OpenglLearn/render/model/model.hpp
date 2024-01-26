@@ -13,12 +13,13 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "model_data.h"
+#include "../BaseDraw.h"
 
-class Model {
+class Model : public BaseDraw {
 public:
     Model();
     void LoadFile(const std::string &path);
-    void draw();
+    virtual bool draw() override;
     
     // 模型的属性
     void setScale(float scale);

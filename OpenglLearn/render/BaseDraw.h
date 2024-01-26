@@ -26,6 +26,7 @@ public:
             glDeleteBuffers(1, &_EBO);
         }
     }
+    virtual bool draw() = 0;
 protected:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;

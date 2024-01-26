@@ -11,8 +11,6 @@
 #include <iostream>
 #include <filesystem>
 
-#include "render/image.hpp"
-#include "render/model/model.hpp"
 #include "render/scene.hpp"
 #include "camera.hpp"
  
@@ -75,13 +73,7 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
- 
-    Image image;
-    image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/3.jpg");
- 
-    Model model;
-    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
-    model.setScale(0.02);
+    
     Camera::GetCamera().setPosition({-20,0,0});
     // render loop
     // -----------
@@ -92,13 +84,10 @@ int main()
         processInput(window);
  
         // render
-        //image.draw();
-        
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         Scene::getScene().draw();
-        model.draw();
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
