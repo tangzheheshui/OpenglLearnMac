@@ -80,8 +80,8 @@ int main()
     image.setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/3.jpg");
  
     Model model;
-    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/nanosuit/nanosuit.obj");
-    model.setScale(0.5);
+    model.LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+    model.setScale(0.02);
     Camera::GetCamera().setPosition({-20,0,0});
     // render loop
     // -----------
