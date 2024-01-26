@@ -12,14 +12,31 @@
 #include "shape/ImageRectangle.hpp"
 #include "shape/Line.hpp"
 #include "image.hpp"
+#include "Light.h"
 
 const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+GLuint Scene::_depthTexture = 0;
+glm::mat4 Scene::_lightVPMatrix;
+
 Scene& Scene::getScene() {
     static Scene instance;
     return instance;
+}
+
+Scene::Scene() {
+    glGenFramebuffers(1, &_depthMapFBO);
+    glGenTextures(1, &_depthTexture);
+    glBindTexture(GL_TEXTURE_2D, _depthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 
+                 SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    createObjs();
 }
 
 void Scene::createObjs() {
@@ -59,15 +76,15 @@ void Scene::createObjs() {
     
     // 模型
     std::shared_ptr<Model> objModel = std::make_shared<Model>();
-    objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
-    objModel->setScale(0.02);
+    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+    objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.obj");
+    objModel->setScale(0.01);
     
     // debug deep
     std::shared_ptr<Image> objImage = std::make_shared<Image>();
-    objImage->setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/brickwall.jpg");
-    
-    //objImage->setTextureID(_depthTexture);
-    //objImage->setShaderType(ShaderType::Debug_DeepTexture);
+    //objImage->setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/brickwall.jpg");
+    objImage->setTextureID(GetShadowTexture());
+    objImage->setShaderType(ShaderType::Debug_DeepTexture);
     
     // push 
     m_vec_drawobj.push_back(objGround);
@@ -88,19 +105,6 @@ void Scene::draw() {
 }
 
 void Scene::drawShadow() {
-    // 创建
-    if (_depthTexture == 0) {
-        glGenFramebuffers(1, &_depthMapFBO);
-        glGenTextures(1, &_depthTexture);
-        glBindTexture(GL_TEXTURE_2D, _depthTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 
-                     SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    }
-    
     // attach到fbo
     glBindFramebuffer(GL_FRAMEBUFFER, _depthMapFBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depthTexture, 0);
@@ -118,4 +122,19 @@ void Scene::drawShadow() {
         obj->drawShadow();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+glm::mat4 Scene::GetLightVPMatrix() {
+    if (_lightVPMatrix != glm::mat4()) {
+        return _lightVPMatrix;
+    }
+    glm::mat4 lightProjection, lightView;
+    glm::mat4 lightSpaceMatrix;
+    glm::vec3 lightPos = Light::GlobalLight().position;
+    float near_plane = 1.0f, far_plane = 7.5f;
+    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+    lightSpaceMatrix = lightProjection * lightView;
+    _lightVPMatrix = lightSpaceMatrix;
+    return _lightVPMatrix;
 }

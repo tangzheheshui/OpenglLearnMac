@@ -141,6 +141,10 @@ ShaderCache::ShaderCache() {
     if (auto shader = new Shader("vert_deepImage", "frag_deepImage")) {
         m_map_shader.insert(std::make_pair(ShaderType::Debug_DeepTexture, shader));
     }
+    
+    if (auto shader = new Shader("vert_ground", "frag_ground")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Ground, shader));
+    }
 }
 
 Shader* ShaderCache::GetShader(ShaderType type) {

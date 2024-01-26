@@ -8,6 +8,7 @@
 #include "PassTexture.hpp"
 #include "image.hpp"
 #include "../Light.h"
+#include "../scene.hpp"
 
 PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) { 
     m_mesh_data = meshData; 
@@ -77,13 +78,7 @@ bool PassTexture::setShadowShader(const glm::mat4 &matModel) {
     }
     shader->use();
     
-    glm::mat4 lightProjection, lightView;
-    glm::mat4 lightSpaceMatrix;
-    glm::vec3 lightPos = Light::GlobalLight().position;
-    float near_plane = 1.0f, far_plane = 7.5f;
-    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-    lightSpaceMatrix = lightProjection * lightView;
+    glm::mat4 lightSpaceMatrix = Scene::GetLightVPMatrix();
     shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
     shader->setMat4("model", matModel);
     return true;

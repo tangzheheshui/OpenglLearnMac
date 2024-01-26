@@ -7,6 +7,7 @@
 
 #include "PassColor.hpp"
 #include "../Light.h"
+#include "../scene.hpp"
 
 PassColor::PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) { 
     m_mesh_data = meshData;
@@ -20,9 +21,21 @@ PassColor::PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materai
     m_materail = matData;
 }
 
-bool PassColor::Draw(const glm::mat4 &matModel, bool bDrawShadow) {
-    setup();
+bool PassColor::setShadowShader(const glm::mat4 &matModel) {
+    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Shadow);
+    if (!shader) {
+        return false;
+    }
     
+    shader->use();
+    
+    glm::mat4 lightSpaceMatrix = Scene::GetLightVPMatrix();
+    shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    shader->setMat4("model", matModel);
+    return true;
+}
+
+bool PassColor::setShader(const glm::mat4 &matModel) {
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Color);
     if (!shader) {
         return false;
@@ -52,6 +65,22 @@ bool PassColor::Draw(const glm::mat4 &matModel, bool bDrawShadow) {
     // 相机位置
     auto cam_pos = Camera::GetCamera().getPossition();
     shader->setFloat3("uCameraPos", cam_pos.x, cam_pos.y, cam_pos.z);
+    return true;
+}
+
+bool PassColor::Draw(const glm::mat4 &matModel, bool bDrawShadow) {
+    bool ret = false;
+    if (bDrawShadow) {
+        ret = setShadowShader(matModel);
+    } else {
+        ret = setShader(matModel);
+    }
+    
+    if (!ret) {
+        return ret;
+    }
+    
+    setup();
   
     // 绘制网格
     glEnable(GL_DEPTH_TEST);

@@ -9,6 +9,7 @@
 #include "../image.hpp"
 #include "../shader.hpp"
 #include "../camera.hpp"
+#include "../scene.hpp"
 
 bool ImageRectangle::draw() {
     if (_VBO == 0) {
@@ -32,7 +33,7 @@ bool ImageRectangle::draw() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     
-    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Image);
+    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Ground);
     if (!shader) {
         return false;
     }
@@ -44,8 +45,16 @@ bool ImageRectangle::draw() {
     glBindTexture(GL_TEXTURE_2D, texture);
     shader->setInt("uTexture", 0);
     
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, Scene::GetShadowTexture());
+    shader->setInt("uTextureShadowMap", 1);
+    
+    // 矩阵
+    glm::mat4 model(1.f);
+    shader->setMat4("uModel", model);
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
-    shader->setMat4("uMvp", mpMatrix);
+    shader->setMat4("uVP", mpMatrix);
+    shader->setMat4("uLightSpaceMatrix", Scene::GetLightVPMatrix());
     
     glDrawElements(GL_TRIANGLES, (GLsizei)m_indices.size(), GL_UNSIGNED_INT, 0);
     return true;

@@ -10,22 +10,25 @@
 
 #include <vector>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 class BaseDraw;
 
 class Scene {
 private:
-    Scene() { createObjs(); }
+    Scene();
     void createObjs();
 public:
     static Scene& getScene();
-    
+    static GLuint GetShadowTexture() { return _depthTexture; }
+    static glm::mat4 GetLightVPMatrix();
     void drawShadow();
     void draw();
 private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
     GLuint _depthMapFBO = 0;
-    GLuint _depthTexture = 0;
+    static GLuint _depthTexture;
+    static glm::mat4 _lightVPMatrix;
 };
 
 #endif /* scene_hpp */
