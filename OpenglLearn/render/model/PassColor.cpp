@@ -20,7 +20,7 @@ PassColor::PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materai
     m_materail = matData;
 }
 
-bool PassColor::Draw(const glm::mat4 &matModel) {
+bool PassColor::Draw(const glm::mat4 &matModel, bool bDrawShadow) {
     setup();
     
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Color);

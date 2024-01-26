@@ -47,7 +47,9 @@ Shader::Shader(const std::string &vertPath, const std::string &fragPath) {
     glGetShaderiv(iVertexShader, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(iVertexShader, 512, nullptr, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;    }
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;    
+        assert(0);
+    }
     
     // fragment
     unsigned int iFragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -57,6 +59,7 @@ Shader::Shader(const std::string &vertPath, const std::string &fragPath) {
     if (!success) {
         glGetShaderInfoLog(iFragment, 512, nullptr, infoLog);
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        assert(0);
     }
     
     // program
@@ -129,6 +132,14 @@ ShaderCache::ShaderCache() {
     
     if (auto shader = new Shader("vert_model_color", "frag_model_color")) {
         m_map_shader.insert(std::make_pair(ShaderType::Model_Color, shader));
+    }
+    
+    if (auto shader = new Shader("vert_shadow", "frag_shadow")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Shadow, shader));
+    }
+    
+    if (auto shader = new Shader("vert_deepImage", "frag_deepImage")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Debug_DeepTexture, shader));
     }
 }
 

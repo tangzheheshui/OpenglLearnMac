@@ -9,6 +9,7 @@
 #define scene_hpp
 
 #include <vector>
+#include <glad/glad.h>
 
 class BaseDraw;
 
@@ -19,15 +20,12 @@ private:
 public:
     static Scene& getScene();
     
-    void beginDrawShadow();
-    void endDrawShadow();
     void drawShadow();
-    
-    void beginDraw();
-    void endDraw();
     void draw();
 private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
+    GLuint _depthMapFBO = 0;
+    GLuint _depthTexture = 0;
 };
 
 #endif /* scene_hpp */

@@ -20,6 +20,7 @@ public:
     Model();
     void LoadFile(const std::string &path);
     virtual bool draw() override;
+    virtual bool drawShadow() override;
     
     // 模型的属性
     void setScale(float scale);

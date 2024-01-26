@@ -38,6 +38,8 @@ enum class ShaderType {
     Color,
     Model_Color,
     Model_Texture,
+    Shadow,
+    Debug_DeepTexture,
 };
 
 class ShaderCache {

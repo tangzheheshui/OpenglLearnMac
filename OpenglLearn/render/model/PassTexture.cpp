@@ -22,9 +22,74 @@ PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Mat
     }
 }
 
-bool PassTexture::Draw(const glm::mat4 &matModel) {
+bool PassTexture::Draw(const glm::mat4 &matModel, bool bDrawShadow) {
+    bool ret = false;
+    if (bDrawShadow) {
+        ret = setShadowShader(matModel);
+    } else {
+        ret = setShader(matModel);
+    }
+    
+    if (!ret) {
+        return ret;
+    }
+    
     setup();
     
+    // 绘制网格
+    glBindVertexArray(_VAO);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glDrawElements(GL_TRIANGLES, (GLsizei)m_mesh_data->indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+    return true;
+}
+
+void PassTexture::setup() {
+    if (_VBO == 0) {
+        glGenVertexArrays(1, &_VAO);
+        glGenBuffers(1, &_VBO);
+        glGenBuffers(1, &_EBO);
+    }
+    
+    glBindVertexArray(_VAO);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, m_buffer.size() * sizeof(BufferPassTexture), m_buffer.data() , GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)0);
+    glEnableVertexAttribArray(0);
+    
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+}
+
+bool PassTexture::setShadowShader(const glm::mat4 &matModel) {
+    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Shadow);
+    if (!shader) {
+        return false;
+    }
+    shader->use();
+    
+    glm::mat4 lightProjection, lightView;
+    glm::mat4 lightSpaceMatrix;
+    glm::vec3 lightPos = Light::GlobalLight().position;
+    float near_plane = 1.0f, far_plane = 7.5f;
+    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+    lightSpaceMatrix = lightProjection * lightView;
+    shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    shader->setMat4("model", matModel);
+    return true;
+}
+
+bool PassTexture::setShader(const glm::mat4 &matModel) {
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Texture);
     if (!shader) {
         return false;
@@ -86,37 +151,5 @@ bool PassTexture::Draw(const glm::mat4 &matModel) {
     // 相机位置
     auto cam_pos = Camera::GetCamera().getPossition();
     shader->setFloat3("uCameraPos", cam_pos.x, cam_pos.y, cam_pos.z);
-    
-    // 绘制网格
-    glBindVertexArray(_VAO);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glDrawElements(GL_TRIANGLES, (GLsizei)m_mesh_data->indices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
     return true;
-}
-
-void PassTexture::setup() {
-    if (_VBO == 0) {
-        glGenVertexArrays(1, &_VAO);
-        glGenBuffers(1, &_VBO);
-        glGenBuffers(1, &_EBO);
-    }
-    
-    glBindVertexArray(_VAO);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, m_buffer.size() * sizeof(BufferPassTexture), m_buffer.data() , GL_STATIC_DRAW);
-    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)0);
-    glEnableVertexAttribArray(0);
-    
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
 }

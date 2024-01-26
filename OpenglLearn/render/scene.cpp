@@ -11,6 +11,11 @@
 #include "model/model.hpp"
 #include "shape/ImageRectangle.hpp"
 #include "shape/Line.hpp"
+#include "image.hpp"
+
+const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
 
 Scene& Scene::getScene() {
     static Scene instance;
@@ -57,16 +62,60 @@ void Scene::createObjs() {
     objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
     objModel->setScale(0.02);
     
+    // debug deep
+    std::shared_ptr<Image> objImage = std::make_shared<Image>();
+    objImage->setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/brickwall.jpg");
+    
+    //objImage->setTextureID(_depthTexture);
+    //objImage->setShaderType(ShaderType::Debug_DeepTexture);
+    
     // push 
     m_vec_drawobj.push_back(objGround);
     m_vec_drawobj.push_back(objModel);
     m_vec_drawobj.push_back(line_x);
     m_vec_drawobj.push_back(line_y);
     m_vec_drawobj.push_back(line_z);
+    m_vec_drawobj.push_back(objImage);
 }
 
 void Scene::draw() {
+    glViewport(0, 0, SCR_WIDTH*2, SCR_HEIGHT*2);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     for (auto obj : m_vec_drawobj) {
         obj->draw();
     }
+}
+
+void Scene::drawShadow() {
+    // 创建
+    if (_depthTexture == 0) {
+        glGenFramebuffers(1, &_depthMapFBO);
+        glGenTextures(1, &_depthTexture);
+        glBindTexture(GL_TEXTURE_2D, _depthTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 
+                     SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+    
+    // attach到fbo
+    glBindFramebuffer(GL_FRAMEBUFFER, _depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depthTexture, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    
+    // bind
+    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    glBindFramebuffer(GL_FRAMEBUFFER, _depthMapFBO);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    
+    // draw
+    for (auto obj : m_vec_drawobj) {
+        obj->drawShadow();
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

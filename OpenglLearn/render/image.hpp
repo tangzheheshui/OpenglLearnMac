@@ -11,19 +11,22 @@
 #include <string>
 #include <map>
 #include "BaseDraw.h"
+#include "shader.hpp"
 
 class Image : public BaseDraw {
 public:
     Image();
     ~Image();
     bool setPath(const char* filepath);
-    bool draw();
+    void setTextureID(unsigned int tex) { _texture = tex; }
+    void setShaderType(ShaderType type) { m_type = type; }
+    virtual bool draw() override;
     static unsigned int TextureFromFile(const std::string &filename);
     static unsigned int TextureFromMem(unsigned char* buffer, int len);
 private:
     void setData();
-    unsigned int _texture;
-    std::string _filename;
+    unsigned int _texture = 0;
+    ShaderType m_type = ShaderType::Image;
     static std::map<const std::string, unsigned int> s_map_texture_cache;
 };
 

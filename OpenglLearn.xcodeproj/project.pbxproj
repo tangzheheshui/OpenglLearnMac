@@ -81,6 +81,10 @@
 		65FA24252B6241B6006062DB /* BaseDraw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseDraw.h; sourceTree = "<group>"; };
 		65FA24262B625980006062DB /* ImageRectangle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ImageRectangle.cpp; sourceTree = "<group>"; };
 		65FA24272B625980006062DB /* ImageRectangle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ImageRectangle.hpp; sourceTree = "<group>"; };
+		65FA24292B63D982006062DB /* frag_shadow */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_shadow; sourceTree = "<group>"; };
+		65FA242A2B63D982006062DB /* vert_shadow */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_shadow; sourceTree = "<group>"; };
+		65FA242B2B63E3A1006062DB /* vert_deepImage */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_deepImage; sourceTree = "<group>"; };
+		65FA242C2B63E3A2006062DB /* frag_deepImage */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_deepImage; sourceTree = "<group>"; };
 		65FD8F0C2B43F7E700A06A38 /* vert_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_image; sourceTree = "<group>"; };
 		65FD8F0D2B43F83400A06A38 /* frag_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_image; sourceTree = "<group>"; };
 		65FD8F0E2B44588A00A06A38 /* camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
@@ -216,6 +220,10 @@
 		65FD8F0B2B43F7A300A06A38 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				65FA242C2B63E3A2006062DB /* frag_deepImage */,
+				65FA242B2B63E3A1006062DB /* vert_deepImage */,
+				65FA24292B63D982006062DB /* frag_shadow */,
+				65FA242A2B63D982006062DB /* vert_shadow */,
 				65FA24232B6240E0006062DB /* frag_color */,
 				65FA24242B6240E0006062DB /* vert_color */,
 				650751962B5E8A4400BB2098 /* frag_model_color */,

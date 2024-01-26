@@ -14,6 +14,7 @@ class Light {
 public:
     static Light& GlobalLight() {
         static Light light;
+        light.position = {-2.0f, 4.0f, -1.0f};
         light.direction = {1, -1, 0};
         light.ambient = {0.5f, 0.5f, 0.5f};
         light.diffuse = {0.5f, 0.5f, 0.5f};
@@ -21,7 +22,7 @@ public:
         return light;
     }
 public:
-    //vec3 position;
+    glm::vec3 position;
     glm::vec3 direction;
     glm::vec3 ambient;
     glm::vec3 diffuse;

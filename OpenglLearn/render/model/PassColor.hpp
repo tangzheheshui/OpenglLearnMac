@@ -19,8 +19,7 @@ class PassColor : public RenderPass {
 public:
     PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
     
-    virtual bool Draw(const glm::mat4 &matModel) override;
-    
+    virtual bool Draw(const glm::mat4 &matModel, bool bDrawShadow) override;
 private:
     void setup();
 private:

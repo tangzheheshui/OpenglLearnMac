@@ -27,6 +27,7 @@ public:
         }
     }
     virtual bool draw() = 0;
+    virtual bool drawShadow() { return false; }
 protected:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;

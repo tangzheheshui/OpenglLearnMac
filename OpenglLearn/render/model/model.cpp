@@ -241,9 +241,16 @@ void Model::genMesh() {
     
 }
 
+bool Model::drawShadow() {
+    for (auto mesh : m_mesh) {
+        mesh->Draw(m_matModel, true);
+    }
+    return true;
+}
+
 bool Model::draw() {
     for (auto mesh : m_mesh) {
-        mesh->Draw(m_matModel);
+        mesh->Draw(m_matModel, false);
     }
     return true;
 }
