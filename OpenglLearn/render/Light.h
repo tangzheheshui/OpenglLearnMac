@@ -14,7 +14,7 @@ class Light {
 public:
     static Light& GlobalLight() {
         static Light light;
-        light.position = {-2.0f, 4.0f, -1.0f};
+        light.position = {-4.0f, 4.0f, -1.0f};
         light.direction = {1, -1, 0};
         light.ambient = {0.5f, 0.5f, 0.5f};
         light.diffuse = {0.5f, 0.5f, 0.5f};
