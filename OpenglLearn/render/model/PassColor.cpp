@@ -11,13 +11,6 @@
 
 PassColor::PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) { 
     m_mesh_data = meshData;
-    m_buffer.reserve(meshData->positions.size());
-    for (int i = 0; i < meshData->positions.size(); i++) {
-        BufferPassColor data;
-        data.m_pos = meshData->positions[i];
-        data.m_normal = meshData->normals[i];
-        m_buffer.push_back(data);
-    }
     m_materail = matData;
 }
 
@@ -102,17 +95,18 @@ void PassColor::setup() {
     glBindVertexArray(_VAO);
     
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, m_buffer.size() * sizeof(BufferPassColor), m_buffer.data() , GL_STATIC_DRAW);
+    size_t size1 = m_mesh_data->positions.size() * sizeof(glm::vec3);
+    size_t size2 = m_mesh_data->normals.size() * sizeof(glm::vec3);
+    glBufferData(GL_ARRAY_BUFFER, (size1 + size2), nullptr , GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size1, m_mesh_data->positions.data());
+    glBufferSubData(GL_ARRAY_BUFFER, size1, size2, m_mesh_data->normals.data());
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassColor), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassColor), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)size1);
     glEnableVertexAttribArray(1);
-    
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(BufferPassColor), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
 }

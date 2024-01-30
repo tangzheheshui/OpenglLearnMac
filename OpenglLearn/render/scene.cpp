@@ -78,7 +78,7 @@ void Scene::createObjs() {
     
     // 模型
     std::shared_ptr<Model> objModel = std::make_shared<Model>();
-    objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+    objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.obj");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.obj");
     objModel->setScale(0.01);
     

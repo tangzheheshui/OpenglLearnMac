@@ -13,14 +13,6 @@
 PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) { 
     m_mesh_data = meshData; 
     m_materail = matData; 
-    m_buffer.reserve(meshData->positions.size());
-    for (int i = 0; i < meshData->positions.size(); i++) {
-        BufferPassTexture data;
-        data.m_pos = meshData->positions[i];
-        data.m_normal = meshData->normals[i];
-        data.m_coord = meshData->coords[i];
-        m_buffer.push_back(data);
-    }
 }
 
 bool PassTexture::Draw(const glm::mat4 &matModel, bool bDrawShadow) {
@@ -55,19 +47,26 @@ void PassTexture::setup() {
     
     glBindVertexArray(_VAO);
     
+    size_t size1 = m_mesh_data->positions.size() * sizeof(glm::vec3);
+    size_t size2 = m_mesh_data->normals.size() * sizeof(glm::vec3);
+    size_t size3 = m_mesh_data->coords.size() * sizeof(glm::vec2);
+    
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, m_buffer.size() * sizeof(BufferPassTexture), m_buffer.data() , GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (size1 + size2 + size3), nullptr, GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size1, m_mesh_data->positions.data());
+    glBufferSubData(GL_ARRAY_BUFFER, size1, size2, m_mesh_data->normals.data());
+    glBufferSubData(GL_ARRAY_BUFFER, size1 + size2, size3, m_mesh_data->coords.data());
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)size1);
     glEnableVertexAttribArray(1);
     
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BufferPassTexture), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(size1 + size2));
     glEnableVertexAttribArray(2);
 }
 
