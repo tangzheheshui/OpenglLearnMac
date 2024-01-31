@@ -24,6 +24,7 @@ public:
     static glm::mat4 GetLightVPMatrix();
     void drawShadow();
     void draw();
+    void update();
 private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
     GLuint _depthMapFBO = 0;

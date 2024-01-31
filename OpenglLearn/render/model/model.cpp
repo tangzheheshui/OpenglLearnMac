@@ -11,6 +11,7 @@
 #include <filesystem>
 
 Model::Model() {
+    m_FinalBoneMatrices.resize(100, glm::mat4(1.0));
 }
 
 void Model::LoadFile(const std::string &path) {
@@ -23,7 +24,7 @@ void Model::LoadFile(const std::string &path) {
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
         std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-        return;
+        //return;
     }
     
     // retrieve the directory path of the filepath
@@ -35,7 +36,10 @@ void Model::LoadFile(const std::string &path) {
     processMaterail(scene);
     
     // process ASSIMP's root node recursively
-    processNode(scene->mRootNode, scene);
+    processNode(scene->mRootNode, scene, nullptr);
+    
+    // 解析动画
+    processAnimation(scene);
 }
 
 void Model::processTexture(const aiScene* scene) {
@@ -54,6 +58,45 @@ void Model::processTexture(const aiScene* scene) {
         std::shared_ptr<std::vector<char>> pData = std::make_shared<std::vector<char>>();
         pData->assign(buf, buf + texture->mWidth);
         m_model_data.map_image[name] = pData;
+    }
+}
+
+void Model::processAnimation(const aiScene* scene) {
+    if (!scene || !scene->HasAnimations()) {
+        return;
+    }
+    for (unsigned int i = 0; i < scene->mNumAnimations; i++) {
+        Animation animation;
+        auto pAni = scene->mAnimations[i];
+        animation.name = std::string(pAni->mName.data);
+        animation.duration = pAni->mDuration;
+        animation.ticksPerSecond = pAni->mTicksPerSecond;
+        
+        for(int j = 0; j < pAni->mNumChannels; j++) {
+            auto channel = pAni->mChannels[j];
+            NodeAnim nodeAni;
+            nodeAni.name = channel->mNodeName.C_Str();
+            
+            // position
+            for (int indexPos = 0; indexPos < channel->mNumPositionKeys; indexPos++) {
+                KeyPosition key;
+                key.timeStamp = channel->mPositionKeys[indexPos].mTime;
+                key.position = AssimpGLMHelpers::GetGLMVec(channel->mPositionKeys[indexPos].mValue);
+                nodeAni.positions.push_back(key);
+            }
+            
+            for (int indexPos = 0; indexPos < channel->mNumRotationKeys; indexPos++) {
+                KeyRotation key;
+                key.timeStamp = channel->mRotationKeys[indexPos].mTime;
+                key.qua = AssimpGLMHelpers::GetGLMQuat(channel->mRotationKeys[indexPos].mValue);
+                nodeAni.rotations.push_back(key);
+            }
+            
+            animation.nodeAnims.push_back(nodeAni);
+        }
+        // 目前只取一个动画
+        m_model_data.animation = animation;
+        break;
     }
 }
 
@@ -103,16 +146,71 @@ void Model::processMaterail(const aiScene* scene) {
     }
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene) {
+void Model::processNode(aiNode* node, const aiScene* scene, std::shared_ptr<Node> nodeParent) {
     for(unsigned int i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         m_mesh.push_back(processMesh(mesh, scene));
     }
     
+    if (!nodeParent) {
+        nodeParent = std::make_shared<Node>();
+    }
+    nodeParent->name = node->mName.data;
+    nodeParent->transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(node->mTransformation);
+    nodeParent->child.resize(node->mNumChildren);
+    m_model_data.nodes.push_back(nodeParent);
     for(unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        processNode(node->mChildren[i], scene);
+        processNode(node->mChildren[i], scene, nodeParent->child.at(i));
+    }
+}
+
+void Model::processBoneWeightForVertices(aiMesh *mesh, std::shared_ptr<MeshData> meshData) {
+    if (!mesh) {
+        return;
+    }
+    
+    meshData->boneIDs.resize(meshData->positions.size(), glm::ivec4(-1));
+    meshData->weights.resize(meshData->positions.size());
+    
+    int m_BoneCounter = 0;
+    
+    for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+    {
+        int boneID = -1;
+        std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+        if (m_model_data.mapBoneInfo.find(boneName) == m_model_data.mapBoneInfo.end())
+        {
+            BoneInfo newBoneInfo;
+            newBoneInfo.index = m_BoneCounter;
+            newBoneInfo.offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(
+                                                                            mesh->mBones[boneIndex]->mOffsetMatrix);
+            m_model_data.mapBoneInfo[boneName] = newBoneInfo;
+            boneID = m_BoneCounter;
+            m_BoneCounter++;
+        }
+        else
+        {
+            boneID = m_model_data.mapBoneInfo[boneName].index;
+        }
+        
+        assert(boneID != -1);
+        
+        auto weights = mesh->mBones[boneIndex]->mWeights;
+        int numWeights = mesh->mBones[boneIndex]->mNumWeights;
+        for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+        {
+            int vertexId = weights[weightIndex].mVertexId;
+            float weight = weights[weightIndex].mWeight;
+            assert(vertexId <= meshData->positions.size());
+            glm::ivec4 &curBoneID = meshData->boneIDs[vertexId];
+            glm::vec4 &curWeitht = meshData->weights[vertexId];
+            if (curBoneID.x == -1) {
+                curBoneID.x = boneID;
+                curWeitht.x = weight;
+            }
+        }
     }
 }
 
@@ -128,15 +226,13 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         float x = mesh->mVertices[i].x;
         float y = mesh->mVertices[i].y;
         float z = mesh->mVertices[i].z;
-        meshData->positions.push_back({x, y, z});
+        
+        meshData->positions.push_back(AssimpGLMHelpers::GetGLMVec(mesh->mVertices[i]));
         
         // normals
         if (mesh->HasNormals())
         {
-            x = mesh->mNormals[i].x;
-            y = mesh->mNormals[i].y;
-            z = mesh->mNormals[i].z;
-            meshData->normals.push_back({x, y, z});
+            meshData->normals.push_back(AssimpGLMHelpers::GetGLMVec(mesh->mNormals[i]));
         }
         
         // texture coordinates
@@ -197,6 +293,9 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     
     // 材质索引
     meshData->index_materail = mesh->mMaterialIndex;
+    
+    processBoneWeightForVertices(mesh, meshData);
+    
     auto pMesh = std::make_shared<Mesh>(meshData, m_model_data.materails[mesh->mMaterialIndex]);
     return pMesh;
 }
@@ -248,6 +347,43 @@ bool Model::drawShadow() {
     return true;
 }
 
+void Model::updateNode(Node* node, Node* nodeParent) {
+    if (!node) {
+        return;
+    }
+    
+    if (nodeParent) {
+        auto nodeAni = m_model_data.animation.findNodeAnim(node->name);
+        if (nodeAni) {
+            node->matCur = nodeParent->matCur * nodeAni->getMat4(0);
+        } else {
+            node->matCur = nodeParent->matCur * nodeParent->transformation;
+        }
+    }
+    
+    auto iter = m_model_data.mapBoneInfo.find(node->name);
+    if (iter != m_model_data.mapBoneInfo.end()) {
+        int indexBone = iter->second.index;
+        glm::mat4 offset = iter->second.offset;
+        m_FinalBoneMatrices[indexBone] = node->matCur * offset;
+    }
+    
+    for (int i = 0; i < node->child.size(); i++) {
+        updateNode(node->child.at(i).get(), node);
+    }
+}
+
+void Model::update() {
+    if (!m_model_data.nodes.empty()) {
+        updateNode(m_model_data.nodes.front().get(), nullptr);
+    }
+    
+    // 更新node
+    for (auto mesh : m_mesh) {
+        //mesh->Draw(m_matModel, false);
+    }
+}
+
 bool Model::draw() {
     for (auto mesh : m_mesh) {
         mesh->Draw(m_matModel, false);
@@ -258,3 +394,8 @@ bool Model::draw() {
 void Model::setScale(float scale) {
     m_matModel = glm::scale(m_matModel, glm::vec3(scale, scale, scale));
 }
+
+void Model::setPosition(const glm::vec3 &pos) {
+    m_matModel = glm::translate(m_matModel, pos);
+}
+
