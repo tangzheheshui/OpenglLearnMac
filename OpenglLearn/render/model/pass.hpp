@@ -42,6 +42,7 @@ public:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
     unsigned int _EBO = 0;
+    std::shared_ptr<std::vector<glm::mat4>> m_matBone;
 };
 
 #endif /* pass_hpp */

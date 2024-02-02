@@ -83,6 +83,7 @@ int main()
         // -----
         processInput(window);
  
+        Scene::getScene().update();
         // render
         Scene::getScene().drawShadow();
         Scene::getScene().draw();

@@ -14,6 +14,7 @@
 #include <glm/glm.hpp>
 #include "model_data.h"
 #include "../BaseDraw.h"
+#include <time.h>
 
 class AssimpGLMHelpers
 {
@@ -73,7 +74,9 @@ private:
     std::string m_filepath;
     std::vector<std::shared_ptr<Mesh>> m_mesh;
     ModelData m_model_data;
-    std::vector<glm::mat4> m_FinalBoneMatrices;
+    std::shared_ptr<std::vector<glm::mat4>> m_FinalBoneMatrices;
+    clock_t m_clock;
+    float m_anim_ratio = 0.f;
 };
 
 #endif /* model_hpp */

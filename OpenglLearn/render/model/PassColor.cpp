@@ -30,6 +30,9 @@ bool PassColor::setShadowShader(const glm::mat4 &matModel) {
 
 bool PassColor::setShader(const glm::mat4 &matModel) {
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Color);
+    if (m_matBone && !m_matBone->empty()) {
+        shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Color_Anim);
+    }
     if (!shader) {
         return false;
     }
@@ -58,6 +61,13 @@ bool PassColor::setShader(const glm::mat4 &matModel) {
     // 相机位置
     auto cam_pos = Camera::GetCamera().getPossition();
     shader->setFloat3("uCameraPos", cam_pos.x, cam_pos.y, cam_pos.z);
+    
+    // boneMat
+    if (m_matBone && !m_matBone->empty()) {
+        for (int i = 0; i < m_matBone->size(); ++i) {
+            shader->setMat4("uFinalBonesMatrices[" + std::to_string(i) + "]", m_matBone->at(i));
+        }
+    }
     return true;
 }
 
@@ -93,20 +103,40 @@ void PassColor::setup() {
     }
     
     glBindVertexArray(_VAO);
-    
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    
+    bool hasAnim = !m_mesh_data->boneIDs.empty();
+    
     size_t size1 = m_mesh_data->positions.size() * sizeof(glm::vec3);
     size_t size2 = m_mesh_data->normals.size() * sizeof(glm::vec3);
-    glBufferData(GL_ARRAY_BUFFER, (size1 + size2), nullptr , GL_STATIC_DRAW);
+    size_t size3 = m_mesh_data->boneIDs.size() * sizeof(glm::ivec4);
+    size_t size4 = m_mesh_data->weights.size() * sizeof(glm::vec4);
+    size_t totalsize = size1 + size2;
+    if (hasAnim) {
+        totalsize += (size3 + size4);
+    }
+    
+    glBufferData(GL_ARRAY_BUFFER, totalsize, nullptr , GL_STATIC_DRAW);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size1, m_mesh_data->positions.data());
     glBufferSubData(GL_ARRAY_BUFFER, size1, size2, m_mesh_data->normals.data());
     
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
     glEnableVertexAttribArray(0);
     
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)size1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)size1);
     glEnableVertexAttribArray(1);
+    
+    if (hasAnim) {
+        glBufferSubData(GL_ARRAY_BUFFER, size1 + size2, size3, m_mesh_data->boneIDs.data());
+        glBufferSubData(GL_ARRAY_BUFFER, size1 + size2 + size3, size4, m_mesh_data->weights.data());
+        
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 4, GL_INT, GL_FALSE, sizeof(glm::ivec4), (void*)(size1 + size2));
+        
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)(size1 + size2 + size3));
+    }
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
 }

@@ -11,7 +11,7 @@
 #include <filesystem>
 
 Model::Model() {
-    m_FinalBoneMatrices.resize(100, glm::mat4(1.0));
+    m_clock = clock();
 }
 
 void Model::LoadFile(const std::string &path) {
@@ -24,7 +24,8 @@ void Model::LoadFile(const std::string &path) {
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
         std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-        //return;
+        assert(0);
+        return;
     }
     
     // retrieve the directory path of the filepath
@@ -76,7 +77,7 @@ void Model::processAnimation(const aiScene* scene) {
             auto channel = pAni->mChannels[j];
             NodeAnim nodeAni;
             nodeAni.name = channel->mNodeName.C_Str();
-            
+            printf("parserAni, nodeName = %s\n", nodeAni.name.c_str());
             // position
             for (int indexPos = 0; indexPos < channel->mNumPositionKeys; indexPos++) {
                 KeyPosition key;
@@ -157,8 +158,14 @@ void Model::processNode(aiNode* node, const aiScene* scene, std::shared_ptr<Node
         nodeParent = std::make_shared<Node>();
     }
     nodeParent->name = node->mName.data;
+    printf("parserNode, nodeName = %s\n", nodeParent->name.c_str());
     nodeParent->transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(node->mTransformation);
-    nodeParent->child.resize(node->mNumChildren);
+    nodeParent->child.reserve(node->mNumChildren);
+    for(unsigned int i = 0; i < node->mNumChildren; i++)
+    {
+        nodeParent->child.push_back(std::make_shared<Node>());
+    }
+    
     m_model_data.nodes.push_back(nodeParent);
     for(unsigned int i = 0; i < node->mNumChildren; i++)
     {
@@ -171,7 +178,7 @@ void Model::processBoneWeightForVertices(aiMesh *mesh, std::shared_ptr<MeshData>
         return;
     }
     
-    meshData->boneIDs.resize(meshData->positions.size(), glm::ivec4(-1));
+    meshData->boneIDs.resize(meshData->positions.size(), glm::vec4(-1));
     meshData->weights.resize(meshData->positions.size());
     
     int m_BoneCounter = 0;
@@ -197,6 +204,9 @@ void Model::processBoneWeightForVertices(aiMesh *mesh, std::shared_ptr<MeshData>
         
         assert(boneID != -1);
         
+        printf("parser boneID, boneID = %d\n", boneID);
+        
+        int boneIDNew = boneID;
         auto weights = mesh->mBones[boneIndex]->mWeights;
         int numWeights = mesh->mBones[boneIndex]->mNumWeights;
         for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
@@ -206,12 +216,23 @@ void Model::processBoneWeightForVertices(aiMesh *mesh, std::shared_ptr<MeshData>
             assert(vertexId <= meshData->positions.size());
             glm::ivec4 &curBoneID = meshData->boneIDs[vertexId];
             glm::vec4 &curWeitht = meshData->weights[vertexId];
+            // printf("parser vertex, vertexId = %d, weight = %f\n", vertexId, weight);
             if (curBoneID.x == -1) {
-                curBoneID.x = boneID;
+                curBoneID.x = boneIDNew;
                 curWeitht.x = weight;
+            } else if (curBoneID.y == -1) {
+                curBoneID.y = boneIDNew;
+                curWeitht.y = weight;
+            } else if (curBoneID.z == -1) {
+                curBoneID.z = boneIDNew;
+                curWeitht.z = weight;
+            } else if (curBoneID.w == -1) {
+                curBoneID.w = boneIDNew;
+                curWeitht.w = weight;
             }
         }
     }
+    int a = 0;
 }
 
 std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
@@ -355,7 +376,7 @@ void Model::updateNode(Node* node, Node* nodeParent) {
     if (nodeParent) {
         auto nodeAni = m_model_data.animation.findNodeAnim(node->name);
         if (nodeAni) {
-            node->matCur = nodeParent->matCur * nodeAni->getMat4(0);
+            node->matCur = nodeParent->matCur * nodeAni->getMat4(m_anim_ratio);
         } else {
             node->matCur = nodeParent->matCur * nodeParent->transformation;
         }
@@ -365,8 +386,10 @@ void Model::updateNode(Node* node, Node* nodeParent) {
     if (iter != m_model_data.mapBoneInfo.end()) {
         int indexBone = iter->second.index;
         glm::mat4 offset = iter->second.offset;
-        m_FinalBoneMatrices[indexBone] = node->matCur * offset;
+        m_FinalBoneMatrices.get()->at(indexBone) = node->matCur * offset;
     }
+    
+    printf("checkNode, nodeName = %s\n", node->name.c_str());
     
     for (int i = 0; i < node->child.size(); i++) {
         updateNode(node->child.at(i).get(), node);
@@ -374,18 +397,23 @@ void Model::updateNode(Node* node, Node* nodeParent) {
 }
 
 void Model::update() {
-    if (!m_model_data.nodes.empty()) {
+    if (!m_model_data.mapBoneInfo.empty()) {
+        if (!m_FinalBoneMatrices) {
+            m_FinalBoneMatrices = std::make_shared<std::vector<glm::mat4>>();
+            m_FinalBoneMatrices.get()->resize(100, glm::mat4(1.0));
+        }
+        
+        clock_t det = (clock() - m_clock);
+        clock_t cur = det % (5 * CLOCKS_PER_SEC);
+        m_anim_ratio = cur / (5.0 * CLOCKS_PER_SEC);
+        printf("update ratio, m_anim_ratio = %f, cur = %d\n", m_anim_ratio, cur);
         updateNode(m_model_data.nodes.front().get(), nullptr);
-    }
-    
-    // 更新node
-    for (auto mesh : m_mesh) {
-        //mesh->Draw(m_matModel, false);
     }
 }
 
 bool Model::draw() {
     for (auto mesh : m_mesh) {
+        mesh->setBoneMat(m_FinalBoneMatrices);
         mesh->Draw(m_matModel, false);
     }
     return true;

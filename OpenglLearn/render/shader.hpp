@@ -41,6 +41,7 @@ enum class ShaderType {
     Shadow,
     Debug_DeepTexture,
     Ground,
+    Model_Color_Anim,
 };
 
 class ShaderCache {

@@ -70,20 +70,17 @@ struct NodeAnim {
     }
     
     glm::mat4 getPosition(float ratio) {
-        glm::mat4 ret;
-        if (1 || 1 == positions.size()) {
-            return glm::translate(glm::mat4(1.0f), positions[0].position);
-        }
-        return ret;
+        int index = ratio * positions.size();
+        index = (index == positions.size()) ? (index-1) : index;
+        printf("getposition, index = %d, total_size = %d\n", index, positions.size());
+        return glm::translate(glm::mat4(1.0f), positions[index].position);
     }
     
     glm::mat4 getRotation(float ratio) {
-        glm::mat4 ret;
-        if (1 || 1 == rotations.size()) {
-            auto rotation = glm::normalize(rotations[0].qua);
-            return glm::toMat4(rotation);
-        }
-        return ret;
+        int index = ratio * rotations.size();
+        index = (index == rotations.size()) ? (index-1) : index;
+        auto rotation = glm::normalize(rotations[index].qua);
+        return glm::toMat4(rotation);
     }
 };
 
