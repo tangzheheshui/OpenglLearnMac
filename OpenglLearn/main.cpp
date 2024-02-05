@@ -171,8 +171,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     float fov = Camera::GetCamera().getFov();
     fov += (float)yoffset;
-    if (fov < 10.0f)
-        fov = 10.0f;
+    if (fov < 3.0f)
+        fov = 3.0f;
     if (fov > 90.0f)
         fov = 90.0f;
     printf("yoffset = %f\n", yoffset);

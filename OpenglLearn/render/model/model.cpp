@@ -324,15 +324,16 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         mat->GetTexture(type, i, &str);
         std::string filename = str.C_Str();
         
+        auto iterCache = m_map_tempTexture.find(filename);
+        if (iterCache != m_map_tempTexture.end()) {
+            textures.push_back(iterCache->second);
+            continue;
+        }
+        
         Texture texture;
         texture.name = typeName + std::to_string(i);
         
-        auto iterCache = m_map_tempTexture.find(filename);
-        if (iterCache != m_map_tempTexture.end()) {
-            continue; // 是不是需要记录一些东西啊？？
-        }
-        
-        //std::cout << "model materail tex name = " << filename << "typeName = " << texture.name << std::endl;
+        //std::cout << "model materail tex name = " << filename << ", typeName = " << texture.name << std::endl;
         auto iter = m_model_data.map_image.find(std::string(str.C_Str()));
         if (iter != m_model_data.map_image.end()) { 
             // 从内存中获取

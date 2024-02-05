@@ -111,28 +111,23 @@ bool PassTexture::setShader() {
     
     shader->use();
     
-    unsigned int diffuseNr  = 0;
-    unsigned int specularNr = 0;
-    unsigned int normalNr   = 0;
-    unsigned int heightNr   = 0;
+    bool has_normal_tex = false;
     
     for (int i = 0; i < m_mesh_data->textures.size(); i++) {
         auto tex = m_mesh_data->textures[i];
         int texID = 0;
-        std::string texUnifromName = tex.name;
         if (!tex.filepath.empty()) {
             texID = Image::TextureFromFile(tex.filepath);
-            if(tex.name == "texture_diffuse") {
-                texUnifromName += std::to_string(diffuseNr++);
+            if(tex.name == "texture_diffuse0") {
+                
             }
-            else if(tex.name == "texture_specular") {
-                texUnifromName += std::to_string(specularNr++);
+            else if(tex.name == "texture_specular0") {
+                
             }
-            else if(tex.name == "texture_normal") {
-                texUnifromName += std::to_string(normalNr++);
+            else if(tex.name == "texture_normal0") {
+                has_normal_tex = true;
             }
-            else if(tex.name == "texture_height") {
-                texUnifromName += std::to_string(heightNr++);
+            else if(tex.name == "texture_height0") {
             }
         }
         else {
@@ -140,7 +135,8 @@ bool PassTexture::setShader() {
         }
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, texID);
-        shader->setInt(texUnifromName, i);
+        shader->setInt(tex.name, i);
+        shader->setBool("uMaterail.has_normal_tex", has_normal_tex);
     }
     
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();

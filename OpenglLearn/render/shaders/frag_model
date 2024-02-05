@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec3 pFragPos;
 in vec3 pNormal; 
 in vec2 TexCoord;
+in mat3 pMatNormal;
 
 struct Materail {
     vec3 ambient;
@@ -11,6 +12,7 @@ struct Materail {
     vec3 specular;
     float shininess;
     float shininess_strength;
+    int has_normal_tex;
 };
 
 struct Light {
@@ -25,14 +27,19 @@ struct Light {
 uniform Materail uMaterail;
 uniform Light uLight;
 uniform vec3 uCameraPos;
-uniform sampler2D texture1;
+uniform sampler2D texture_diffuse0;
+uniform sampler2D texture_specular0;
+uniform sampler2D texture_normal0;
 
 void main()
 {
-    vec3 color = texture(texture1, TexCoord).xyz;
+    vec3 color = texture(texture_diffuse0, TexCoord).xyz;
     
     // 计算光照
     vec3 normal = normalize(pNormal);
+    if (uMaterail.has_normal_tex == 1) {
+        normal = pMatNormal * texture(texture_normal0, TexCoord).xyz;
+    }
 
     // ambient
     vec3 ambient = uLight.ambient * color;

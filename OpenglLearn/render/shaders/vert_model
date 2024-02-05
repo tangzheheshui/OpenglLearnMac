@@ -9,11 +9,13 @@ uniform mat4 uMatrixVP;
 out vec3 pFragPos;
 out vec3 pNormal; 
 out vec2 TexCoord;
+out mat3 pMatNormal;
 
 void main()
 {
     pFragPos = (aInstanceMatrix * vec4(aPos, 1.0)).xyz;
-    pNormal = mat3(transpose(inverse(aInstanceMatrix))) * aNormal;
+    pMatNormal = mat3(transpose(inverse(aInstanceMatrix)));
+    pNormal = pMatNormal * aNormal;
     TexCoord = aTexCoord;
     gl_Position = uMatrixVP * aInstanceMatrix * vec4(aPos, 1.0);
 }
