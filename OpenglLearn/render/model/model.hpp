@@ -54,10 +54,11 @@ public:
     virtual bool draw() override;
     virtual bool drawShadow() override;
     virtual void update() override;
+    
     // 模型的属性
-    void setScale(float scale);
-    void setPosition(const glm::vec3 &pos);
-    glm::mat4 getModelMatrix() { return m_matModel; }
+    void setCount(int count);
+    void setScale(int index, float scale);
+    void setPosition(int index, const glm::vec3 &pos);
 private:
     void processNode(aiNode* node, const aiScene* scene, std::shared_ptr<Node> nodeParent);
     std::shared_ptr<Mesh> processMesh(aiMesh *mesh, const aiScene *scene);
@@ -69,7 +70,7 @@ private:
     void genMesh();
     void updateNode(Node* node, Node* nodeParent);
 private:
-    glm::mat4 m_matModel = glm::mat4(1.0f);;
+    std::vector<glm::mat4> m_vec_modelMat;
     std::map<std::string, Texture> m_map_tempTexture;
     std::string m_filepath;
     std::vector<std::shared_ptr<Mesh>> m_mesh;
@@ -77,6 +78,7 @@ private:
     std::shared_ptr<std::vector<glm::mat4>> m_FinalBoneMatrices;
     clock_t m_clock;
     float m_anim_ratio = 0.f;
+    int m_BoneCounter = 0;
 };
 
 #endif /* model_hpp */

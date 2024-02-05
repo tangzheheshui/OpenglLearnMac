@@ -15,30 +15,31 @@ PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Mat
     m_materail = matData; 
 }
 
-bool PassTexture::Draw(const glm::mat4 &matModel, bool bDrawShadow) {
+bool PassTexture::Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow) {
     bool ret = false;
     if (bDrawShadow) {
-        ret = setShadowShader(matModel);
+        ret = setShadowShader();
     } else {
-        ret = setShader(matModel);
+        ret = setShader();
     }
     
     if (!ret) {
         return ret;
     }
     
-    setup();
+    setup(matModel);
     
     // 绘制网格
     glBindVertexArray(_VAO);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glDrawElements(GL_TRIANGLES, (GLsizei)m_mesh_data->indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)m_mesh_data->indices.size(), GL_UNSIGNED_INT, 0, (int)matModel.size());
     glBindVertexArray(0);
     return true;
 }
 
-void PassTexture::setup() {
+void PassTexture::setup(const std::vector<glm::mat4> &matModel) {
     if (_VBO == 0) {
         glGenVertexArrays(1, &_VAO);
         glGenBuffers(1, &_VBO);
@@ -50,12 +51,14 @@ void PassTexture::setup() {
     size_t size1 = m_mesh_data->positions.size() * sizeof(glm::vec3);
     size_t size2 = m_mesh_data->normals.size() * sizeof(glm::vec3);
     size_t size3 = m_mesh_data->coords.size() * sizeof(glm::vec2);
+    size_t size4 = sizeof(glm::mat4) * matModel.size();
     
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, (size1 + size2 + size3), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (size1 + size2 + size3 + size4), nullptr, GL_STATIC_DRAW);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size1, m_mesh_data->positions.data());
     glBufferSubData(GL_ARRAY_BUFFER, size1, size2, m_mesh_data->normals.data());
     glBufferSubData(GL_ARRAY_BUFFER, size1 + size2, size3, m_mesh_data->coords.data());
+    glBufferSubData(GL_ARRAY_BUFFER, size1 + size2 + size3, size4, matModel.data());
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
@@ -68,9 +71,27 @@ void PassTexture::setup() {
     
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(size1 + size2));
     glEnableVertexAttribArray(2);
+    
+    int bufferIndex = 3;
+    size_t baseOffset = size1 + size2 + size3;
+    glVertexAttribPointer(bufferIndex, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(baseOffset));
+    glVertexAttribDivisor(bufferIndex, 1);
+    glEnableVertexAttribArray(bufferIndex++);
+    
+    glVertexAttribPointer(bufferIndex, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(baseOffset + sizeof(glm::vec4)));
+    glVertexAttribDivisor(bufferIndex, 1);
+    glEnableVertexAttribArray(bufferIndex++);
+    
+    glVertexAttribPointer(bufferIndex, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(baseOffset + 2 * sizeof(glm::vec4)));
+    glVertexAttribDivisor(bufferIndex, 1);
+    glEnableVertexAttribArray(bufferIndex++);
+    
+    glVertexAttribPointer(bufferIndex, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(baseOffset + 3 * sizeof(glm::vec4)));
+    glVertexAttribDivisor(bufferIndex, 1);
+    glEnableVertexAttribArray(bufferIndex++);
 }
 
-bool PassTexture::setShadowShader(const glm::mat4 &matModel) {
+bool PassTexture::setShadowShader() {
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Shadow);
     if (!shader) {
         return false;
@@ -79,11 +100,10 @@ bool PassTexture::setShadowShader(const glm::mat4 &matModel) {
     
     glm::mat4 lightSpaceMatrix = Scene::GetLightVPMatrix();
     shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    shader->setMat4("model", matModel);
     return true;
 }
 
-bool PassTexture::setShader(const glm::mat4 &matModel) {
+bool PassTexture::setShader() {
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Texture);
     if (!shader) {
         return false;
@@ -125,7 +145,6 @@ bool PassTexture::setShader(const glm::mat4 &matModel) {
     
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
 
-    shader->setMat4("uMatrixM", matModel);
     shader->setMat4("uMatrixVP", mpMatrix);
     
     // 灯光

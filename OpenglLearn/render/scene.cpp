@@ -78,10 +78,18 @@ void Scene::createObjs() {
     
     // 模型
     std::shared_ptr<Model> objModel = std::make_shared<Model>();
-    objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/rp_nathan_animated_003_walking.fbx");
-    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.obj");
+    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/rp_nathan_animated_003_walking.fbx");
+    objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.obj");
+    // objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
     //objModel->setPosition({, 0, 0});
-    objModel->setScale(0.01);
+    objModel->setCount(3);
+    objModel->setScale(0, 0.01);
+    
+    objModel->setPosition(1, {0, 0, 2});
+    objModel->setScale(1, 0.01);
+    
+    objModel->setPosition(2, {0, 0, 4});
+    objModel->setScale(2, 0.01);
     
     // debug deep
     std::shared_ptr<Image> objImage = std::make_shared<Image>();

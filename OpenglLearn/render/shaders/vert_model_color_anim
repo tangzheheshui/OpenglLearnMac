@@ -23,8 +23,8 @@ void main()
         if(boneIndex == -1) 
             continue;
         if(boneIndex >= MAX_BONES) {
-            totalPosition = vec4(aPos,1.0f);
-            break;
+            //totalPosition = vec4(aPos,1.0f);
+            //break;
         }
         vec4 localPosition = uFinalBonesMatrices[boneIndex] * vec4(aPos,1.0f);
         totalPosition += localPosition * aWeights[i];

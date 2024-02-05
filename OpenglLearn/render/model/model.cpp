@@ -15,6 +15,10 @@ Model::Model() {
 }
 
 void Model::LoadFile(const std::string &path) {
+    if (!m_filepath.empty()) {
+        assert(0); // 不允许变更模型信息
+        return;
+    }
     // Load the model file.
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -181,8 +185,6 @@ void Model::processBoneWeightForVertices(aiMesh *mesh, std::shared_ptr<MeshData>
     meshData->boneIDs.resize(meshData->positions.size(), glm::vec4(-1));
     meshData->weights.resize(meshData->positions.size());
     
-    int m_BoneCounter = 0;
-    
     for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
     {
         int boneID = -1;
@@ -232,7 +234,6 @@ void Model::processBoneWeightForVertices(aiMesh *mesh, std::shared_ptr<MeshData>
             }
         }
     }
-    int a = 0;
 }
 
 std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
@@ -292,12 +293,6 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     }
     // process materials
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];    
-    // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-    // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-    // Same applies to other texture as the following list summarizes:
-    // diffuse: texture_diffuseN
-    // specular: texture_specularN
-    // normal: texture_normalN
     
     // 1. diffuse maps
     std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
@@ -314,7 +309,7 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     
     // 材质索引
     meshData->index_materail = mesh->mMaterialIndex;
-    
+
     processBoneWeightForVertices(mesh, meshData);
     
     auto pMesh = std::make_shared<Mesh>(meshData, m_model_data.materails[mesh->mMaterialIndex]);
@@ -363,7 +358,7 @@ void Model::genMesh() {
 
 bool Model::drawShadow() {
     for (auto mesh : m_mesh) {
-        mesh->Draw(m_matModel, true);
+        mesh->Draw(m_vec_modelMat, true);
     }
     return true;
 }
@@ -414,16 +409,25 @@ void Model::update() {
 bool Model::draw() {
     for (auto mesh : m_mesh) {
         mesh->setBoneMat(m_FinalBoneMatrices);
-        mesh->Draw(m_matModel, false);
+        mesh->Draw(m_vec_modelMat, false);
     }
     return true;
 }
 
-void Model::setScale(float scale) {
-    m_matModel = glm::scale(m_matModel, glm::vec3(scale, scale, scale));
+void Model::setCount(int count) {
+    m_vec_modelMat.resize(count, glm::mat4(1.0f));
 }
 
-void Model::setPosition(const glm::vec3 &pos) {
-    m_matModel = glm::translate(m_matModel, pos);
+void Model::setScale(int index, float scale) {
+    if (index >= m_vec_modelMat.size() || index < 0) {
+        return;
+    }
+    m_vec_modelMat[index] = glm::scale(m_vec_modelMat[index], glm::vec3(scale, scale, scale));
 }
 
+void Model::setPosition(int index, const glm::vec3 &pos) {
+    if (index >= m_vec_modelMat.size() || index < 0) {
+        return;
+    }
+    m_vec_modelMat[index] = glm::translate(m_vec_modelMat[index], pos);
+}

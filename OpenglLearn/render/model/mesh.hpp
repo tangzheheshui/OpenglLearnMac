@@ -19,19 +19,10 @@
 #include "../third/glm/glm.hpp"
 #include "model_data.h"
 
-struct Vertex {
-    glm::vec3 Position;
-    glm::vec3 Normal;
-    glm::vec4 color;
-    glm::vec2 TexCoords;
-    //glm::vec3 Tangent;
-    //glm::vec3 Bitangent;
-};
-
 class Mesh {
 public:
     Mesh(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
-    bool Draw(const glm::mat4 &matModel, bool bDrawShadow);
+    bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow);
     void setBoneMat(std::shared_ptr<std::vector<glm::mat4>> mat) { m_pass->m_matBone = mat; }
 private:        
     unsigned int _texture;

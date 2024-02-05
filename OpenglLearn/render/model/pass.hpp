@@ -32,10 +32,10 @@ public:
         }
     }
     
-    virtual bool Draw(const glm::mat4 &matModel, bool bDrawShadow) = 0;
+    virtual bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow) = 0;
 protected:
-    virtual bool setShadowShader(const glm::mat4 &matModel) { return false; }
-    virtual bool setShader(const glm::mat4 &matModel) { return false; }
+    virtual bool setShadowShader() { return false; }
+    virtual bool setShader() { return false; }
 public:
     std::shared_ptr<Materail> m_materail;
     std::shared_ptr<MeshData> m_mesh_data;
