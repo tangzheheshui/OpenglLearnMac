@@ -92,7 +92,7 @@ void PassTexture::setup(const std::vector<glm::mat4> &matModel) {
 }
 
 bool PassTexture::setShadowShader() {
-    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Shadow);
+    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Shadow_Texture);
     if (!shader) {
         return false;
     }

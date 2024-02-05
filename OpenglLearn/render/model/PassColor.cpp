@@ -15,7 +15,7 @@ PassColor::PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materai
 }
 
 bool PassColor::setShadowShader() {
-    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Shadow);
+    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Shadow_Color);
     if (!shader) {
         return false;
     }

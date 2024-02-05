@@ -11,6 +11,6 @@ out vec3 pNormal;
 void main()
 {
     pFragPos = (aInstanceMatrix * vec4(aPos, 1.0)).xyz;
-    pNormal = (aInstanceMatrix * vec4(aNormal, 1.0)).xyz;
+    pNormal = mat3(transpose(inverse(aInstanceMatrix))) * aNormal;
     gl_Position = uMatrixVP * aInstanceMatrix * vec4(aPos, 1.0);
 }

@@ -134,8 +134,12 @@ ShaderCache::ShaderCache() {
         m_map_shader.insert(std::make_pair(ShaderType::Model_Color, shader));
     }
     
+    if (auto shader = new Shader("vert_shadow_color", "frag_shadow")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Shadow_Color, shader));
+    }
+    
     if (auto shader = new Shader("vert_shadow", "frag_shadow")) {
-        m_map_shader.insert(std::make_pair(ShaderType::Shadow, shader));
+        m_map_shader.insert(std::make_pair(ShaderType::Shadow_Texture, shader));
     }
     
     if (auto shader = new Shader("vert_deepImage", "frag_deepImage")) {

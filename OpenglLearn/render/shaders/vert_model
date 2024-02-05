@@ -13,7 +13,7 @@ out vec2 TexCoord;
 void main()
 {
     pFragPos = (aInstanceMatrix * vec4(aPos, 1.0)).xyz;
-    pNormal = (aInstanceMatrix * vec4(aNormal, 1.0)).xyz;
+    pNormal = mat3(transpose(inverse(aInstanceMatrix))) * aNormal;
     TexCoord = aTexCoord;
     gl_Position = uMatrixVP * aInstanceMatrix * vec4(aPos, 1.0);
 }

@@ -88,6 +88,7 @@
 		65FA242D2B63FB28006062DB /* vert_ground */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_ground; sourceTree = "<group>"; };
 		65FA242E2B63FB28006062DB /* frag_ground */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_ground; sourceTree = "<group>"; };
 		65FA24802B6AD66F006062DB /* vert_model_color_anim */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_model_color_anim; sourceTree = "<group>"; };
+		65FA24812B712E66006062DB /* vert_shadow_color */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_shadow_color; sourceTree = "<group>"; };
 		65FD8F0C2B43F7E700A06A38 /* vert_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_image; sourceTree = "<group>"; };
 		65FD8F0D2B43F83400A06A38 /* frag_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_image; sourceTree = "<group>"; };
 		65FD8F0E2B44588A00A06A38 /* camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
@@ -223,6 +224,7 @@
 		65FD8F0B2B43F7A300A06A38 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				65FA24812B712E66006062DB /* vert_shadow_color */,
 				65FA24802B6AD66F006062DB /* vert_model_color_anim */,
 				65FA242E2B63FB28006062DB /* frag_ground */,
 				65FA242D2B63FB28006062DB /* vert_ground */,
