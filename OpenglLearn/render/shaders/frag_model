@@ -13,6 +13,7 @@ struct Materail {
     float shininess;
     float shininess_strength;
     int has_normal_tex;
+    int has_specular_tex;
 };
 
 struct Light {
@@ -37,8 +38,10 @@ void main()
     
     // 计算光照
     vec3 normal = normalize(pNormal);
-    if (uMaterail.has_normal_tex == 1) {
-        normal = pMatNormal * texture(texture_normal0, TexCoord).xyz;
+    if (uMaterail.has_normal_tex == 1) { // 需要考虑正负切线 todo
+        normal = texture(texture_normal0, TexCoord).xyz;
+        normal = normalize(normal * 2.0 - 1.0);
+        normal = normalize(pMatNormal * normal);
     }
 
     // ambient
@@ -52,9 +55,11 @@ void main()
     // specular
     vec3 viewDir = normalize(uCameraPos - pFragPos);
     vec3 halfwayDir = normalize(dirLight + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 1);//uMaterail.shininess
-    vec3 specular = uLight.specular * spec;
-    
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), uMaterail.shininess);
+    vec3 specular = uLight.specular * spec * uMaterail.specular;
+    if (uMaterail.has_specular_tex == 1) {
+        specular = uLight.specular * spec * vec3(texture(texture_specular0, TexCoord));
+    }
     vec3 result =  (ambient + diffuse + specular);
     FragColor = vec4(result, 1.0);
 }

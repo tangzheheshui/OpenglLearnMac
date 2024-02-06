@@ -19,7 +19,7 @@ Mesh::Mesh(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData
     if (!meshData) {
         return;
     }
-    if (meshData->textures.empty()) {
+    if (matData->textures.empty()) {
         m_pass = std::make_shared<PassColor>(meshData, matData);
     } else {
         m_pass = std::make_shared<PassTexture>(meshData, matData);

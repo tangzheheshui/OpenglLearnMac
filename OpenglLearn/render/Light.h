@@ -16,9 +16,12 @@ public:
         static Light light;
         light.position = {-4.0f, 4.0f, -1.0f};
         light.direction = {1, -1, 0};
-        light.ambient = {0.5f, 0.5f, 0.5f};
-        light.diffuse = {0.5f, 0.5f, 0.5f};
-        light.specular = {0.2f, 0.2f, 0.2f};
+        float ambient = 0.5;
+        light.ambient = glm::vec3(ambient);
+        float diffuse = 0.5;
+        light.diffuse = glm::vec3(diffuse);
+        float specular = 1.0;
+        light.specular = glm::vec3(specular);
         return light;
     }
 public:

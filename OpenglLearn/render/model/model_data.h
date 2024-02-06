@@ -25,9 +25,10 @@ struct MeshData {
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> coords;
+    std::vector<glm::vec3> tangents;
+    std::vector<glm::vec3> bitTangents;
     std::vector<glm::ivec4> boneIDs;
     std::vector<glm::vec4> weights;
-    std::vector<Texture> textures;
     std::vector<unsigned int> indices;
     int index_materail = -1;
 };
@@ -36,6 +37,7 @@ struct Materail {
     glm::vec4 diffuse;
     glm::vec4 specular;
     glm::vec4 ambient;
+    std::vector<Texture> textures;
     float shininess = 0.f;
     float shininess_strength = 0.f;
 };

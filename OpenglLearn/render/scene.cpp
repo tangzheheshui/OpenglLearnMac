@@ -82,9 +82,10 @@ void Scene::createObjs() {
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.obj");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
     objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
+    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/nanosuit/nanosuit.obj");
     objModel->setCount(1);
     objModel->setPosition(0, {0, 1, 0});
-    objModel->setScale(0, 0.5);
+    objModel->setScale(0, 1);
     
     objModel->setPosition(1, {0, 0, 2});
     objModel->setScale(1, 0.01);

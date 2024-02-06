@@ -112,9 +112,10 @@ bool PassTexture::setShader() {
     shader->use();
     
     bool has_normal_tex = false;
+    bool has_specular_tex = false;
     
-    for (int i = 0; i < m_mesh_data->textures.size(); i++) {
-        auto tex = m_mesh_data->textures[i];
+    for (int i = 0; i < m_materail->textures.size(); i++) {
+        auto tex = m_materail->textures[i];
         int texID = 0;
         if (!tex.filepath.empty()) {
             texID = Image::TextureFromFile(tex.filepath);
@@ -122,10 +123,12 @@ bool PassTexture::setShader() {
                 
             }
             else if(tex.name == "texture_specular0") {
-                
+                has_specular_tex = true;
             }
             else if(tex.name == "texture_normal0") {
-                has_normal_tex = true;
+                if (!m_mesh_data->tangents.empty()) {
+                    has_normal_tex = true;
+                }
             }
             else if(tex.name == "texture_height0") {
             }
@@ -137,6 +140,7 @@ bool PassTexture::setShader() {
         glBindTexture(GL_TEXTURE_2D, texID);
         shader->setInt(tex.name, i);
         shader->setBool("uMaterail.has_normal_tex", has_normal_tex);
+        shader->setBool("uMaterail.has_specular_tex", has_specular_tex);
     }
     
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
