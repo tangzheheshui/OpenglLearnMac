@@ -404,10 +404,13 @@ void Model::update() {
 }
 
 bool Model::draw() {
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     for (auto mesh : m_mesh) {
         mesh->setBoneMat(m_FinalBoneMatrices);
         mesh->Draw(m_vec_modelMat, false);
     }
+    glDisable(GL_CULL_FACE);
     return true;
 }
 
