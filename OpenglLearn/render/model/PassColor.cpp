@@ -50,16 +50,16 @@ bool PassColor::setShader() {
     shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
     shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);
     
+    // 相机位置
+    auto cam_pos = Camera::GetCamera().getPossition();
+    shader->setFloat3("uCameraPos", cam_pos.x, cam_pos.y, cam_pos.z);
+    
     // 材质
     shader->setFloat3("uMaterail.ambient", m_materail->ambient.r, m_materail->ambient.g, m_materail->ambient.b);
     shader->setFloat3("uMaterail.diffuse", m_materail->diffuse.r, m_materail->diffuse.g, m_materail->diffuse.b);
     shader->setFloat3("uMaterail.specular", m_materail->specular.r, m_materail->specular.g, m_materail->specular.b);
     shader->setFloat("uMaterail.shininess", m_materail->shininess);
     shader->setFloat("uMaterail.shininess_strength", m_materail->shininess_strength);
-    
-    // 相机位置
-    auto cam_pos = Camera::GetCamera().getPossition();
-    shader->setFloat3("uCameraPos", cam_pos.x, cam_pos.y, cam_pos.z);
     
     // boneMat
     if (m_matBone && !m_matBone->empty()) {

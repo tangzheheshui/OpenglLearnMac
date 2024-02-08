@@ -74,7 +74,7 @@ int main()
         return -1;
     }
     
-    Camera::GetCamera().setPosition({-20,0,0});
+    Camera::GetCamera().setPosition({0,0,20});
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))

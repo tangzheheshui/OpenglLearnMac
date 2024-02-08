@@ -150,6 +150,10 @@ ShaderCache::ShaderCache() {
         m_map_shader.insert(std::make_pair(ShaderType::Ground, shader));
     }
     
+    if (auto shader = new Shader("vert_ground_normal", "frag_ground_normal")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Ground_Normal, shader));
+    }
+    
     if (auto shader = new Shader("vert_model_color_anim", "frag_model_color")) {
         m_map_shader.insert(std::make_pair(ShaderType::Model_Color_Anim, shader));
     }

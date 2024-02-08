@@ -14,7 +14,7 @@ class Light {
 public:
     static Light& GlobalLight() {
         static Light light;
-        light.position = {-4.0f, 4.0f, -1.0f};
+        light.position = {1.0f, 14.0f, .0f};
         light.direction = {1, -1, 0};
         float ambient = 0.5;
         light.ambient = glm::vec3(ambient);

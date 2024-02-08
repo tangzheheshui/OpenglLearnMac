@@ -65,6 +65,8 @@
 		651EFBF32B3F320900620837 /* libglfw.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.dylib; path = "glfw/lib-x86_64/libglfw.3.dylib"; sourceTree = "<group>"; };
 		651EFBF42B3F320900620837 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = "glfw/lib-x86_64/libglfw3.a"; sourceTree = "<group>"; };
 		651EFBF92B3F324000620837 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glad.c; path = glad/src/glad.c; sourceTree = SOURCE_ROOT; };
+		657D254D2B74EBFF0073F59A /* frag_ground_normal */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_ground_normal; sourceTree = "<group>"; };
+		657D254E2B74EBFF0073F59A /* vert_ground_normal */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_ground_normal; sourceTree = "<group>"; };
 		65ABD0012B5FED75007552FD /* model_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_data.h; sourceTree = "<group>"; };
 		65ABD02C2B60DF2B007552FD /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		65D475B42B42D355004AE289 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
@@ -224,6 +226,8 @@
 		65FD8F0B2B43F7A300A06A38 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				657D254D2B74EBFF0073F59A /* frag_ground_normal */,
+				657D254E2B74EBFF0073F59A /* vert_ground_normal */,
 				65FA24812B712E66006062DB /* vert_shadow_color */,
 				65FA24802B6AD66F006062DB /* vert_model_color_anim */,
 				65FA242E2B63FB28006062DB /* frag_ground */,

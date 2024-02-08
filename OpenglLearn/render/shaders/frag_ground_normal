@@ -1,10 +1,13 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec2 TexCoord;
-in vec3 Normal;
-in vec3 pFragPos;
-in vec4 FragPosLightSpace;
+in VS_OUT {
+    vec2 TexCoord;
+    vec3 TangentLightPos;
+    vec3 TangentViewPos;
+    vec3 TangentFragPos;
+    vec4 FragPosLightSpace;
+} fs_in;
 
 struct Light {
     vec4 position;
@@ -15,10 +18,9 @@ struct Light {
 };
 
 uniform Light uLight;
-uniform vec3 uCameraPos;
-
 uniform sampler2D uTexture;
 uniform sampler2D uTextureShadowMap;
+uniform sampler2D uTextureNormal;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -42,26 +44,28 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {
-    vec3 color = texture(uTexture, TexCoord).xyz;
+    vec3 color = texture(uTexture, fs_in.TexCoord).xyz;
+    vec3 normal = texture(uTextureNormal, fs_in.TexCoord).rgb;
+    normal = normalize(normal * 2.0 - 1.0); 
     
     // ambient
     vec3 ambient = uLight.ambient * color;
     
     // diffuse
-    vec3 dirLight = normalize(uLight.position.xyz - pFragPos);
-    float diff = max(dot(dirLight, Normal), 0.0);
+    vec3 dirLight = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
+    float diff = max(dot(dirLight, normal), 0.0);
     vec3 diffuse = uLight.diffuse * color * diff;
     
     // specular
-    vec3 viewDir = normalize(uCameraPos - pFragPos);
+    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
     vec3 halfwayDir = normalize(dirLight + viewDir);  
-    float spec = pow(max(dot(Normal, halfwayDir), 0.0), 32.0);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
     vec3 specular = uLight.specular * spec;
  
     vec3 result =  (ambient + diffuse + specular);
     
     // shadow
-    float shadow = ShadowCalculation(FragPosLightSpace); 
+    float shadow = ShadowCalculation(fs_in.FragPosLightSpace); 
     float dark = 1 - shadow * 0.7;
     
     FragColor = vec4(dark * result, 1.0);

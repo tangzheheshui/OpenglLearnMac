@@ -149,7 +149,7 @@ bool PassTexture::setShader() {
     
     // 灯光
     auto light = Light::GlobalLight();
-    shader->setFloat3("uLight.direction", light.direction.x, light.direction.y, light.direction.z);
+    shader->setFloat4("uLight.position", light.position.x, light.position.y, light.position.z, 1);
     shader->setFloat3("uLight.ambient", light.ambient.x, light.ambient.y, light.ambient.z);
     shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
     shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);

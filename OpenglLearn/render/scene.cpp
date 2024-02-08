@@ -67,7 +67,7 @@ void Scene::createObjs() {
     // 地面
     std::shared_ptr<ImageRectangle> objGround = std::make_shared<ImageRectangle>();
     float ground_width = 10;
-    objGround->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/wood.png");
+    objGround->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "brickwall.jpg", "brickwall_normal.jpg", "");
     objGround->setSetp(5, 5);
     glm::vec3 p1(-ground_width, 0,  ground_width);
     glm::vec3 p2(ground_width, 0,  ground_width);
@@ -84,7 +84,7 @@ void Scene::createObjs() {
     objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/nanosuit/nanosuit.obj");
     objModel->setCount(1);
-    objModel->setPosition(0, {0, 1, 0});
+    objModel->setPosition(0, {0, 2, 0});
     objModel->setScale(0, 1);
     
     objModel->setPosition(1, {0, 0, 2});

@@ -97,15 +97,15 @@ unsigned int Image::TextureFromFile(const std::string &filename)
     if (iter != s_map_texture_cache.end()) {
         return iter->second;
     }
-    
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
 
     int width, height, nrComponents;
     unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     // stbi_load_16_from_memory
     if (data)
     {
+        unsigned int textureID;
+        glGenTextures(1, &textureID);
+        
         GLenum format;
         if (nrComponents == 1)
             format = GL_RED;
@@ -124,15 +124,15 @@ unsigned int Image::TextureFromFile(const std::string &filename)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
+        
+        s_map_texture_cache[filename] = textureID;
     }
     else
     {
         std::cout << "Texture failed to load at path: " << filename << std::endl;
         stbi_image_free(data);
     }
-
-    s_map_texture_cache[filename] = textureID;
-    return textureID;
+    return -1;
 }
 
 unsigned int Image::TextureFromMem(unsigned char* buffer, int len) {
