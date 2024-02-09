@@ -21,6 +21,8 @@ uniform Light uLight;
 uniform sampler2D uTexture;
 uniform sampler2D uTextureShadowMap;
 uniform sampler2D uTextureNormal;
+uniform sampler2D uTextureHeight;
+uniform int uHasHeight;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -42,9 +44,21 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     return shadow;
 }
 
+vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
+{ 
+    float height =  texture(uTextureHeight, texCoords).r;    
+    vec2 p = viewDir.xy / viewDir.z * (height * 1.0);
+    return texCoords - p;    
+}
+
 void main()
 {
-    vec3 color = texture(uTexture, fs_in.TexCoord).xyz;
+    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
+    vec2 texCoord = fs_in.TexCoord;
+    if (uHasHeight > 0.f) {
+        //texCoord = ParallaxMapping(fs_in.TexCoord, viewDir);
+    }
+    vec3 color = texture(uTexture, texCoord).xyz;
     vec3 normal = texture(uTextureNormal, fs_in.TexCoord).rgb;
     normal = normalize(normal * 2.0 - 1.0); 
     
@@ -57,7 +71,6 @@ void main()
     vec3 diffuse = uLight.diffuse * color * diff;
     
     // specular
-    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
     vec3 halfwayDir = normalize(dirLight + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
     vec3 specular = uLight.specular * spec;

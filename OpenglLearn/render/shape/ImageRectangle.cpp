@@ -22,6 +22,9 @@ bool ImageRectangle::draw() {
     int texture_normal = Image::TextureFromFile(m_image_normal);
     bool has_normal = (texture_normal > 0);
     
+    int texture_height = Image::TextureFromFile(m_image_height);
+    bool has_height = (texture_height > 0);
+    
     glBindVertexArray(_VAO);
     
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
@@ -61,14 +64,24 @@ bool ImageRectangle::draw() {
     glBindTexture(GL_TEXTURE_2D, texture);
     shader->setInt("uTexture", 0);
     
+    int indexTex = 1;
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, Scene::GetShadowTexture());
-    shader->setInt("uTextureShadowMap", 1);
+    shader->setInt("uTextureShadowMap", indexTex++);
     
     if (has_normal) {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, texture_normal);
-        shader->setInt("uTextureNormal", 2);
+        shader->setInt("uTextureNormal", indexTex++);
+    }
+    
+    if (has_height) {
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, texture_normal);
+        shader->setInt("uTextureHeight", indexTex++);
+        shader->setInt("uHasHeight", 1);
+    } else {
+        shader->setInt("uHasHeight", 0);
     }
     
     // 矩阵

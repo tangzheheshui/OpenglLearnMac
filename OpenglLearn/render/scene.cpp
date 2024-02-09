@@ -67,7 +67,7 @@ void Scene::createObjs() {
     // 地面
     std::shared_ptr<ImageRectangle> objGround = std::make_shared<ImageRectangle>();
     float ground_width = 10;
-    objGround->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "brickwall.jpg", "brickwall_normal.jpg", "");
+    objGround->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "bricks2.jpg", "bricks2_normal.jpg", "bricks2_disp.jpg");// bricks2_disp.jpg
     objGround->setSetp(5, 5);
     glm::vec3 p1(-ground_width, 0,  ground_width);
     glm::vec3 p2(ground_width, 0,  ground_width);
