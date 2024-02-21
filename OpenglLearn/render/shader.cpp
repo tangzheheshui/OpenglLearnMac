@@ -157,6 +157,10 @@ ShaderCache::ShaderCache() {
     if (auto shader = new Shader("vert_model_color_anim", "frag_model_color")) {
         m_map_shader.insert(std::make_pair(ShaderType::Model_Color_Anim, shader));
     }
+    
+    if (auto shader = new Shader("vert_model_anim", "frag_model")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Model_Texture_Anim, shader));
+    }
 }
 
 Shader* ShaderCache::GetShader(ShaderType type) {

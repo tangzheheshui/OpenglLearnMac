@@ -378,7 +378,7 @@ void Model::updateNode(Node* node, Node* nodeParent) {
     if (iter != m_model_data.mapBoneInfo.end()) {
         int indexBone = iter->second.index;
         glm::mat4 offset = iter->second.offset;
-        m_FinalBoneMatrices.get()->at(indexBone) = node->matCur * offset;
+        m_FinalBoneMatrices->at(indexBone) = node->matCur * offset;
     }
     
     printf("checkNode, nodeName = %s\n", node->name.c_str());
@@ -392,7 +392,7 @@ void Model::update() {
     if (!m_model_data.mapBoneInfo.empty()) {
         if (!m_FinalBoneMatrices) {
             m_FinalBoneMatrices = std::make_shared<std::vector<glm::mat4>>();
-            m_FinalBoneMatrices.get()->resize(100, glm::mat4(1.0));
+            m_FinalBoneMatrices->resize(100, glm::mat4(1.0));
         }
         
         clock_t det = (clock() - m_clock);

@@ -13,8 +13,7 @@ struct Materail {
 };
 
 struct Light {
-    //vec3 position;
-    vec3 direction;
+    vec3 position;
 
     vec3 ambient;
     vec3 diffuse;
@@ -33,7 +32,7 @@ void main()
     vec3 ambient = uLight.ambient * uMaterail.ambient;
     
     // diffuse
-    vec3 dirLight = normalize(-uLight.direction);
+    vec3 dirLight = normalize(uLight.position.xyz - pFragPos);
     vec3 diffuse = uLight.diffuse * uMaterail.diffuse * dot(dirLight, normal);
     
     // specular

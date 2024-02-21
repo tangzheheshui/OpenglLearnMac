@@ -1,0 +1,41 @@
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec2 aTexCoord;
+layout (location = 3) in ivec4 aBoneIds; 
+layout (location = 4) in vec4 aWeights;
+layout (location = 5) in mat4 aInstanceMatrix;
+
+const int MAX_BONES = 100;
+const int MAX_BONE_INFLUENCE = 4;
+
+uniform mat4 uMatrixVP;
+uniform mat4 uFinalBonesMatrices[MAX_BONES];
+
+out vec3 pFragPos;
+out vec3 pNormal; 
+out vec2 TexCoord;
+out mat3 pMatNormal;
+
+void main()
+{
+    vec4 totalPosition = vec4(1.0f);
+    
+    for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++) {
+        int boneIndex = aBoneIds[i];
+        if(boneIndex == -1) 
+            continue;
+        if(boneIndex >= MAX_BONES) {
+            totalPosition = vec4(aPos,1.0f);
+            break;
+        }
+        vec4 localPosition = uFinalBonesMatrices[boneIndex] * vec4(aPos,1.0f);
+        totalPosition += localPosition * aWeights[i];
+   }
+   
+    pFragPos = (aInstanceMatrix * vec4(aPos, 1.0)).xyz;
+    pMatNormal = mat3(transpose(inverse(aInstanceMatrix)));
+    pNormal = pMatNormal * aNormal;
+    TexCoord = aTexCoord;
+    gl_Position = uMatrixVP * aInstanceMatrix * totalPosition;// vec4(aPos, 1.0);
+}

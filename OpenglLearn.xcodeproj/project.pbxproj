@@ -60,6 +60,7 @@
 		650751C42B5E973500BB2098 /* PassColor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PassColor.hpp; sourceTree = "<group>"; };
 		650751C62B5EA62D00BB2098 /* PassTexture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PassTexture.cpp; sourceTree = "<group>"; };
 		650751C72B5EA62D00BB2098 /* PassTexture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PassTexture.hpp; sourceTree = "<group>"; };
+		6507D6802B8642A50029654C /* vert_model_anim */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_model_anim; sourceTree = "<group>"; };
 		651EFBE82B3F308C00620837 /* OpenglLearn */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OpenglLearn; sourceTree = BUILT_PRODUCTS_DIR; };
 		651EFBEB2B3F308C00620837 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		651EFBF32B3F320900620837 /* libglfw.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.dylib; path = "glfw/lib-x86_64/libglfw.3.dylib"; sourceTree = "<group>"; };
@@ -226,6 +227,7 @@
 		65FD8F0B2B43F7A300A06A38 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				6507D6802B8642A50029654C /* vert_model_anim */,
 				657D254D2B74EBFF0073F59A /* frag_ground_normal */,
 				657D254E2B74EBFF0073F59A /* vert_ground_normal */,
 				65FA24812B712E66006062DB /* vert_shadow_color */,

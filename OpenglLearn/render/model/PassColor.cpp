@@ -12,59 +12,14 @@
 PassColor::PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) : RenderPass(meshData, matData){ 
 }
 
-bool PassColor::setShadowShader() {
-    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Shadow_Color);
-    if (!shader) {
-        return false;
+Shader* PassColor::getShader(bool shadow) {
+    Shader* pShadow = nullptr;
+    if (shadow) {
+        pShadow = ShaderCache::GetInstance().GetShader(ShaderType::Shadow_Color);
+    } else {
+        pShadow = ShaderCache::GetInstance().GetShader(ShaderType::Model_Color);
     }
-    
-    shader->use();
-    
-    glm::mat4 lightSpaceMatrix = Scene::GetLightVPMatrix();
-    shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    return true;
-}
-
-bool PassColor::setShader() {
-    auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Color);
-    if (m_matBone && !m_matBone->empty()) {
-        shader = ShaderCache::GetInstance().GetShader(ShaderType::Model_Color_Anim);
-    }
-    if (!shader) {
-        return false;
-    }
-    
-    shader->use();
-    
-    // 矩阵
-    auto mpMatrix = Camera::GetCamera().GetVPMatrix();
-    shader->setMat4("uMatrixVP", mpMatrix);
-    
-    // 灯光
-    auto light = Light::GlobalLight();
-    shader->setFloat3("uLight.direction", light.direction.x, light.direction.y, light.direction.z);
-    shader->setFloat3("uLight.ambient", light.ambient.x, light.ambient.y, light.ambient.z);
-    shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
-    shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);
-    
-    // 相机位置
-    auto cam_pos = Camera::GetCamera().getPossition();
-    shader->setFloat3("uCameraPos", cam_pos.x, cam_pos.y, cam_pos.z);
-    
-    // 材质
-    shader->setFloat3("uMaterail.ambient", m_materail->ambient.r, m_materail->ambient.g, m_materail->ambient.b);
-    shader->setFloat3("uMaterail.diffuse", m_materail->diffuse.r, m_materail->diffuse.g, m_materail->diffuse.b);
-    shader->setFloat3("uMaterail.specular", m_materail->specular.r, m_materail->specular.g, m_materail->specular.b);
-    shader->setFloat("uMaterail.shininess", m_materail->shininess);
-    shader->setFloat("uMaterail.shininess_strength", m_materail->shininess_strength);
-    
-    // boneMat
-    if (m_matBone && !m_matBone->empty()) {
-        for (int i = 0; i < m_matBone->size(); ++i) {
-            shader->setMat4("uFinalBonesMatrices[" + std::to_string(i) + "]", m_matBone->at(i));
-        }
-    }
-    return true;
+    return pShadow;
 }
 
 void PassColor::setup(const std::vector<glm::mat4> &matModel) {

@@ -16,8 +16,7 @@ public:
     
 private:
     virtual void setup(const std::vector<glm::mat4> &matModel) override;
-    virtual bool setShadowShader() override;
-    virtual bool setShader() override;
+    virtual Shader* getShader(bool shadow) override;
 };
 
 #endif /* PassTexture_hpp */

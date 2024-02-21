@@ -15,8 +15,7 @@ public:
     PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
 
 private:
-    virtual bool setShadowShader() override;
-    virtual bool setShader() override;
+    virtual Shader* getShader(bool shadow) override;
     virtual void setup(const std::vector<glm::mat4> &matModel) override;
 private:
     

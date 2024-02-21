@@ -34,8 +34,7 @@ public:
     
     bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow);
 protected:
-    virtual bool setShadowShader() { return false; }
-    virtual bool setShader() { return false; }
+    virtual Shader* getShader(bool shadow) { return nullptr; }
     virtual void setup(const std::vector<glm::mat4> &matModel) {}
 public:
     std::shared_ptr<Materail> m_materail;
