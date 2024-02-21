@@ -13,12 +13,13 @@
 class PassColor : public RenderPass {
 public:
     PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
-    
-    virtual bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow) override;
+
+private:
     virtual bool setShadowShader() override;
     virtual bool setShader() override;
+    virtual void setup(const std::vector<glm::mat4> &matModel) override;
 private:
-    void setup(const std::vector<glm::mat4> &matModel);
+    
 };
 
 #endif /* PassColor_hpp */

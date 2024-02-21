@@ -14,9 +14,8 @@ class PassTexture : public RenderPass {
 public:
     PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
     
-    virtual bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow) override;
 private:
-    void setup(const std::vector<glm::mat4> &matModel);
+    virtual void setup(const std::vector<glm::mat4> &matModel) override;
     virtual bool setShadowShader() override;
     virtual bool setShader() override;
 };

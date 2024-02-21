@@ -10,33 +10,7 @@
 #include "../Light.h"
 #include "../scene.hpp"
 
-PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) { 
-    m_mesh_data = meshData; 
-    m_materail = matData; 
-}
-
-bool PassTexture::Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow) {
-    bool ret = false;
-    if (bDrawShadow) {
-        ret = setShadowShader();
-    } else {
-        ret = setShader();
-    }
-    
-    if (!ret) {
-        return ret;
-    }
-    
-    setup(matModel);
-    
-    // 绘制网格
-    glBindVertexArray(_VAO);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glDrawElements(GL_TRIANGLES, (GLsizei)m_mesh_data->indices.size(), GL_UNSIGNED_INT, 0);
-    glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)m_mesh_data->indices.size(), GL_UNSIGNED_INT, 0, (int)matModel.size());
-    glBindVertexArray(0);
-    return true;
+PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) : RenderPass(meshData, matData) { 
 }
 
 void PassTexture::setup(const std::vector<glm::mat4> &matModel) {
@@ -143,8 +117,8 @@ bool PassTexture::setShader() {
         shader->setBool("uMaterail.has_specular_tex", has_specular_tex);
     }
     
+    // 矩阵
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
-
     shader->setMat4("uMatrixVP", mpMatrix);
     
     // 灯光

@@ -70,14 +70,17 @@ bool ImageRectangle::draw() {
     shader->setInt("uTextureShadowMap", indexTex++);
     
     if (has_normal) {
-        glActiveTexture(GL_TEXTURE2);
+        glActiveTexture(GL_TEXTURE0 + indexTex);
         glBindTexture(GL_TEXTURE_2D, texture_normal);
         shader->setInt("uTextureNormal", indexTex++);
+        shader->setInt("uHasNormal", 1);
+    } else {
+        shader->setInt("uHasNormal", 0);
     }
     
     if (has_height) {
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, texture_normal);
+        glActiveTexture(GL_TEXTURE0 + indexTex);
+        glBindTexture(GL_TEXTURE_2D, texture_height);
         shader->setInt("uTextureHeight", indexTex++);
         shader->setInt("uHasHeight", 1);
     } else {

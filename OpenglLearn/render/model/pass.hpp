@@ -17,7 +17,7 @@
 
 class RenderPass {
 public:
-    RenderPass() {}
+    RenderPass(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
     virtual ~RenderPass() {
         if (_VAO > 0) {
             glDeleteVertexArrays(1, &_VAO);
@@ -32,10 +32,11 @@ public:
         }
     }
     
-    virtual bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow) = 0;
+    bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow);
 protected:
     virtual bool setShadowShader() { return false; }
     virtual bool setShader() { return false; }
+    virtual void setup(const std::vector<glm::mat4> &matModel) {}
 public:
     std::shared_ptr<Materail> m_materail;
     std::shared_ptr<MeshData> m_mesh_data;
