@@ -18,9 +18,6 @@ const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-GLuint Scene::_depthTexture = 0;
-glm::mat4 Scene::_lightVPMatrix;
-
 Scene& Scene::getScene() {
     static Scene instance;
     return instance;

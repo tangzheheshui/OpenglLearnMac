@@ -28,8 +28,8 @@ public:
 private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
     GLuint _depthMapFBO = 0;
-    static GLuint _depthTexture;
-    static glm::mat4 _lightVPMatrix;
+    inline static GLuint _depthTexture = 0;
+    inline static glm::mat4 _lightVPMatrix;
 };
 
 #endif /* scene_hpp */

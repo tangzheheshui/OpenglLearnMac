@@ -16,7 +16,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../third/stb_image.h"
 
-std::map<const std::string, unsigned int> Image::s_map_texture_cache;
+//std::map<const std::string, unsigned int> Image::s_map_texture_cache;
 
 Image::Image() {
     

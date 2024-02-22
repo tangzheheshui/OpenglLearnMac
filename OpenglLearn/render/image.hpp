@@ -27,7 +27,7 @@ private:
     void setData();
     unsigned int _texture = 0;
     ShaderType m_type = ShaderType::Image;
-    static std::map<const std::string, unsigned int> s_map_texture_cache;
+    inline static std::map<const std::string, unsigned int> s_map_texture_cache;
 };
 
 #endif /* image_hpp */
