@@ -12,7 +12,7 @@
 
 class PassTexture : public RenderPass {
 public:
-    PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
+    using RenderPass::RenderPass;
     
 private:
     virtual void setup(const std::vector<glm::mat4> &matModel) override;

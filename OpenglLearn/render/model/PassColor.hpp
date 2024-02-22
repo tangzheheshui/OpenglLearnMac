@@ -12,7 +12,7 @@
 
 class PassColor : public RenderPass {
 public:
-    PassColor(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
+    using RenderPass::RenderPass;
 
 private:
     virtual Shader* getShader(bool shadow) override;

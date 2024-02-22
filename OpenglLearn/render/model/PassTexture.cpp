@@ -10,9 +10,6 @@
 #include "../Light.h"
 #include "../scene.hpp"
 
-PassTexture::PassTexture(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData) : RenderPass(meshData, matData) { 
-}
-
 Shader* PassTexture::getShader(bool shadow) {
     Shader* pShadow = nullptr;
     if (shadow) {
