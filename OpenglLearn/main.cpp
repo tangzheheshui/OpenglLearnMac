@@ -39,13 +39,27 @@ float fov   =  45.0f;
 float deltaTime = 0.0f;    // time between current frame and last frame
 float lastFrame = 0.0f;
 
+// static API
+static std::vector<std::string> g_supportExtensions;
+static void GetSupportExtensions() {
+    if (!g_supportExtensions.empty())
+        return;
+    GLint n, i;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &n);
+    for (i = 0; i < n; i++) {
+        std::string extension = (char*)glGetStringi(GL_EXTENSIONS, i);
+        std::cout << "extension = " << extension << std::endl;
+        g_supportExtensions.push_back(extension);
+    }
+}
+
 int main()
 {
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
  
 #ifdef __APPLE__
@@ -74,6 +88,7 @@ int main()
         return -1;
     }
     
+    GetSupportExtensions();
     Camera::GetCamera().setPosition({0,0,20});
     // render loop
     // -----------
