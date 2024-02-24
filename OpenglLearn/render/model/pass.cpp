@@ -15,7 +15,7 @@ RenderPass::RenderPass(std::shared_ptr<MeshData> meshData, std::shared_ptr<Mater
     m_materail = matData;
 }
 
-bool RenderPass::Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow) {
+bool RenderPass::Draw(const std::vector<Matrix> &matModel, bool bDrawShadow) {
     auto shader = getShader(bDrawShadow);
     if (!shader) {
         return false;

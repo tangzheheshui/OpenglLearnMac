@@ -14,6 +14,7 @@
 #include "camera.hpp"
 #include "shader.hpp"
 #include "model_data.h"
+#include "core/math/matrix.hpp"
 
 class RenderPass {
 public:
@@ -32,10 +33,10 @@ public:
         }
     }
     
-    bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow);
+    bool Draw(const std::vector<Matrix> &matModel, bool bDrawShadow);
 protected:
     virtual Shader* getShader(bool shadow) { return nullptr; }
-    virtual void setup(const std::vector<glm::mat4> &matModel) {}
+    virtual void setup(const std::vector<Matrix> &matModel) {}
 public:
     std::shared_ptr<Materail> m_materail;
     std::shared_ptr<MeshData> m_mesh_data;

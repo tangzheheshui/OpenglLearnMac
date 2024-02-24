@@ -16,7 +16,7 @@ public:
 
 private:
     virtual Shader* getShader(bool shadow) override;
-    virtual void setup(const std::vector<glm::mat4> &matModel) override;
+    virtual void setup(const std::vector<Matrix> &matModel) override;
 private:
     
 };

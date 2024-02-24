@@ -15,7 +15,7 @@ public:
     using RenderPass::RenderPass;
     
 private:
-    virtual void setup(const std::vector<glm::mat4> &matModel) override;
+    virtual void setup(const std::vector<Matrix> &matModel) override;
     virtual Shader* getShader(bool shadow) override;
 };
 

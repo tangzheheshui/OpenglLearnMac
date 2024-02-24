@@ -23,7 +23,7 @@ Shader* PassTexture::getShader(bool shadow) {
     return pShadow;
 }
 
-void PassTexture::setup(const std::vector<glm::mat4> &matModel) {
+void PassTexture::setup(const std::vector<Matrix> &matModel) {
     if (_VBO == 0) {
         glGenVertexArrays(1, &_VAO);
         glGenBuffers(1, &_VBO);
@@ -39,7 +39,7 @@ void PassTexture::setup(const std::vector<glm::mat4> &matModel) {
     size_t size3 = m_mesh_data->coords.size() * sizeof(glm::vec2);
     size_t size4 = m_mesh_data->boneIDs.size() * sizeof(glm::ivec4);
     size_t size5 = m_mesh_data->weights.size() * sizeof(glm::vec4);
-    size_t size6 = sizeof(glm::mat4) * matModel.size();
+    size_t size6 = sizeof(Matrix) * matModel.size();
     size_t totalsize = size1 + size2 + size3 + size4 + size5 + size6;
     
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);

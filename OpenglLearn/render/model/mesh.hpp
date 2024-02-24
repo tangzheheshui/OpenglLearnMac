@@ -22,7 +22,7 @@
 class Mesh {
 public:
     Mesh(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData);
-    bool Draw(const std::vector<glm::mat4> &matModel, bool bDrawShadow);
+    bool Draw(const std::vector<Matrix> &matModel, bool bDrawShadow);
     void setBoneMat(std::shared_ptr<std::vector<glm::mat4>> mat) { m_pass->m_matBone = mat; }
 private:        
     unsigned int _texture;

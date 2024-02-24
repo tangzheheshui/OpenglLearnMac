@@ -19,7 +19,7 @@ Shader* PassColor::getShader(bool shadow) {
     return pShadow;
 }
 
-void PassColor::setup(const std::vector<glm::mat4> &matModel) {
+void PassColor::setup(const std::vector<Matrix> &matModel) {
     if (_VBO == 0) {
         glGenVertexArrays(1, &_VAO);
         glGenBuffers(1, &_VBO);
@@ -39,7 +39,7 @@ void PassColor::setup(const std::vector<glm::mat4> &matModel) {
     if (hasAnim) {
         totalsize += (size3 + size4);
     }
-    size_t size5 = sizeof(glm::mat4) * matModel.size();
+    size_t size5 = sizeof(Matrix) * matModel.size();
     totalsize += size5;
     
     glBufferData(GL_ARRAY_BUFFER, totalsize, nullptr , GL_STATIC_DRAW);

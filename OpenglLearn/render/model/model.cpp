@@ -415,19 +415,40 @@ bool Model::draw() {
 }
 
 void Model::setCount(int count) {
-    m_vec_modelMat.resize(count, glm::mat4(1.0f));
+    m_vec_modelMat.resize(count, Matrix());
+}
+
+void Model::setRotateX(int index, float angle) {
+    if (index >= m_vec_modelMat.size() || index < 0) {
+        return;
+    }
+    m_vec_modelMat[index].rotateX(angle);
+}
+
+void Model::setRotateY(int index, float angle) {
+    if (index >= m_vec_modelMat.size() || index < 0) {
+        return;
+    }
+    m_vec_modelMat[index].rotateY(angle);
+}
+
+void Model::setRotateZ(int index, float angle) {
+    if (index >= m_vec_modelMat.size() || index < 0) {
+        return;
+    }
+    m_vec_modelMat[index].rotateZ(angle);
 }
 
 void Model::setScale(int index, float scale) {
     if (index >= m_vec_modelMat.size() || index < 0) {
         return;
     }
-    m_vec_modelMat[index] = glm::scale(m_vec_modelMat[index], glm::vec3(scale, scale, scale));
+    m_vec_modelMat[index].scale(scale);
 }
 
 void Model::setPosition(int index, const glm::vec3 &pos) {
     if (index >= m_vec_modelMat.size() || index < 0) {
         return;
     }
-    m_vec_modelMat[index] = glm::translate(m_vec_modelMat[index], pos);
+    m_vec_modelMat[index].translate(pos.x, pos.y, pos.z);
 }

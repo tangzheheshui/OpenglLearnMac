@@ -15,6 +15,7 @@
 		651EFBF62B3F320900620837 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 651EFBF42B3F320900620837 /* libglfw3.a */; };
 		651EFBF72B3F322800620837 /* libglfw.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 651EFBF32B3F320900620837 /* libglfw.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		651EFBFA2B3F324000620837 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 651EFBF92B3F324000620837 /* glad.c */; };
+		6581573D2B89E7FD00253663 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6581573B2B89E7FD00253663 /* matrix.cpp */; };
 		65D475B62B42D355004AE289 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B42B42D355004AE289 /* shader.cpp */; };
 		65D475BA2B42EFBB004AE289 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B82B42EFBB004AE289 /* image.cpp */; };
 		65FA241E2B623321006062DB /* Line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FA241C2B623321006062DB /* Line.cpp */; };
@@ -68,6 +69,8 @@
 		651EFBF92B3F324000620837 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glad.c; path = glad/src/glad.c; sourceTree = SOURCE_ROOT; };
 		657D254D2B74EBFF0073F59A /* frag_ground_normal */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_ground_normal; sourceTree = "<group>"; };
 		657D254E2B74EBFF0073F59A /* vert_ground_normal */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_ground_normal; sourceTree = "<group>"; };
+		6581573B2B89E7FD00253663 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
+		6581573C2B89E7FD00253663 /* matrix.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = matrix.hpp; sourceTree = "<group>"; };
 		65ABD0012B5FED75007552FD /* model_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_data.h; sourceTree = "<group>"; };
 		65ABD02C2B60DF2B007552FD /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		65D475B42B42D355004AE289 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
@@ -140,6 +143,7 @@
 		651EFBEA2B3F308C00620837 /* OpenglLearn */ = {
 			isa = PBXGroup;
 			children = (
+				658157392B89E71D00253663 /* core */,
 				65FD8F0A2B43F77A00A06A38 /* res */,
 				65D475BB2B42F257004AE289 /* third */,
 				65D475B32B42D323004AE289 /* render */,
@@ -157,6 +161,23 @@
 				651EFBF42B3F320900620837 /* libglfw3.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		658157392B89E71D00253663 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				6581573A2B89E72200253663 /* math */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		6581573A2B89E72200253663 /* math */ = {
+			isa = PBXGroup;
+			children = (
+				6581573B2B89E7FD00253663 /* matrix.cpp */,
+				6581573C2B89E7FD00253663 /* matrix.hpp */,
+			);
+			path = math;
 			sourceTree = "<group>";
 		};
 		65ABD02A2B60DCF8007552FD /* model */ = {
@@ -318,6 +339,7 @@
 				651EFBFA2B3F324000620837 /* glad.c in Sources */,
 				65FD8F102B44588A00A06A38 /* camera.cpp in Sources */,
 				650751C82B5EA62D00BB2098 /* PassTexture.cpp in Sources */,
+				6581573D2B89E7FD00253663 /* matrix.cpp in Sources */,
 				650751C52B5E973500BB2098 /* PassColor.cpp in Sources */,
 				65FD8F1B2B45141E00A06A38 /* model.cpp in Sources */,
 				65FD8F242B452BFC00A06A38 /* mesh.cpp in Sources */,
@@ -450,6 +472,7 @@
 					"\"$(SRCROOT)/glad/include\"/**",
 					"\"$(SRCROOT)/glfw/include\"",
 					"\"$(SRCROOT)/OpenglLearn/third\"",
+					"\"$(SRCROOT)/OpenglLearn\"",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/glfw/lib-x86_64\"",
@@ -468,6 +491,7 @@
 					"\"$(SRCROOT)/glad/include\"/**",
 					"\"$(SRCROOT)/glfw/include\"",
 					"\"$(SRCROOT)/OpenglLearn/third\"",
+					"\"$(SRCROOT)/OpenglLearn\"",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/glfw/lib-x86_64\"",

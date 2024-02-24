@@ -15,6 +15,7 @@
 #include "model_data.h"
 #include "../BaseDraw.h"
 #include <time.h>
+#include "core/math/matrix.hpp"
 
 class AssimpGLMHelpers
 {
@@ -59,6 +60,9 @@ public:
     void setCount(int count);
     void setScale(int index, float scale);
     void setPosition(int index, const glm::vec3 &pos);
+    void setRotateX(int index, float angle);
+    void setRotateY(int index, float angle);
+    void setRotateZ(int index, float angle);
 private:
     void processNode(aiNode* node, const aiScene* scene, std::shared_ptr<Node> nodeParent);
     std::shared_ptr<Mesh> processMesh(aiMesh *mesh, const aiScene *scene);
@@ -70,7 +74,7 @@ private:
     void genMesh();
     void updateNode(Node* node, Node* nodeParent);
 private:
-    std::vector<glm::mat4> m_vec_modelMat;
+    std::vector<Matrix> m_vec_modelMat;
     std::map<std::string, Texture> m_map_tempTexture;
     std::string m_filepath;
     std::vector<std::shared_ptr<Mesh>> m_mesh;
