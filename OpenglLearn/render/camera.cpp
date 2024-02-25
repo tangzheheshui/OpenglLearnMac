@@ -18,16 +18,10 @@ Camera::Camera()
 , _fov(45)
 {
     _position = {0, 0, 0};
-    _worldUp = {0, 1, 0};
 }
 
 void Camera::setPosition(glm::vec3 pos) {
     _position = pos;
-    _needCal = true;
-}
-
-void Camera::setUp(glm::vec3 up) {
-    _worldUp = up;
     _needCal = true;
 }
 
@@ -46,19 +40,18 @@ void Camera::setFov(float fov) {
     _needCal = true;
 }
 
-glm::mat4 Camera::GetVPMatrix() {
+Matrix Camera::GetVPMatrix() {
     caculate();
-    
-    glm::mat4 view = glm::lookAt(_position, _position + _front, _up);
     
     float r = std::sqrt(_position.x*_position.x + _position.y*_position.y + _position.z*_position.z);
     float y = r * sin(glm::radians(_pitch));
     float x = r * cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
     float z = r * cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
-    view = glm::lookAt({x, y, z}, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0)); 
+    
+    Matrix lookat = LookAt({x, y, z}, glm::vec3(0), _worldUp);
     
     glm::mat4 projection = glm::perspective(glm::radians(_fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    return projection * view;
+    return Matrix::toMatrix(projection) * lookat;
 }
 
 void Camera::caculate() {
@@ -80,4 +73,33 @@ void Camera::caculate() {
 Camera& Camera::GetCamera() {
     static Camera cam;
     return cam;
+}
+
+Matrix Camera::LookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up) {
+    auto F = glm::normalize(center - eye);
+    auto R = glm::normalize(glm::cross(F, up));
+    auto U = glm::cross(R, F);
+    
+//    // T矩阵
+//    Matrix matT;
+//    matT.set(3, 0, -eye.x);
+//    matT.set(3, 1, -eye.y);
+//    matT.set(3, 2, -eye.z);
+    
+    // R*T矩阵
+    Matrix matR;
+    matR.set(0, 0, R.x);
+    matR.set(1, 0, R.y);
+    matR.set(2, 0, R.z);
+    matR.set(0, 1, U.x);
+    matR.set(1, 1, U.y);
+    matR.set(2, 1, U.z);
+    matR.set(0, 2, -F.x);
+    matR.set(1, 2, -F.y);
+    matR.set(2, 2, -F.z);
+    matR.set(3, 0, -eye.x * R.x - eye.y * R.y - eye.z * R.z);
+    matR.set(3, 1, -eye.x * U.x - eye.y * U.y - eye.z * U.z);
+    matR.set(3, 2, eye.x * F.x + eye.y * F.y + eye.z * F.z);
+    
+    return matR;
 }

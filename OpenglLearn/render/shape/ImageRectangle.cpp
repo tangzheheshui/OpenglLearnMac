@@ -88,7 +88,7 @@ bool ImageRectangle::draw() {
     }
     
     // 矩阵
-    glm::mat4 model(1.f);
+    Matrix model;
     shader->setMat4("uModel", model);
     auto mpMatrix = Camera::GetCamera().GetVPMatrix();
     shader->setMat4("uVP", mpMatrix);

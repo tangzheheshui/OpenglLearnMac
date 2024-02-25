@@ -95,7 +95,7 @@ Matrix Matrix::operator*(const Matrix &other) const {
         for (int j = 0; j < 4; ++j) {
             result.set(i, j, 0);
             for (int k = 0; k < 4; ++k) {
-                result.data[i][j] += data[i][k] * other.data[k][j];
+                result.data[i][j] += data[k][j] * other.data[i][k];
             }
         }
     }

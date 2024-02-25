@@ -24,7 +24,7 @@ public:
     void rotateZ(float angle);
     void scale(float scale);
     void set(int x, int y, float value);
-    const float* buffer() { return &data[0][0];}
+    const float* buffer() const { return &data[0][0];}
     Matrix operator*(const Matrix &other) const;
     static Matrix toMatrix(const glm::mat4 &mat);
     static glm::mat4 toMatrix(const Matrix &mat);

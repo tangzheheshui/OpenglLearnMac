@@ -83,7 +83,7 @@ bool Image::draw() {
     glBindTexture(GL_TEXTURE_2D, _texture);
     
     if (m_type == ShaderType::Image) {
-        glm::mat4 model         = glm::mat4(1.0f); 
+        Matrix model;
         shader->setMat4("uMvp",model);
     }
     

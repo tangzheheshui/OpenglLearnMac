@@ -10,31 +10,31 @@
 
 #include "../third/glm/glm.hpp"
 #include "../third/glm/gtc/matrix_transform.hpp"
+#include "core/math/matrix.hpp"
 
 class Camera {
 public:
     Camera();
     void setPosition(glm::vec3 pos);
-    void setUp(glm::vec3 up);
     void setYaw(float yaw);
     void setPitch(float pitch);
     void setFov(float fov);
     
-    float getUp();
     float getYaw() { return _yaw; }
     float getPitch() { return _pitch; }
     float getFov() { return _fov; }
     glm::vec3 getPossition() { return _position; }
     
     void caculate();
-    glm::mat4 GetVPMatrix();
+    Matrix GetVPMatrix();
     static Camera& GetCamera();
+    static Matrix LookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up);
 private:
     glm::vec3 _position;
     glm::vec3 _front;
     glm::vec3 _up;
     glm::vec3 _right;
-    glm::vec3 _worldUp;
+    const glm::vec3 _worldUp = {0, 1, 0};
     // euler Angles
     float _yaw;
     float _pitch;

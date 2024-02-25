@@ -141,18 +141,21 @@ void Scene::drawShadow() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-glm::mat4 Scene::GetLightVPMatrix() {
-    if (_lightVPMatrix != glm::mat4()) {
-        return _lightVPMatrix;
+Matrix Scene::GetLightVPMatrix() {
+    if (_lightVPMatrix) {
+        return *_lightVPMatrix;
     }
-    glm::mat4 lightProjection, lightView;
-    glm::mat4 lightSpaceMatrix;
+    Matrix lightProjection, lightView;
     glm::vec3 lightPos = Light::GlobalLight().position;
     float near_plane = 1.0f, far_plane = 15.f;
     float width = 10.f;
-    lightProjection = glm::ortho(-width, width, -width, width, near_plane, far_plane);
-    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-    lightSpaceMatrix = lightProjection * lightView;
-    _lightVPMatrix = lightSpaceMatrix;
-    return _lightVPMatrix;
+    
+    lightView = Camera::LookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+    lightProjection = Matrix::toMatrix(glm::ortho(-width, width, -width, width, near_plane, far_plane));
+    
+    if (!_lightVPMatrix) {
+        _lightVPMatrix = new Matrix;
+        *_lightVPMatrix = lightProjection * lightView;
+    }
+    return *_lightVPMatrix;
 }

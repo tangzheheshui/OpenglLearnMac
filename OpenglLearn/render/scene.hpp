@@ -11,6 +11,7 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "core/math/matrix.hpp"
 
 class BaseDraw;
 
@@ -21,7 +22,7 @@ private:
 public:
     static Scene& getScene();
     static GLuint GetShadowTexture() { return _depthTexture; }
-    static glm::mat4 GetLightVPMatrix();
+    static Matrix GetLightVPMatrix();
     void drawShadow();
     void draw();
     void update();
@@ -29,7 +30,7 @@ private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
     GLuint _depthMapFBO = 0;
     inline static GLuint _depthTexture = 0;
-    inline static glm::mat4 _lightVPMatrix;
+    inline static Matrix* _lightVPMatrix = nullptr;
 };
 
 #endif /* scene_hpp */

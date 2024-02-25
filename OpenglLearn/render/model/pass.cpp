@@ -24,7 +24,7 @@ bool RenderPass::Draw(const std::vector<Matrix> &matModel, bool bDrawShadow) {
     shader->use();
     
     if (bDrawShadow) {
-        glm::mat4 lightSpaceMatrix = Scene::GetLightVPMatrix();
+        auto lightSpaceMatrix = Scene::GetLightVPMatrix();
         shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
     } else {
         bool has_normal_tex = false;
@@ -84,7 +84,8 @@ bool RenderPass::Draw(const std::vector<Matrix> &matModel, bool bDrawShadow) {
         // boneMat
         if (m_matBone && !m_matBone->empty()) {
             for (int i = 0; i < m_matBone->size(); ++i) {
-                shader->setMat4("uFinalBonesMatrices[" + std::to_string(i) + "]", m_matBone->at(i));
+                auto mat = Matrix::toMatrix(m_matBone->at(i));
+                shader->setMat4("uFinalBonesMatrices[" + std::to_string(i) + "]", mat);
             }
         }
     }
