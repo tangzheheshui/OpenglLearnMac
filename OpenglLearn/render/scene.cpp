@@ -151,8 +151,7 @@ Matrix Scene::GetLightVPMatrix() {
     float width = 10.f;
     
     lightView = Camera::LookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-    lightProjection = Matrix::toMatrix(glm::ortho(-width, width, -width, width, near_plane, far_plane));
-    
+    lightProjection = Camera::ortho(-width, width, -width, width, near_plane, far_plane);
     if (!_lightVPMatrix) {
         _lightVPMatrix = new Matrix;
         *_lightVPMatrix = lightProjection * lightView;

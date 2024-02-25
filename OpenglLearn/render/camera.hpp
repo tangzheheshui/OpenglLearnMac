@@ -29,6 +29,8 @@ public:
     Matrix GetVPMatrix();
     static Camera& GetCamera();
     static Matrix LookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up);
+    static Matrix ortho(float left, float right, float bottom, float top, float near, float far);
+    static Matrix perspective(float fov, float aspect, float near, float far);
 private:
     glm::vec3 _position;
     glm::vec3 _front;

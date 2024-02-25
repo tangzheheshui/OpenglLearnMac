@@ -49,9 +49,8 @@ Matrix Camera::GetVPMatrix() {
     float z = r * cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
     
     Matrix lookat = LookAt({x, y, z}, glm::vec3(0), _worldUp);
-    
-    glm::mat4 projection = glm::perspective(glm::radians(_fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    return Matrix::toMatrix(projection) * lookat;
+    Matrix projection = Camera::perspective(_fov, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.f);
+    return projection * lookat;
 }
 
 void Camera::caculate() {
@@ -80,12 +79,6 @@ Matrix Camera::LookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::
     auto R = glm::normalize(glm::cross(F, up));
     auto U = glm::cross(R, F);
     
-//    // T矩阵
-//    Matrix matT;
-//    matT.set(3, 0, -eye.x);
-//    matT.set(3, 1, -eye.y);
-//    matT.set(3, 2, -eye.z);
-    
     // R*T矩阵
     Matrix matR;
     matR.set(0, 0, R.x);
@@ -102,4 +95,26 @@ Matrix Camera::LookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::
     matR.set(3, 2, eye.x * F.x + eye.y * F.y + eye.z * F.z);
     
     return matR;
+}
+
+Matrix Camera::ortho(float left, float right, float bottom, float top, float near, float far) {
+    Matrix mat;
+    mat.set(0, 0, 2.0 / (right - left));
+    mat.set(1, 1, 2.0 / (top - bottom));
+    mat.set(2, 2, 2.0 / (near - far));
+    mat.set(3, 0, - (right + left) / (right - left));
+    mat.set(3, 1, - (top + bottom) / (top - bottom));
+    mat.set(3, 2, (far + near) / (near - far));
+    return mat;
+}
+
+Matrix Camera::perspective(float fov, float aspect, float near, float far) {
+    float halffov = 1 / degrees_to_radians(fov / 2);
+    Matrix mat;
+    mat.set(0, 0, halffov / aspect);
+    mat.set(1, 1, halffov);
+    mat.set(2, 2, (near + far) / (near - far));
+    mat.set(2, 3, -1);
+    mat.set(3, 2, 2 * near * far / (near - far));
+    return mat;
 }
