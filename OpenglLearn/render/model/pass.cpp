@@ -15,7 +15,8 @@ RenderPass::RenderPass(std::shared_ptr<MeshData> meshData, std::shared_ptr<Mater
     m_materail = matData;
 }
 
-bool RenderPass::Draw(const std::vector<Matrix> &matModel, bool bDrawShadow) {
+bool RenderPass::Draw(const std::vector<Matrix> &matModel, uint32_t flags) {
+    bool bDrawShadow = (flags & DrawOption::DRAW_SHADOW);
     auto shader = getShader(bDrawShadow);
     if (!shader) {
         return false;
@@ -64,7 +65,9 @@ bool RenderPass::Draw(const std::vector<Matrix> &matModel, bool bDrawShadow) {
         shader->setMat4("uMatrixVP", mpMatrix);
         
         // 灯光
+        bool lightOpen = flags&DrawOption::LIGHT_OPEN;
         auto light = Light::GlobalLight();
+        shader->setBool("uLight.is_open", lightOpen);
         shader->setFloat4("uLight.position", light.position.x, light.position.y, light.position.z, 1);
         shader->setFloat3("uLight.ambient", light.ambient.x, light.ambient.y, light.ambient.z);
         shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);

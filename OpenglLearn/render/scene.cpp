@@ -76,30 +76,31 @@ void Scene::createObjs() {
     // 模型
     std::shared_ptr<Model> objModel = std::make_shared<Model>();
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/rp_nathan_animated_003_walking.fbx");
-    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/spider.obj");
+    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/spider.obj");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
     objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/nanosuit/nanosuit.obj");
     objModel->setCount(1);
-    objModel->setPosition(0, {0, 1, 0});
-    objModel->setScale(0, 0.5);
-    //objModel->setRotateZ(0, 45);
-    
-    objModel->setPosition(1, {0, 0, 2});
-    objModel->setScale(1, 0.01);
-    
-    objModel->setPosition(2, {0, 0, 4});
-    objModel->setScale(2, 0.01);
+    objModel->setPosition(0, {0, 0.5, 0});
+    objModel->setScale(0, 1);
+    // 光源模型
+    std::shared_ptr<Model> objLight = std::make_shared<Model>();
+    objLight->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/box.obj");
+    objLight->setCount(1);
+    objLight->setLightOpen(false);
+    auto lightPos = Light::GlobalLight().position;
+    objLight->setPosition(0, {lightPos.x, lightPos.y, lightPos.z});
+    objLight->setScale(0, 0.5);
     
     // debug deep
     std::shared_ptr<Image> objImage = std::make_shared<Image>();
-    //objImage->setPath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/brickwall.jpg");
     objImage->setTextureID(GetShadowTexture());
     objImage->setShaderType(ShaderType::Debug_DeepTexture);
     
     // push 
     m_vec_drawobj.push_back(objGround);
-    m_vec_drawobj.push_back(objModel);
+    //m_vec_drawobj.push_back(objModel);
+    m_vec_drawobj.push_back(objLight);
     m_vec_drawobj.push_back(line_x);
     m_vec_drawobj.push_back(line_y);
     m_vec_drawobj.push_back(line_z);

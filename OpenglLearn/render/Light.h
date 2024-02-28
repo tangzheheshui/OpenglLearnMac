@@ -14,19 +14,17 @@ class Light {
 public:
     static Light& GlobalLight() {
         static Light light;
-        light.position = {3.0f, 10.0f, .0f};
-        light.direction = {1, -1, 0};
-        float ambient = 0.5;
+        light.position = {.0f, 5.0f, .0f};
+        float ambient = 0.4;
         light.ambient = glm::vec3(ambient);
-        float diffuse = 0.5;
+        float diffuse = 0.7;
         light.diffuse = glm::vec3(diffuse);
-        float specular = 1.0;
+        float specular = 0;
         light.specular = glm::vec3(specular);
         return light;
     }
 public:
     glm::vec3 position;
-    glm::vec3 direction;
     glm::vec3 ambient;
     glm::vec3 diffuse;
     glm::vec3 specular;

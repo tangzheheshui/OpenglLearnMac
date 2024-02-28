@@ -124,4 +124,10 @@ struct ModelData {
     std::map<std::string, BoneInfo> mapBoneInfo;
 };
 
+enum DrawOption : char {
+    NONE = 0,
+    DRAW_SHADOW = (1<<0),
+    LIGHT_OPEN  = (1<<1),
+};
+
 #endif /* model_data_h */

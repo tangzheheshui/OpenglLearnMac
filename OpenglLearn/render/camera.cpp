@@ -43,12 +43,7 @@ void Camera::setFov(float fov) {
 Matrix Camera::GetVPMatrix() {
     caculate();
     
-    float r = std::sqrt(_position.x*_position.x + _position.y*_position.y + _position.z*_position.z);
-    float y = r * sin(glm::radians(_pitch));
-    float x = r * cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
-    float z = r * cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
-    
-    Matrix lookat = LookAt({x, y, z}, glm::vec3(0), _worldUp);
+    Matrix lookat = LookAt(_position, glm::vec3(0), _worldUp);
     Matrix projection = Camera::perspective(_fov, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.f);
     return projection * lookat;
 }
@@ -67,6 +62,13 @@ void Camera::caculate() {
     // also re-calculate the Right and Up vector
     _right = glm::normalize(glm::cross(_front, _worldUp));  
     _up    = glm::normalize(glm::cross(_right, _front));
+    
+    // 重新计算位置
+    float r = std::sqrt(_position.x*_position.x + _position.y*_position.y + _position.z*_position.z);
+    float y = r * sin(glm::radians(_pitch));
+    float x = r * cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
+    float z = r * cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
+    _position = {x, y, z};
 }
 
 Camera& Camera::GetCamera() {

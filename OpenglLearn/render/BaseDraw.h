@@ -29,10 +29,15 @@ public:
     virtual bool draw() = 0;
     virtual bool drawShadow() { return false; }
     virtual void update() {}
+public:
+    bool getLightOpen() const { return _lightOpen; }
+    void setLightOpen(const bool &b) { _lightOpen = b; }
 protected:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
     unsigned int _EBO = 0;
+private:
+    bool _lightOpen = true;
 };
 
 #endif /* BaseDraw_h */

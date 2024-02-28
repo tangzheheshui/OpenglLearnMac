@@ -26,9 +26,9 @@ Mesh::Mesh(std::shared_ptr<MeshData> meshData, std::shared_ptr<Materail> matData
     }
 }
 
-bool Mesh::Draw(const std::vector<Matrix> &matModel, bool bDrawShadow) {
+bool Mesh::Draw(const std::vector<Matrix> &matModel, uint32_t flags) {
     if (m_pass) {
-         m_pass->Draw(matModel, bDrawShadow);
+         m_pass->Draw(matModel, flags);
     }
     return true;
 }

@@ -329,7 +329,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         Texture texture;
         texture.name = typeName + std::to_string(i);
         
-        //std::cout << "model materail tex name = " << filename << ", typeName = " << texture.name << std::endl;
+        std::cout << "model materail tex name = " << filename << ", typeName = " << texture.name << std::endl;
         auto iter = m_model_data.map_image.find(std::string(str.C_Str()));
         if (iter != m_model_data.map_image.end()) { 
             // 从内存中获取
@@ -354,8 +354,10 @@ void Model::genMesh() {
 }
 
 bool Model::drawShadow() {
+    uint32_t flags = 0;
+    flags |= DrawOption::DRAW_SHADOW;
     for (auto mesh : m_mesh) {
-        mesh->Draw(m_vec_modelMat, true);
+        mesh->Draw(m_vec_modelMat, flags);
     }
     return true;
 }
@@ -406,9 +408,14 @@ void Model::update() {
 bool Model::draw() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    
+    uint32_t flags = 0;
+    if (getLightOpen()) {
+        flags |= DrawOption::LIGHT_OPEN;
+    }
     for (auto mesh : m_mesh) {
         mesh->setBoneMat(m_FinalBoneMatrices);
-        mesh->Draw(m_vec_modelMat, false);
+        mesh->Draw(m_vec_modelMat, flags);
     }
     glDisable(GL_CULL_FACE);
     return true;

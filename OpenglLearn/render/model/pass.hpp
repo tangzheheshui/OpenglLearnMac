@@ -33,7 +33,7 @@ public:
         }
     }
     
-    bool Draw(const std::vector<Matrix> &matModel, bool bDrawShadow);
+    bool Draw(const std::vector<Matrix> &matModel, uint32_t flags);
 protected:
     virtual Shader* getShader(bool shadow) { return nullptr; }
     virtual void setup(const std::vector<Matrix> &matModel) {}

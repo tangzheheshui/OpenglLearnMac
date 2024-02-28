@@ -126,6 +126,7 @@ unsigned int Image::TextureFromFile(const std::string &filename)
         stbi_image_free(data);
         
         s_map_texture_cache[filename] = textureID;
+        return textureID;
     }
     else
     {

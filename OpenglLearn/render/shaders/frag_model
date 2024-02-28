@@ -17,8 +17,8 @@ struct Materail {
 };
 
 struct Light {
+    bool is_open;
     vec4 position;
-
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -34,31 +34,35 @@ uniform sampler2D texture_normal0;
 void main()
 {
     vec3 color = texture(texture_diffuse0, TexCoord).xyz;
+    vec3 result = color;
+    if (uLight.is_open) {
+        // 计算光照
+        vec3 normal = normalize(pNormal);
+        if (uMaterail.has_normal_tex == 1) { // 需要考虑正负切线 todo
+            normal = texture(texture_normal0, TexCoord).xyz;
+            normal = normalize(normal * 2.0 - 1.0);
+            normal = normalize(pMatNormal * normal);
+        }
     
-    // 计算光照
-    vec3 normal = normalize(pNormal);
-    if (uMaterail.has_normal_tex == 1) { // 需要考虑正负切线 todo
-        normal = texture(texture_normal0, TexCoord).xyz;
-        normal = normalize(normal * 2.0 - 1.0);
-        normal = normalize(pMatNormal * normal);
+        // ambient
+        vec3 ambient = uLight.ambient * color;
+        
+        // diffuse
+        vec3 dirLight = normalize(uLight.position.xyz - pFragPos);
+        float diff = max(dot(dirLight, normal), 0.0);
+        vec3 diffuse = uLight.diffuse * color * diff;
+        
+        // specular
+        vec3 viewDir = normalize(uCameraPos - pFragPos);
+        vec3 halfwayDir = normalize(dirLight + viewDir);  
+        float spec = pow(max(dot(normal, halfwayDir), 0.0), uMaterail.shininess);
+        vec3 specular = uLight.specular * spec * uMaterail.specular;
+        if (uMaterail.has_specular_tex == 1) {
+            specular = uLight.specular * spec * vec3(texture(texture_specular0, TexCoord));
+        }
+        
+        result =  (ambient + diffuse + specular);
     }
-
-    // ambient
-    vec3 ambient = uLight.ambient * color;
     
-    // diffuse
-    vec3 dirLight = normalize(uLight.position.xyz - pFragPos);
-    float diff = max(dot(dirLight, normal), 0.0);
-    vec3 diffuse = uLight.diffuse * color * diff;
-    
-    // specular
-    vec3 viewDir = normalize(uCameraPos - pFragPos);
-    vec3 halfwayDir = normalize(dirLight + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), uMaterail.shininess);
-    vec3 specular = uLight.specular * spec * uMaterail.specular;
-    if (uMaterail.has_specular_tex == 1) {
-        specular = uLight.specular * spec * vec3(texture(texture_specular0, TexCoord));
-    }
-    vec3 result =  (ambient + diffuse + specular);
     FragColor = vec4(result, 1.0);
 }
