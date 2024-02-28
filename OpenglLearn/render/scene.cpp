@@ -153,7 +153,7 @@ Matrix Scene::GetLightVPMatrix() {
     glm::vec3 lightPos = Light::GlobalLight().position;
     float near_plane = 1.0f, far_plane = 15.f;
     
-    lightView = Camera::LookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+    lightView = Matrix::toMatrix(glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0000001, 1, 0.0))) ;
     lightProjection = Camera::perspective(degrees_to_radians(90), 1.f, near_plane, far_plane);
     if (!_lightVPMatrix) {
         _lightVPMatrix = new Matrix;
@@ -166,31 +166,33 @@ std::shared_ptr<Line> Scene::getTestLine() {
     std::shared_ptr<Line> lineObj = std::make_shared<Line>();
     glm::mat4 matVP = Matrix::toMatrix(GetLightVPMatrix());
     matVP = glm::inverse(matVP);
-    glm::vec4 n1 = (matVP * glm::vec4(-1.0, -1.0, -1.0f, 1));
-    glm::vec4 n2 = (matVP * glm::vec4(-1.0, 1.0, -1.0f, 1));
-    glm::vec4 n3 = (matVP * glm::vec4(1.0, 1.0, -1.0f, 1));
-    glm::vec4 n4 = (matVP * glm::vec4(1.0, -1.0, -1.0f, 1));
-    glm::vec4 n5 = (matVP * glm::vec4(-1.0, -1.0, 1.0f, 1));
-    glm::vec4 n6 = (matVP * glm::vec4(-1.0, 1.0, 1.0f, 1));
-    glm::vec4 n7 = (matVP * glm::vec4(1.0, 1.0, 1.0f, 1));
-    glm::vec4 n8 = (matVP * glm::vec4(1.0, -1.0, 1.0f, 1));
+    std::vector<glm::vec3> frustumVertices;
     
-    glm::vec3 point1 = {n1.x, n1.y, n1.z};
-    glm::vec3 point2 = {n2.x, n2.y, n2.z};
-    glm::vec3 point3 = {n3.x, n3.y, n3.z};
-    glm::vec3 point4 = {n4.x, n4.y, n4.z};
-    glm::vec3 point5 = {n5.x, n5.y, n5.z};
-    glm::vec3 point6 = {n6.x, n6.y, n6.z};
-    glm::vec3 point7 = {n7.x, n7.y, n7.z};
-    glm::vec3 point8 = {n8.x, n8.y, n8.z};
+    // 近裁剪面的四个顶点
+    frustumVertices.push_back(glm::vec3(-1, -1, -1));  // 左下
+    frustumVertices.push_back(glm::vec3(1, -1, -1));   // 右下
+    frustumVertices.push_back(glm::vec3(1, 1, -1));    // 右上
+    frustumVertices.push_back(glm::vec3(-1, 1, -1));   // 左上
+    
+    // 远裁剪面的四个顶点
+    frustumVertices.push_back(glm::vec3(-1, -1, 1));   // 左下
+    frustumVertices.push_back(glm::vec3(1, -1, 1));    // 右下
+    frustumVertices.push_back(glm::vec3(1, 1, 1));     // 右上
+    frustumVertices.push_back(glm::vec3(-1, 1, 1));    // 左上
+    
+    // 将顶点从 NDC 空间转换到世界空间
+    for (glm::vec3& vertex : frustumVertices) {
+        glm::vec4 worldVertex = matVP * glm::vec4(vertex, 1.0f);
+        vertex = glm::vec3(worldVertex) / worldVertex.w;
+    }
     
     glm::vec3 lightPos = Light::GlobalLight().position;
-    std::vector<glm::vec3> vec_points = {point1, point2, point3, point4, point5, point6, point7, point8, lightPos};
+    frustumVertices.push_back(lightPos);
     std::vector<unsigned int> indexs = {0, 1, 1, 2, 2, 3, 3, 0, 
         4, 5, 5, 6, 6, 7, 7, 4,
         0, 4, 1, 5, 2, 6, 3, 7,
     0, 8, 1, 8, 2, 8, 3, 8};
-    lineObj->setData(vec_points, indexs);
+    lineObj->setData(frustumVertices, indexs);
     lineObj->setColor({0, 1, 1});
     return lineObj;
 }
