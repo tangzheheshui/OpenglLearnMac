@@ -48,8 +48,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 { 
     float height =  texture(uTextureHeight, texCoords).r;    
-    vec2 p = viewDir.xy / viewDir.z * (height * 1.0);
-    return texCoords - p;    
+    vec2 p = vec2(2.0, 0.1) * viewDir.xy * height;
+    return texCoords + p;    
 }
 
 void main()

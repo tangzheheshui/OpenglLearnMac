@@ -39,20 +39,14 @@ bool ImageRectangle::draw() {
     // normal
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
-    
-    if (has_normal) {
-        // tangent
-        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(8 * sizeof(float)));
-        glEnableVertexAttribArray(3);
-        // bitangent
-        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(11 * sizeof(float)));
-        glEnableVertexAttribArray(4);
-    }
+    // tangent
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(8 * sizeof(float)));
+    glEnableVertexAttribArray(3);
+    // bitangent
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(11 * sizeof(float)));
+    glEnableVertexAttribArray(4);
     
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Ground);
-    if (has_normal) {
-        shader = ShaderCache::GetInstance().GetShader(ShaderType::Ground_Normal);
-    }
     if (!shader) {
         return false;
     }
@@ -102,8 +96,8 @@ bool ImageRectangle::draw() {
     shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);
     
     // 相机位置
-    auto cam_pos = Camera::GetCamera().getPossition();
-    shader->setFloat3("uCameraPos", cam_pos.x, cam_pos.y, cam_pos.z);
+    // auto cam_pos = Camera::GetCamera().getPossition();
+    shader->setFloat3("uCameraPos", 15, 15, 0);
     
     glDrawArrays(GL_TRIANGLES, 0, (int)m_buffer.size());
     return true;

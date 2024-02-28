@@ -91,8 +91,6 @@
 		65FA242A2B63D982006062DB /* vert_shadow */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_shadow; sourceTree = "<group>"; };
 		65FA242B2B63E3A1006062DB /* vert_deepImage */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_deepImage; sourceTree = "<group>"; };
 		65FA242C2B63E3A2006062DB /* frag_deepImage */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_deepImage; sourceTree = "<group>"; };
-		65FA242D2B63FB28006062DB /* vert_ground */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_ground; sourceTree = "<group>"; };
-		65FA242E2B63FB28006062DB /* frag_ground */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_ground; sourceTree = "<group>"; };
 		65FA24802B6AD66F006062DB /* vert_model_color_anim */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_model_color_anim; sourceTree = "<group>"; };
 		65FA24812B712E66006062DB /* vert_shadow_color */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_shadow_color; sourceTree = "<group>"; };
 		65FD8F0C2B43F7E700A06A38 /* vert_image */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_image; sourceTree = "<group>"; };
@@ -253,8 +251,6 @@
 				657D254E2B74EBFF0073F59A /* vert_ground_normal */,
 				65FA24812B712E66006062DB /* vert_shadow_color */,
 				65FA24802B6AD66F006062DB /* vert_model_color_anim */,
-				65FA242E2B63FB28006062DB /* frag_ground */,
-				65FA242D2B63FB28006062DB /* vert_ground */,
 				65FA242C2B63E3A2006062DB /* frag_deepImage */,
 				65FA242B2B63E3A1006062DB /* vert_deepImage */,
 				65FA24292B63D982006062DB /* frag_shadow */,

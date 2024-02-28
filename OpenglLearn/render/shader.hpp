@@ -44,7 +44,6 @@ enum class ShaderType {
     Shadow_Texture,
     Debug_DeepTexture,
     Ground,
-    Ground_Normal,
     Model_Color_Anim,
     Model_Texture_Anim,
 };
