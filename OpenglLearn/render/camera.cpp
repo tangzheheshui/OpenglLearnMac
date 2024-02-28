@@ -99,6 +99,19 @@ Matrix Camera::LookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::
 
 Matrix Camera::ortho(float left, float right, float bottom, float top, float near, float far) {
     Matrix mat;
+    // 步骤1:平移矩阵T
+    //    1 0 0 -(r+l)/2
+    //    0 1 0 -(t+b)/2
+    //    0 0 1 -(n+f)/2
+    //    0 0 0 1
+    
+    // 步骤2:缩放矩阵S
+    //    2/(r-l) 0       0       0
+    //    0       2/(t-b) 0       0
+    //    0       0       2/(f-n) 0
+    //    0       0       0       1
+    
+    // 步骤3:S*T后，将n和f，替换成-n和-f
     mat.set(0, 0, 2.0 / (right - left));
     mat.set(1, 1, 2.0 / (top - bottom));
     mat.set(2, 2, 2.0 / (near - far));
