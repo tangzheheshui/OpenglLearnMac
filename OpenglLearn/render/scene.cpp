@@ -152,11 +152,9 @@ Matrix Scene::GetLightVPMatrix() {
     Matrix lightProjection, lightView;
     glm::vec3 lightPos = Light::GlobalLight().position;
     float near_plane = 1.0f, far_plane = 15.f;
-    float width = 10.f;
     
     lightView = Camera::LookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-    lightProjection = Matrix::toMatrix(glm::perspective(90.f, 1.f, 1.f, 15.f));
-    lightProjection = Camera::perspective(90.f, 1.f, 1.f, 15.f);
+    lightProjection = Camera::perspective(degrees_to_radians(90), 1.f, near_plane, far_plane);
     if (!_lightVPMatrix) {
         _lightVPMatrix = new Matrix;
         *_lightVPMatrix = lightProjection * lightView;
