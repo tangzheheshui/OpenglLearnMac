@@ -14,6 +14,7 @@
 #include "core/math/matrix.hpp"
 
 class BaseDraw;
+class Line;
 
 class Scene {
 private:
@@ -26,6 +27,8 @@ public:
     void drawShadow();
     void draw();
     void update();
+private:
+    std::shared_ptr<Line> getTestLine();
 private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
     GLuint _depthMapFBO = 0;

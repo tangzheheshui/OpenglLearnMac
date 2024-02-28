@@ -81,8 +81,8 @@ void Scene::createObjs() {
     objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/nanosuit/nanosuit.obj");
     objModel->setCount(1);
-    objModel->setPosition(0, {0, 0.5, 0});
-    objModel->setScale(0, 1);
+    objModel->setPosition(0, {0, 1, 0});
+    objModel->setScale(0, 0.5);
     // 光源模型
     std::shared_ptr<Model> objLight = std::make_shared<Model>();
     objLight->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/box.obj");
@@ -97,9 +97,12 @@ void Scene::createObjs() {
     objImage->setTextureID(GetShadowTexture());
     objImage->setShaderType(ShaderType::Debug_DeepTexture);
     
+    // 
+    auto testLine = getTestLine();
+    m_vec_drawobj.push_back(testLine);
     // push 
     m_vec_drawobj.push_back(objGround);
-    //m_vec_drawobj.push_back(objModel);
+    m_vec_drawobj.push_back(objModel);
     m_vec_drawobj.push_back(objLight);
     m_vec_drawobj.push_back(line_x);
     m_vec_drawobj.push_back(line_y);
@@ -152,10 +155,44 @@ Matrix Scene::GetLightVPMatrix() {
     float width = 10.f;
     
     lightView = Camera::LookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-    lightProjection = Camera::ortho(-width, width, -width, width, near_plane, far_plane);
+    lightProjection = Matrix::toMatrix(glm::perspective(90.f, 1.f, 1.f, 15.f));
+    lightProjection = Camera::perspective(90.f, 1.f, 1.f, 15.f);
     if (!_lightVPMatrix) {
         _lightVPMatrix = new Matrix;
         *_lightVPMatrix = lightProjection * lightView;
     }
     return *_lightVPMatrix;
+}
+
+std::shared_ptr<Line> Scene::getTestLine() {
+    std::shared_ptr<Line> lineObj = std::make_shared<Line>();
+    glm::mat4 matVP = Matrix::toMatrix(GetLightVPMatrix());
+    matVP = glm::inverse(matVP);
+    glm::vec4 n1 = (matVP * glm::vec4(-1.0, -1.0, -1.0f, 1));
+    glm::vec4 n2 = (matVP * glm::vec4(-1.0, 1.0, -1.0f, 1));
+    glm::vec4 n3 = (matVP * glm::vec4(1.0, 1.0, -1.0f, 1));
+    glm::vec4 n4 = (matVP * glm::vec4(1.0, -1.0, -1.0f, 1));
+    glm::vec4 n5 = (matVP * glm::vec4(-1.0, -1.0, 1.0f, 1));
+    glm::vec4 n6 = (matVP * glm::vec4(-1.0, 1.0, 1.0f, 1));
+    glm::vec4 n7 = (matVP * glm::vec4(1.0, 1.0, 1.0f, 1));
+    glm::vec4 n8 = (matVP * glm::vec4(1.0, -1.0, 1.0f, 1));
+    
+    glm::vec3 point1 = {n1.x, n1.y, n1.z};
+    glm::vec3 point2 = {n2.x, n2.y, n2.z};
+    glm::vec3 point3 = {n3.x, n3.y, n3.z};
+    glm::vec3 point4 = {n4.x, n4.y, n4.z};
+    glm::vec3 point5 = {n5.x, n5.y, n5.z};
+    glm::vec3 point6 = {n6.x, n6.y, n6.z};
+    glm::vec3 point7 = {n7.x, n7.y, n7.z};
+    glm::vec3 point8 = {n8.x, n8.y, n8.z};
+    
+    glm::vec3 lightPos = Light::GlobalLight().position;
+    std::vector<glm::vec3> vec_points = {point1, point2, point3, point4, point5, point6, point7, point8, lightPos};
+    std::vector<unsigned int> indexs = {0, 1, 1, 2, 2, 3, 3, 0, 
+        4, 5, 5, 6, 6, 7, 7, 4,
+        0, 4, 1, 5, 2, 6, 3, 7,
+    0, 8, 1, 8, 2, 8, 3, 8};
+    lineObj->setData(vec_points, indexs);
+    lineObj->setColor({0, 1, 1});
+    return lineObj;
 }

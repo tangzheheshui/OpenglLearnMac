@@ -124,7 +124,7 @@ Matrix Camera::ortho(float left, float right, float bottom, float top, float nea
 }
 
 Matrix Camera::perspective(float fov, float aspect, float near, float far) {
-    float halffov = 1 / degrees_to_radians(fov / 2);
+    float halffov = 1 / tan(degrees_to_radians(fov) / 2);
     Matrix mat;
     mat.set(0, 0, halffov / aspect);
     mat.set(1, 1, halffov);
