@@ -32,16 +32,14 @@ public:
     virtual bool drawShadow() { return false; }
     virtual void update() {}
 public:
+    virtual void getDebugPoint(std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices) {}
+    
     bool getLightOpen() const { return _lightOpen; }
     void setLightOpen(const bool &b) { _lightOpen = b; }
 protected:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
     unsigned int _EBO = 0;
-    
-    // debug线
-    std::vector<glm::vec3> _debugVerts;
-    std::vector<unsigned int> _debugIndex;
 private:
     bool _lightOpen = true;
 };

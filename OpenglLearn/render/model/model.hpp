@@ -56,7 +56,7 @@ public:
     virtual bool draw() override;
     virtual bool drawShadow() override;
     virtual void update() override;
-    
+    virtual void getDebugPoint(std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices) override;
     // 模型的属性
     void setCount(int count);
     void setScale(int index, float scale);

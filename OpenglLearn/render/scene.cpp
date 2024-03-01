@@ -115,13 +115,10 @@ void Scene::createObjs() {
     objImage->setTextureID(GetShadowTexture());
     objImage->setShaderType(ShaderType::Debug_DeepTexture);
     
-    // 
-    auto testLine = getTestLine();
-    m_vec_drawobj.push_back(testLine);
     // push 
     m_vec_drawobj.push_back(objGround);
-    m_vec_drawobj.push_back(objModel);
     m_vec_drawobj.push_back(objDuck);
+    m_vec_drawobj.push_back(objModel);
     m_vec_drawobj.push_back(objLight);
     m_vec_drawobj.push_back(line_x);
     m_vec_drawobj.push_back(line_y);
@@ -142,6 +139,10 @@ void Scene::draw() {
     for (auto obj : m_vec_drawobj) {
         obj->draw();
     }
+    
+    // 画debug线
+    auto testLine = getTestLine();
+    testLine->draw();
 }
 
 void Scene::drawShadow() {
@@ -182,7 +183,7 @@ Matrix Scene::GetLightVPMatrix() {
 }
 
 std::shared_ptr<Line> Scene::getTestLine() {
-    std::shared_ptr<Line> lineObj = std::make_shared<Line>();
+    static std::shared_ptr<Line> lineObj = std::make_shared<Line>();
     glm::mat4 matVP = Matrix::toMatrix(GetLightVPMatrix());
     matVP = glm::inverse(matVP);
     std::vector<glm::vec3> frustumVertices;
@@ -211,6 +212,12 @@ std::shared_ptr<Line> Scene::getTestLine() {
         4, 5, 5, 6, 6, 7, 7, 4,
         0, 4, 1, 5, 2, 6, 3, 7,
     0, 8, 1, 8, 2, 8, 3, 8};
+    
+    // 取出m_vec_drawobj中的
+    for (auto obj : m_vec_drawobj) {
+        obj->getDebugPoint(frustumVertices, indexs);
+    }
+    
     lineObj->setData(frustumVertices, indexs);
     lineObj->setColor({0, 1, 1});
     return lineObj;

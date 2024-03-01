@@ -466,3 +466,38 @@ void Model::setPosition(int index, const glm::vec3 &pos) {
     }
     m_vec_modelMat[index].translate(pos.x, pos.y, pos.z);
 }
+
+void Model::getDebugPoint(std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices) {    
+    if (m_vec_modelMat.empty()) {
+        return;
+    }
+    
+    std::vector<unsigned int> _debugIndex = {0, 1, 1, 2, 2, 3, 3, 0,
+        4, 5, 5, 6, 6, 7, 7, 4,
+    0, 4, 1, 5, 2, 6, 3, 7};
+    
+    std::vector<glm::vec3> points;
+    points.push_back(glm::vec3(m_aabb.getMinX(), m_aabb.getMinY(), m_aabb.getMinZ()));
+    points.push_back(glm::vec3(m_aabb.getMaxX(), m_aabb.getMinY(), m_aabb.getMinZ()));
+    points.push_back(glm::vec3(m_aabb.getMaxX(), m_aabb.getMaxY(), m_aabb.getMinZ()));
+    points.push_back(glm::vec3(m_aabb.getMinX(), m_aabb.getMaxY(), m_aabb.getMinZ()));
+    
+    points.push_back(glm::vec3(m_aabb.getMinX(), m_aabb.getMinY(), m_aabb.getMaxZ()));
+    points.push_back(glm::vec3(m_aabb.getMaxX(), m_aabb.getMinY(), m_aabb.getMaxZ()));
+    points.push_back(glm::vec3(m_aabb.getMaxX(), m_aabb.getMaxY(), m_aabb.getMaxZ()));
+    points.push_back(glm::vec3(m_aabb.getMinX(), m_aabb.getMaxY(), m_aabb.getMaxZ()));
+    
+    std::vector<glm::vec3> all_points;
+    all_points.reserve(8 * m_vec_modelMat.size());
+    for (const auto &mat : m_vec_modelMat) {
+        size_t indexBegin = vertices.size() + all_points.size();
+        
+        for (const auto &point : points) {
+            all_points.push_back(Matrix::toMatrix(mat) * glm::vec4(point, 1));
+        }
+        
+        std::transform(_debugIndex.begin(), _debugIndex.end(), std::back_inserter(indices),
+                           [indexBegin](int val) { return val + indexBegin; });
+    }
+    vertices.insert(vertices.end(), all_points.begin(), all_points.end());
+}
