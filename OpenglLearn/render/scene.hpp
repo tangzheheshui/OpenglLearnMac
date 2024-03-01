@@ -15,6 +15,7 @@
 
 class BaseDraw;
 class Line;
+class Shader;
 
 class Scene {
 private:
@@ -27,6 +28,7 @@ public:
     void drawShadow();
     void draw();
     void update();
+    void setLightUniform(Shader* shader);
 private:
     std::shared_ptr<Line> getTestLine();
 private:

@@ -15,6 +15,8 @@ struct Materail {
 struct Light {
     bool is_open;
     vec3 position;
+    vec3 direction;
+    float cosTheta;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -29,22 +31,24 @@ void main()
     vec3 result;
     if (uLight.is_open) {
         vec3 normal = normalize(pNormal);
-
-        // ambient
-        vec3 ambient = uLight.ambient * uMaterail.ambient;
-    
-        // diffuse
         vec3 dirLight = normalize(uLight.position.xyz - pFragPos);
-        float diff = max(dot(dirLight, normal), 0.0);
-        vec3 diffuse = uLight.diffuse * uMaterail.diffuse * diff;
+        float cos = dot(-dirLight, normalize(uLight.direction));
+            
+        // ambient
+        result += uLight.ambient * uMaterail.ambient;
     
-        // specular
-        vec3 viewDir = normalize(uCameraPos - pFragPos);
-        vec3 reflectDir = reflect(-dirLight, normal);  
-        float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterail.shininess);
-        vec3 specular = uLight.specular * (spec * uMaterail.specular * uMaterail.shininess_strength);
-    
-        result =  (ambient + diffuse);
+        if (cos > uLight.cosTheta) {
+            // diffuse
+            float diff = max(dot(dirLight, normal), 0.0);
+            result += uLight.diffuse * uMaterail.diffuse * diff;
+            
+            // specular
+            vec3 viewDir = normalize(uCameraPos - pFragPos);
+            vec3 halfwayDir = normalize(dirLight + viewDir);   
+            float spec = pow(max(dot(normal, halfwayDir), 0.0), uMaterail.shininess);
+            vec3 specular = uLight.specular * (spec * uMaterail.specular);
+            result += specular;
+        }
     } else {
         result = uMaterail.diffuse;
     }

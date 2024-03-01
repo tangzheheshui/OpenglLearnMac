@@ -16,6 +16,7 @@
 		651EFBF72B3F322800620837 /* libglfw.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 651EFBF32B3F320900620837 /* libglfw.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		651EFBFA2B3F324000620837 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 651EFBF92B3F324000620837 /* glad.c */; };
 		6581573D2B89E7FD00253663 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6581573B2B89E7FD00253663 /* matrix.cpp */; };
+		658157682B922EA500253663 /* aabb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 658157662B922EA500253663 /* aabb.cpp */; };
 		65D475B62B42D355004AE289 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B42B42D355004AE289 /* shader.cpp */; };
 		65D475BA2B42EFBB004AE289 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B82B42EFBB004AE289 /* image.cpp */; };
 		65FA241E2B623321006062DB /* Line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FA241C2B623321006062DB /* Line.cpp */; };
@@ -71,6 +72,8 @@
 		657D254E2B74EBFF0073F59A /* vert_ground_normal */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_ground_normal; sourceTree = "<group>"; };
 		6581573B2B89E7FD00253663 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
 		6581573C2B89E7FD00253663 /* matrix.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = matrix.hpp; sourceTree = "<group>"; };
+		658157662B922EA500253663 /* aabb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = aabb.cpp; sourceTree = "<group>"; };
+		658157672B922EA500253663 /* aabb.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = aabb.hpp; sourceTree = "<group>"; };
 		65ABD0012B5FED75007552FD /* model_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_data.h; sourceTree = "<group>"; };
 		65ABD02C2B60DF2B007552FD /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		65D475B42B42D355004AE289 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
@@ -192,6 +195,8 @@
 				650751C62B5EA62D00BB2098 /* PassTexture.cpp */,
 				650751C72B5EA62D00BB2098 /* PassTexture.hpp */,
 				65ABD0012B5FED75007552FD /* model_data.h */,
+				658157662B922EA500253663 /* aabb.cpp */,
+				658157672B922EA500253663 /* aabb.hpp */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -333,6 +338,7 @@
 				65FA24222B623DE5006062DB /* scene.cpp in Sources */,
 				651EFBEC2B3F308C00620837 /* main.cpp in Sources */,
 				651EFBFA2B3F324000620837 /* glad.c in Sources */,
+				658157682B922EA500253663 /* aabb.cpp in Sources */,
 				65FD8F102B44588A00A06A38 /* camera.cpp in Sources */,
 				650751C82B5EA62D00BB2098 /* PassTexture.cpp in Sources */,
 				6581573D2B89E7FD00253663 /* matrix.cpp in Sources */,

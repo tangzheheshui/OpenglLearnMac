@@ -73,16 +73,34 @@ void Scene::createObjs() {
     objGround->setPoints(p1, p2, p3, p4);
     objGround->calculate();
     
-    // 模型
+    // 背包
     std::shared_ptr<Model> objModel = std::make_shared<Model>();
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/rp_nathan_animated_003_walking.fbx");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/spider.obj");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
     objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
     //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/nanosuit/nanosuit.obj");
-    objModel->setCount(1);
+    objModel->setCount(3);
     objModel->setPosition(0, {0, 1, 0});
     objModel->setScale(0, 0.5);
+    
+    objModel->setPosition(1, {-4, 1, 0});
+    objModel->setScale(1, 0.5);
+    
+    objModel->setPosition(2, {4, 1, 0});
+    objModel->setScale(2, 0.5);
+    
+    // 鸭子
+    std::shared_ptr<Model> objDuck = std::make_shared<Model>();
+    objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+    objDuck->setCount(3);
+    objDuck->setPosition(0, {0, 0, 2});
+    objDuck->setScale(0, 0.01);
+    objDuck->setPosition(1, {-2, 0, 2});
+    objDuck->setScale(1, 0.01);
+    objDuck->setPosition(2, {2, 0, 2});
+    objDuck->setScale(2, 0.01);
+    
     // 光源模型
     std::shared_ptr<Model> objLight = std::make_shared<Model>();
     objLight->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/box.obj");
@@ -103,6 +121,7 @@ void Scene::createObjs() {
     // push 
     m_vec_drawobj.push_back(objGround);
     m_vec_drawobj.push_back(objModel);
+    m_vec_drawobj.push_back(objDuck);
     m_vec_drawobj.push_back(objLight);
     m_vec_drawobj.push_back(line_x);
     m_vec_drawobj.push_back(line_y);
@@ -195,4 +214,14 @@ std::shared_ptr<Line> Scene::getTestLine() {
     lineObj->setData(frustumVertices, indexs);
     lineObj->setColor({0, 1, 1});
     return lineObj;
+}
+
+void Scene::setLightUniform(Shader* shader) {
+    auto light = Light::GlobalLight();
+    shader->setFloat4("uLight.position", light.position.x, light.position.y, light.position.z, 1);
+    shader->setFloat3("uLight.direction", light.direction.x, light.direction.y, light.direction.z);
+    shader->setFloat("uLight.cosTheta", light.cosTheta);
+    shader->setFloat3("uLight.ambient", light.ambient.x, light.ambient.y, light.ambient.z);
+    shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
+    shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);
 }

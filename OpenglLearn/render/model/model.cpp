@@ -262,6 +262,13 @@ std::shared_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         float y = mesh->mVertices[i].y;
         float z = mesh->mVertices[i].z;
         
+        m_aabb.setMinX(std::min(x, m_aabb.getMinX()));
+        m_aabb.setMinY(std::min(y, m_aabb.getMinY()));
+        m_aabb.setMinZ(std::min(z, m_aabb.getMinZ()));
+        m_aabb.setMaxX(std::max(x, m_aabb.getMaxX()));
+        m_aabb.setMaxY(std::max(y, m_aabb.getMaxY()));
+        m_aabb.setMaxZ(std::max(z, m_aabb.getMaxZ()));
+        
         meshData->positions.push_back(AssimpGLMHelpers::GetGLMVec(mesh->mVertices[i]));
         
         // normals

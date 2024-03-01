@@ -15,6 +15,8 @@ public:
     static Light& GlobalLight() {
         static Light light;
         light.position = {0.f, 10.0f, .0f};
+        light.direction = -light.position;
+        light.cosTheta = cos(degrees_to_radians(15));
         float ambient = 0.4;
         light.ambient = glm::vec3(ambient);
         float diffuse = 0.7;
@@ -25,6 +27,8 @@ public:
     }
 public:
     glm::vec3 position;
+    glm::vec3 direction;
+    float cosTheta = 0.f;
     glm::vec3 ambient;
     glm::vec3 diffuse;
     glm::vec3 specular;

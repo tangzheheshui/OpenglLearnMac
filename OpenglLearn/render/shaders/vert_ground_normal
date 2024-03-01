@@ -8,6 +8,7 @@ layout (location = 4) in vec3 aBitangent;
 out VS_OUT {
     vec2 TexCoord;
     vec3 TangentLightPos;
+    vec3 TangentLighDirection;
     vec3 TangentViewPos;
     vec3 TangentFragPos;
     vec4 FragPosLightSpace;
@@ -15,7 +16,8 @@ out VS_OUT {
 
 struct Light {
     vec4 position;
-
+    vec3 direction;
+    float cosTheta;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -41,6 +43,7 @@ void main()
     
     mat3 TBN = transpose(mat3(T, B, N));
     vs_out.TangentLightPos = TBN * uLight.position.xyz;
+    vs_out.TangentLighDirection = normalize(TBN * uLight.direction);
     vs_out.TangentViewPos  = TBN * uCameraPos;
     vs_out.TangentFragPos  = TBN * vec3(uModel * vec4(aPos, 1.0));
 }

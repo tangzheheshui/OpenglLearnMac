@@ -89,11 +89,8 @@ bool ImageRectangle::draw() {
     shader->setMat4("uLightSpaceMatrix", Scene::GetLightVPMatrix());
     
     // 灯光
-    auto light = Light::GlobalLight();
-    shader->setFloat4("uLight.position", light.position.x, light.position.y, light.position.z, 1);
-    shader->setFloat3("uLight.ambient", light.ambient.x, light.ambient.y, light.ambient.z);
-    shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
-    shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);
+    Scene scene = Scene::getScene();
+    scene.setLightUniform(shader);
     
     // 相机位置
     // auto cam_pos = Camera::GetCamera().getPossition();

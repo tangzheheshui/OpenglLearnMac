@@ -9,6 +9,8 @@
 #define BaseDraw_h
 
 #include <glad/glad.h>
+#include <vector>
+#include <glm/glm.hpp>
 
 class BaseDraw {
 public:
@@ -36,6 +38,10 @@ protected:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
     unsigned int _EBO = 0;
+    
+    // debug线
+    std::vector<glm::vec3> _debugVerts;
+    std::vector<unsigned int> _debugIndex;
 private:
     bool _lightOpen = true;
 };

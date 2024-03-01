@@ -16,6 +16,7 @@
 #include "../BaseDraw.h"
 #include <time.h>
 #include "core/math/matrix.hpp"
+#include "aabb.hpp"
 
 class AssimpGLMHelpers
 {
@@ -83,6 +84,7 @@ private:
     clock_t m_clock;
     float m_anim_ratio = 0.f;
     int m_BoneCounter = 0;
+    AABB m_aabb;
 };
 
 #endif /* model_hpp */
