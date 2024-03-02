@@ -14,12 +14,14 @@
 
 #include "render/scene.hpp"
 #include "camera.hpp"
+#include "input.hpp"
  
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -84,7 +86,13 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetKeyCallback(window, key_callback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
+    glfwSetInputMode(window, GLFW_CURSOR_NORMAL, GLFW_CURSOR_DISABLED);
+    
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    InputProcessMng::setFrameBufferSize(width, height);
+    
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -189,16 +197,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    float fov = Camera::GetCamera().getFov();
-    fov += (float)yoffset;
-    if (fov < 3.0f)
-        fov = 3.0f;
-    if (fov > 90.0f)
-        fov = 90.0f;
-    printf("yoffset = %f\n", yoffset);
-    
-    Camera::GetCamera().setFov(fov);
-    return;
+    InputProcessMng::processScroll(xoffset, yoffset);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -209,61 +208,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
     else if (action == GLFW_RELEASE)
     {
-        if (key == GLFW_KEY_C) {
-            // 读取当前帧缓冲的像素数据
-            int width, height;
-            glfwGetFramebufferSize(window, &width, &height);
-            unsigned char* pixels = new unsigned char[width * height * 3]; // 假设使用 RGB 颜色格式
-            glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, pixels);
+        InputProcessMng::processKeyRelease(key);
+    }
+}
 
-            // 写入图像数据到文件
-            std::string rootPath = "/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/screen_picture/";
-            std::ofstream imageFile(rootPath + "output_image.bmp", std::ios::binary);
-            if (imageFile.is_open())
-            {
-                // BMP 文件头
-                char bmpHeader[54] = {0};
-                bmpHeader[0] = 'B';
-                bmpHeader[1] = 'M';
-                int imageSize = width * height * 3;
-                int fileSize = imageSize + 54;
-                bmpHeader[2] = fileSize & 0xFF;
-                bmpHeader[3] = (fileSize >> 8) & 0xFF;
-                bmpHeader[4] = (fileSize >> 16) & 0xFF;
-                bmpHeader[5] = (fileSize >> 24) & 0xFF;
-                bmpHeader[10] = 54;
-                
-                // 图像信息头
-                bmpHeader[14] = 40;
-                bmpHeader[18] = width & 0xFF;
-                bmpHeader[19] = (width >> 8) & 0xFF;
-                bmpHeader[20] = (width >> 16) & 0xFF;
-                bmpHeader[21] = (width >> 24) & 0xFF;
-                bmpHeader[22] = height & 0xFF;
-                bmpHeader[23] = (height >> 8) & 0xFF;
-                bmpHeader[24] = (height >> 16) & 0xFF;
-                bmpHeader[25] = (height >> 24) & 0xFF;
-                bmpHeader[26] = 1;
-                bmpHeader[28] = 24;
-                
-                // 写入文件头
-                imageFile.write(bmpHeader, 54);
-                
-                // 写入图像数据
-                imageFile.write(reinterpret_cast<char*>(pixels), imageSize);
-                
-                // 关闭文件
-                imageFile.close();
-            }
-            else
-            {
-                std::cerr << "Failed to open image file for writing" << std::endl;
-            }
-            
-            
-            // 释放内存
-            delete[] pixels;
-        }
-        std::cout << "Key released: " << key << std::endl;
+// 鼠标点击回调函数
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        InputProcessMng::processMouseLeftKeyUp(xpos, ypos);
     }
 }

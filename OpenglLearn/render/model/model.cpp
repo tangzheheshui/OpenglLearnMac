@@ -489,6 +489,7 @@ void Model::getDebugPoint(std::vector<glm::vec3> &vertices, std::vector<unsigned
     
     std::vector<glm::vec3> all_points;
     all_points.reserve(8 * m_vec_modelMat.size());
+    indices.reserve(indices.size() + m_vec_modelMat.size() * _debugIndex.size());
     for (const auto &mat : m_vec_modelMat) {
         size_t indexBegin = vertices.size() + all_points.size();
         
