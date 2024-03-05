@@ -17,6 +17,8 @@ Camera::Camera()
 , _pitch(PITCH)
 , _fov(45)
 {
+    _near = 0.1f;
+    _far = 100.f;
     _position = {0, 0, 0};
 }
 
@@ -44,7 +46,7 @@ Matrix Camera::GetVPMatrix() {
     caculate();
     
     Matrix lookat = LookAt(_position, glm::vec3(0), _worldUp);
-    Matrix projection = Camera::perspective(degrees_to_radians(_fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.f);
+    Matrix projection = Camera::perspective(degrees_to_radians(_fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, _near, _far);
     return projection * lookat;
 }
 
@@ -133,4 +135,11 @@ Matrix Camera::perspective(float fov, float aspect, float near, float far) {
     mat.set(2, 3, -1);
     mat.set(3, 2, 2 * near * far / (near - far));
     return mat;
+}
+
+void Camera::screenToWorld(const glm::vec2 &screen, glm::vec3 &world) {
+    glm::vec4 proj(screen.x * 2 / SCR_WIDTH - 1, screen.y * 2 / SCR_HEIGHT, -1, 1);
+    glm::mat4 vpMat = Matrix::toMatrix(GetCamera().GetVPMatrix());
+    glm::vec4 worldNear = glm::inverse(vpMat) * proj;
+    world = {worldNear.x / worldNear.w, worldNear.y / worldNear.w, worldNear.z / worldNear.w};
 }

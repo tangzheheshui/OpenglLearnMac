@@ -31,6 +31,7 @@ public:
     virtual bool draw() = 0;
     virtual bool drawShadow() { return false; }
     virtual void update() {}
+    virtual bool isClick(const glm::vec3 &worldStart, const glm::vec3 &worldEnd, float &fDeep) { return false; }
 public:
     virtual void getDebugPoint(std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices) {}
     

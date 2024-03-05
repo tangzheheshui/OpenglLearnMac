@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include "render/camera.hpp"
+#include "render/scene.hpp"
 
 void InputProcessMng::setFrameBufferSize(int w, int h) {
     _frameWidth = w;
@@ -18,7 +19,7 @@ void InputProcessMng::setFrameBufferSize(int w, int h) {
 }
 
 void InputProcessMng::processMouseLeftKeyUp(double x, double y) {
-    std::cout << "Left mouse button pressed at (" << x << ", " << y << ")" << std::endl;
+    Scene::getScene().processMouseClick(x, y);
 }
 
 void InputProcessMng::processKeyRelease(int key) {

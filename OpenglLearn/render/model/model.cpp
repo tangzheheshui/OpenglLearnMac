@@ -9,6 +9,7 @@
 #include "image.hpp"
 #include <iostream>
 #include <filesystem>
+#include "core/math/math.hpp"
 
 Model::Model() {
     m_clock = clock();
@@ -501,4 +502,59 @@ void Model::getDebugPoint(std::vector<glm::vec3> &vertices, std::vector<unsigned
                            [indexBegin](int val) { return val + indexBegin; });
     }
     vertices.insert(vertices.end(), all_points.begin(), all_points.end());
+}
+
+bool Model::isClick(const glm::vec3 &worldStart, const glm::vec3 &worldEnd, float &fDeep) {
+    glm::vec3 P1(m_aabb.getMinX(), m_aabb.getMinY(), m_aabb.getMinZ());
+    glm::vec3 P2(m_aabb.getMaxX(), m_aabb.getMinY(), m_aabb.getMinZ());
+    glm::vec3 P3(m_aabb.getMaxX(), m_aabb.getMaxY(), m_aabb.getMinZ());
+    glm::vec3 P4(m_aabb.getMinX(), m_aabb.getMaxY(), m_aabb.getMinZ());
+    
+    glm::vec3 P5(m_aabb.getMinX(), m_aabb.getMinY(), m_aabb.getMaxZ());
+    glm::vec3 P6(m_aabb.getMaxX(), m_aabb.getMinY(), m_aabb.getMaxZ());
+    glm::vec3 P7(m_aabb.getMaxX(), m_aabb.getMaxY(), m_aabb.getMaxZ());
+    glm::vec3 P8(m_aabb.getMinX(), m_aabb.getMaxY(), m_aabb.getMaxZ());
+   
+    for (int i = 0; i < m_vec_modelMat.size(); i++) {
+        auto mat = Matrix::toMatrix(m_vec_modelMat[i]);
+        glm::vec4 temp1 = mat * glm::vec4(P1, 1);
+        glm::vec4 temp2 = mat * glm::vec4(P7, 1);
+        glm::vec3 aabbP1(temp1.x, temp1.y, temp1.z);
+        aabbP1 /= temp1.w;
+        glm::vec3 aabbP2(temp2.x, temp2.y, temp2.z);
+        aabbP2 /= temp2.w;
+        glm::vec3 dir =glm::normalize(worldEnd - worldStart);
+        
+        glm::vec3 interPoint = Math::intersectLinePlane(aabbP1, {0, 0, 1.f}, worldStart, dir);
+        if (Math::isInsidePolygon({P1, P2, P3, P4}, interPoint)) {
+            return true;
+        }
+        
+        interPoint = Math::intersectLinePlane(aabbP2, {0, 0, 1}, worldEnd, dir);
+        if (Math::isInsidePolygon({P5, P6, P7, P8}, interPoint)) {
+            return true;
+        }
+        
+        interPoint = Math::intersectLinePlane(aabbP1, {1, 0, 0}, worldEnd, dir);
+        if (Math::isInsidePolygon({P1, P4, P8, P5}, interPoint)) {
+            return true;
+        }
+        
+        interPoint = Math::intersectLinePlane(aabbP2, {1, 0, 0}, worldEnd, dir);
+        if (Math::isInsidePolygon({P2, P3, P7, P6}, interPoint)) {
+            return true;
+        }
+        
+        interPoint = Math::intersectLinePlane(aabbP1, {0, 1, 0}, worldEnd, dir);
+        if (Math::isInsidePolygon({P1, P2, P6, P5}, interPoint)) {
+            return true;
+        }
+        
+        interPoint = Math::intersectLinePlane(aabbP2, {0, 1, 0}, worldEnd, dir);
+        if (Math::isInsidePolygon({P4, P3, P7, P8}, interPoint)) {
+            return true;
+        }
+        
+    }
+    return false;
 }

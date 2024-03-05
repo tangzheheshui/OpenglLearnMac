@@ -232,3 +232,19 @@ void Scene::setLightUniform(Shader* shader) {
     shader->setFloat3("uLight.diffuse", light.diffuse.x, light.diffuse.y, light.diffuse.z);
     shader->setFloat3("uLight.specular", light.specular.x, light.specular.y, light.specular.z);
 }
+
+void Scene::processMouseClick(double x, double y) {
+    // 计算射线
+    glm::vec3 worldNear;
+    Camera::screenToWorld({x, y}, worldNear);
+    
+    glm::vec3 cameraPos = Camera::GetCamera().getPossition();
+    
+    float deep = -2.f;
+    for (auto obj : m_vec_drawobj) {
+        if (auto modelObj = dynamic_pointer_cast<Model>(obj)) {
+            modelObj->isClick(cameraPos, worldNear, deep);
+        }
+    }
+}
+

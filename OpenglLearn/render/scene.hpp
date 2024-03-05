@@ -29,6 +29,7 @@ public:
     void draw();
     void update();
     void setLightUniform(Shader* shader);
+    void processMouseClick(double x, double y);
 private:
     std::shared_ptr<Line> getTestLine();
 private:
