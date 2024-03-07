@@ -51,7 +51,7 @@ public:
 
 class Model : public BaseDraw {
 public:
-    Model();
+    using BaseDraw::BaseDraw;
     void LoadFile(const std::string &path);
     virtual bool draw() override;
     virtual bool drawShadow() override;
@@ -82,7 +82,7 @@ private:
     std::vector<std::shared_ptr<Mesh>> m_mesh;
     ModelData m_model_data;
     std::shared_ptr<std::vector<glm::mat4>> m_FinalBoneMatrices;
-    clock_t m_clock;
+    clock_t m_clock{};
     float m_anim_ratio = 0.f;
     int m_BoneCounter = 0;
     AABB m_aabb;

@@ -25,26 +25,32 @@ bool ImageRectangle::draw() {
     int texture_height = Image::TextureFromFile(m_image_height);
     bool has_height = (texture_height > 0);
     
-    glBindVertexArray(_VAO);
+    if (!_has_bind_vbo) {
+        glBindVertexArray(_VAO);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Buffer) * m_buffer.size(), m_buffer.data(), GL_STATIC_DRAW);
+        
+        // position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)0);
+        glEnableVertexAttribArray(0);
+        // texture coord attribute
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+        // normal
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(5 * sizeof(float)));
+        glEnableVertexAttribArray(2);
+        // tangent
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(8 * sizeof(float)));
+        glEnableVertexAttribArray(3);
+        // bitangent
+        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(11 * sizeof(float)));
+        glEnableVertexAttribArray(4);
+        
+        glBindVertexArray(0);
+        _has_bind_vbo = true;
+    }
     
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Buffer) * m_buffer.size(), m_buffer.data(), GL_STATIC_DRAW);
-    
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)0);
-    glEnableVertexAttribArray(0);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // normal
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(5 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-    // tangent
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(8 * sizeof(float)));
-    glEnableVertexAttribArray(3);
-    // bitangent
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Buffer), (void*)(11 * sizeof(float)));
-    glEnableVertexAttribArray(4);
     
     auto shader = ShaderCache::GetInstance().GetShader(ShaderType::Ground);
     if (!shader) {
@@ -96,6 +102,7 @@ bool ImageRectangle::draw() {
     // auto cam_pos = Camera::GetCamera().getPossition();
     shader->setFloat3("uCameraPos", 15, 15, 0);
     
+    glBindVertexArray(_VAO);
     glDrawArrays(GL_TRIANGLES, 0, (int)m_buffer.size());
     return true;
 }

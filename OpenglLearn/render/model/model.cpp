@@ -11,10 +11,6 @@
 #include <filesystem>
 #include "core/math/math.hpp"
 
-Model::Model() {
-    m_clock = clock();
-}
-
 void Model::LoadFile(const std::string &path) {
     if (!m_filepath.empty()) {
         assert(0); // 不允许变更模型信息

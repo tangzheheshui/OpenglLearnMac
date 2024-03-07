@@ -91,5 +91,7 @@ void PassTexture::setup(const std::vector<Matrix> &matModel) {
     glVertexAttribPointer(bufferIndex, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(baseOffset + 3 * sizeof(glm::vec4)));
     glVertexAttribDivisor(bufferIndex, 1);
     glEnableVertexAttribArray(bufferIndex++);
+    
+    glBindVertexArray(0);
 }
 

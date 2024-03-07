@@ -41,6 +41,7 @@ protected:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
     unsigned int _EBO = 0;
+    bool _has_bind_vbo = false;
 private:
     bool _lightOpen = true;
 };

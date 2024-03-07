@@ -85,4 +85,6 @@ void PassColor::setup(const std::vector<Matrix> &matModel) {
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);
+    
+    glBindVertexArray(0);
 }
