@@ -55,7 +55,7 @@ void Model::processTexture(const aiScene* scene) {
         }
         //image_data.name = texture->mFilename.C_Str();
         auto name = std::string("*") + std::to_string(i);
-        std::cout << "model data, image name = " << name << std::endl;
+        //std::cout << "model data, image name = " << name << std::endl;
         char* buf = (char*)texture->pcData;
         std::shared_ptr<std::vector<char>> pData = std::make_shared<std::vector<char>>();
         pData->assign(buf, buf + texture->mWidth);
@@ -333,7 +333,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         Texture texture;
         texture.name = typeName + std::to_string(i);
         
-        std::cout << "model materail tex name = " << filename << ", typeName = " << texture.name << std::endl;
+        //std::cout << "model materail tex name = " << filename << ", typeName = " << texture.name << std::endl;
         auto iter = m_model_data.map_image.find(std::string(str.C_Str()));
         if (iter != m_model_data.map_image.end()) { 
             // 从内存中获取

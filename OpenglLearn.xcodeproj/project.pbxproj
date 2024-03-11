@@ -19,8 +19,13 @@
 		658157682B922EA500253663 /* aabb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 658157662B922EA500253663 /* aabb.cpp */; };
 		6581576D2B92F2D900253663 /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6581576B2B92F2D900253663 /* input.cpp */; };
 		6585AA962B944B2000841A5C /* math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6585AA942B944B2000841A5C /* math.cpp */; };
+		65C3C0CC2B9DDCEB00ACB3F4 /* node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65C3C0CA2B9DDCEA00ACB3F4 /* node.cpp */; };
 		65D475B62B42D355004AE289 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B42B42D355004AE289 /* shader.cpp */; };
 		65D475BA2B42EFBB004AE289 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B82B42EFBB004AE289 /* image.cpp */; };
+		65F5CE302B9DADAD0011F599 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F5CE2E2B9DADAD0011F599 /* ParticleSystem.cpp */; };
+		65F5CE332B9DADC30011F599 /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F5CE312B9DADC30011F599 /* particle.cpp */; };
+		65F5CE362B9DADDB0011F599 /* emitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F5CE342B9DADDB0011F599 /* emitter.cpp */; };
+		65F5CE392B9DAE040011F599 /* affector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F5CE372B9DAE040011F599 /* affector.cpp */; };
 		65FA241E2B623321006062DB /* Line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FA241C2B623321006062DB /* Line.cpp */; };
 		65FA24222B623DE5006062DB /* scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FA24202B623DE5006062DB /* scene.cpp */; };
 		65FA24282B625981006062DB /* ImageRectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65FA24262B625980006062DB /* ImageRectangle.cpp */; };
@@ -82,11 +87,22 @@
 		6585AA952B944B2000841A5C /* math.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = math.hpp; sourceTree = "<group>"; };
 		65ABD0012B5FED75007552FD /* model_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_data.h; sourceTree = "<group>"; };
 		65ABD02C2B60DF2B007552FD /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
+		65C3C0CA2B9DDCEA00ACB3F4 /* node.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = node.cpp; sourceTree = "<group>"; };
+		65C3C0CB2B9DDCEA00ACB3F4 /* node.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = node.hpp; sourceTree = "<group>"; };
+		65C3C0F52B9E14C600ACB3F4 /* time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = time.h; sourceTree = "<group>"; };
 		65D475B42B42D355004AE289 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		65D475B52B42D355004AE289 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		65D475B82B42EFBB004AE289 /* image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
 		65D475B92B42EFBB004AE289 /* image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
 		65D475BC2B42F287004AE289 /* stb_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		65F5CE2E2B9DADAD0011F599 /* ParticleSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
+		65F5CE2F2B9DADAD0011F599 /* ParticleSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleSystem.hpp; sourceTree = "<group>"; };
+		65F5CE312B9DADC30011F599 /* particle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
+		65F5CE322B9DADC30011F599 /* particle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = particle.hpp; sourceTree = "<group>"; };
+		65F5CE342B9DADDB0011F599 /* emitter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = emitter.cpp; sourceTree = "<group>"; };
+		65F5CE352B9DADDB0011F599 /* emitter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = emitter.hpp; sourceTree = "<group>"; };
+		65F5CE372B9DAE040011F599 /* affector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = affector.cpp; sourceTree = "<group>"; };
+		65F5CE382B9DAE040011F599 /* affector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = affector.hpp; sourceTree = "<group>"; };
 		65FA241C2B623321006062DB /* Line.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Line.cpp; sourceTree = "<group>"; };
 		65FA241D2B623321006062DB /* Line.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Line.hpp; sourceTree = "<group>"; };
 		65FA24202B623DE5006062DB /* scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = scene.cpp; sourceTree = "<group>"; };
@@ -222,6 +238,7 @@
 		65D475B32B42D323004AE289 /* render */ = {
 			isa = PBXGroup;
 			children = (
+				65F5CE2D2B9DAD6A0011F599 /* priticle */,
 				65FA241F2B623328006062DB /* shape */,
 				65ABD02A2B60DCF8007552FD /* model */,
 				65FD8F0B2B43F7A300A06A38 /* shaders */,
@@ -246,6 +263,24 @@
 				65D475BC2B42F287004AE289 /* stb_image.h */,
 			);
 			path = third;
+			sourceTree = "<group>";
+		};
+		65F5CE2D2B9DAD6A0011F599 /* priticle */ = {
+			isa = PBXGroup;
+			children = (
+				65F5CE2E2B9DADAD0011F599 /* ParticleSystem.cpp */,
+				65F5CE2F2B9DADAD0011F599 /* ParticleSystem.hpp */,
+				65F5CE312B9DADC30011F599 /* particle.cpp */,
+				65F5CE322B9DADC30011F599 /* particle.hpp */,
+				65F5CE342B9DADDB0011F599 /* emitter.cpp */,
+				65F5CE352B9DADDB0011F599 /* emitter.hpp */,
+				65F5CE372B9DAE040011F599 /* affector.cpp */,
+				65F5CE382B9DAE040011F599 /* affector.hpp */,
+				65C3C0CA2B9DDCEA00ACB3F4 /* node.cpp */,
+				65C3C0CB2B9DDCEA00ACB3F4 /* node.hpp */,
+				65C3C0F52B9E14C600ACB3F4 /* time.h */,
+			);
+			path = priticle;
 			sourceTree = "<group>";
 		};
 		65FA241F2B623328006062DB /* shape */ = {
@@ -355,15 +390,20 @@
 				65FA241E2B623321006062DB /* Line.cpp in Sources */,
 				65FA24222B623DE5006062DB /* scene.cpp in Sources */,
 				651EFBEC2B3F308C00620837 /* main.cpp in Sources */,
+				65F5CE392B9DAE040011F599 /* affector.cpp in Sources */,
 				651EFBFA2B3F324000620837 /* glad.c in Sources */,
+				65F5CE302B9DADAD0011F599 /* ParticleSystem.cpp in Sources */,
 				658157682B922EA500253663 /* aabb.cpp in Sources */,
 				6585AA962B944B2000841A5C /* math.cpp in Sources */,
 				65FD8F102B44588A00A06A38 /* camera.cpp in Sources */,
+				65C3C0CC2B9DDCEB00ACB3F4 /* node.cpp in Sources */,
 				6581576D2B92F2D900253663 /* input.cpp in Sources */,
 				650751C82B5EA62D00BB2098 /* PassTexture.cpp in Sources */,
 				6581573D2B89E7FD00253663 /* matrix.cpp in Sources */,
 				650751C52B5E973500BB2098 /* PassColor.cpp in Sources */,
+				65F5CE332B9DADC30011F599 /* particle.cpp in Sources */,
 				65FD8F1B2B45141E00A06A38 /* model.cpp in Sources */,
+				65F5CE362B9DADDB0011F599 /* emitter.cpp in Sources */,
 				65FD8F242B452BFC00A06A38 /* mesh.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

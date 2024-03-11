@@ -102,9 +102,9 @@ Matrix Matrix::operator*(const Matrix &other) const {
 Matrix Matrix::toMatrix(const glm::mat4 &mat) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            std::cout << " " << mat[i][j];
+            //std::cout << " " << mat[i][j];
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }
     Matrix matrix(mat[0][0], mat[0][1], mat[0][2], mat[0][3],
                   mat[1][0], mat[1][1], mat[1][2], mat[1][3],
@@ -121,9 +121,9 @@ glm::mat4 Matrix::toMatrix(const Matrix &mat) {
                               matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            std::cout << " " << ret[i][j];
+            //std::cout << " " << ret[i][j];
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }
     return ret;
 }

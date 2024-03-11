@@ -11,6 +11,7 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <time.h>
 
 #include "render/scene.hpp"
 #include "camera.hpp"
@@ -105,6 +106,8 @@ int main()
     Camera::GetCamera().setPosition({0,0,20});
     // render loop
     // -----------
+    clock_t begin = clock();
+    clock_t frame_begin = 0;
     while (!glfwWindowShouldClose(window))
     {
         // input
@@ -120,6 +123,13 @@ int main()
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
+        
+        if (frame_begin == 0) {
+            frame_begin = begin;
+        }
+        float fTime = (clock() - frame_begin) / (float)CLOCKS_PER_SEC;
+        std::cout << "frame_time = " << fTime << std::endl;
+        frame_begin = clock();
     }
  
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -204,7 +214,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
     if (action == GLFW_PRESS)
     {
-        std::cout << "Key pressed: " << key << std::endl;
+        //std::cout << "Key pressed: " << key << std::endl;
     }
     else if (action == GLFW_RELEASE)
     {
