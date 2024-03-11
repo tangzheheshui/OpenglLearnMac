@@ -13,6 +13,7 @@
 #include "shape/Line.hpp"
 #include "image.hpp"
 #include "Light.h"
+#include "core/taskQueue.h"
 
 const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 const unsigned int SCR_WIDTH = 800;
@@ -60,11 +61,19 @@ void Scene::createObjs() {
     line_y->setColor({0, 1, 0});
     line_z->setColor({0, 0, 1});
     
-    
+    auto start = std::chrono::high_resolution_clock::now();
     // 地面
     std::shared_ptr<ImageRectangle> objGround = std::make_shared<ImageRectangle>();
     float ground_width = 10;
-    objGround->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "bricks2.jpg", "bricks2_normal.jpg", "bricks2_disp.jpg");// bricks2_disp.jpg
+    
+    TaskQueue::instance().pushTask([objGround, start](){
+        objGround->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "bricks2.jpg", "bricks2_normal.jpg", "bricks2_disp.jpg");
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << " task1, time = " << duration.count() << std::endl;
+    });
+    
     objGround->setSetp(5, 5);
     glm::vec3 p1(-ground_width, 0,  ground_width);
     glm::vec3 p2(ground_width, 0,  ground_width);
@@ -75,11 +84,14 @@ void Scene::createObjs() {
     
     // 背包
     std::shared_ptr<Model> objModel = std::make_shared<Model>();
-    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/rp_nathan_animated_003_walking.fbx");
-    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/spider.obj");
-    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
-    objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
-    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/nanosuit/nanosuit.obj");
+    TaskQueue::instance().pushTask([objModel, start](){
+        objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << " task2, time = " << duration.count() << std::endl;
+    });
+    
     objModel->setCount(3);
     objModel->setPosition(0, {0, 1, 0});
     objModel->setScale(0, 0.5);
@@ -92,7 +104,14 @@ void Scene::createObjs() {
     
     // 鸭子
     std::shared_ptr<Model> objDuck = std::make_shared<Model>();
-    objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+    TaskQueue::instance().pushTask([objDuck, start](){
+        objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+       
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << " task3, time = " << duration.count() << std::endl;
+    });
+    
     objDuck->setCount(3);
     objDuck->setPosition(0, {0, 0, 2});
     objDuck->setScale(0, 0.01);
@@ -103,7 +122,14 @@ void Scene::createObjs() {
     
     // 光源模型
     std::shared_ptr<Model> objLight = std::make_shared<Model>();
-    objLight->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/box.obj");
+    TaskQueue::instance().pushTask([objLight, start](){
+        objLight->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/box.obj");
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << " task4, time = " << duration.count() << std::endl;
+    });
+    
     objLight->setCount(1);
     objLight->setLightOpen(false);
     auto lightPos = Light::GlobalLight().position;

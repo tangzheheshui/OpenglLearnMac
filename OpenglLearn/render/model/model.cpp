@@ -7,6 +7,7 @@
 
 #include "model.hpp"
 #include "image.hpp"
+#include "core/taskQueue.h"
 #include <iostream>
 #include <filesystem>
 #include "core/math/math.hpp"
@@ -334,7 +335,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         texture.name = typeName + std::to_string(i);
         
         //std::cout << "model materail tex name = " << filename << ", typeName = " << texture.name << std::endl;
-        auto iter = m_model_data.map_image.find(std::string(str.C_Str()));
+        auto iter = m_model_data.map_image.find(filename);
         if (iter != m_model_data.map_image.end()) { 
             // 从内存中获取
             texture.data = iter->second;
@@ -346,6 +347,11 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
             }
             auto name = filename.substr(pos+1, filename.length() - pos);
             texture.filepath = m_filepath + name;
+            // 异步加载(opengl指令似乎不可以在其他线程执行)
+//            auto data = Image::GetTextureDataFromFile(m_filepath + name);
+//            texture.data = data;
+//            m_model_data.map_image[filename] = data;
+            
         }
         m_map_tempTexture[filename] = texture;
         textures.push_back(texture);

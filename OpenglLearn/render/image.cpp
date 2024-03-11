@@ -8,6 +8,8 @@
 #include "image.hpp"
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -91,6 +93,29 @@ bool Image::draw() {
     return true;
 }
 
+std::shared_ptr<std::vector<char>> Image::GetTextureDataFromFile(const std::string &filename) {
+    if (filename.empty()) {
+        return nullptr;
+    }
+    
+    // 读取图片文件的二进制数据到内存中
+    std::ifstream file(filename, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open image file." << std::endl;
+        return nullptr;
+    }
+    
+    std::streampos fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+    
+    std::shared_ptr<std::vector<char>> pData = std::make_shared<std::vector<char>>(fileSize);
+    file.read(pData->data(), fileSize);
+    
+    file.close();
+    
+    return pData;
+}
+
 unsigned int Image::TextureFromFile(const std::string &filename)
 {
     auto iter = s_map_texture_cache.find(filename);
@@ -137,9 +162,7 @@ unsigned int Image::TextureFromFile(const std::string &filename)
 }
 
 unsigned int Image::TextureFromMem(unsigned char* buffer, int len) {
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-
+    unsigned int textureID = -1;
     int width, height, nrComponents;
     unsigned short *data = stbi_load_16_from_memory(buffer, len, &width, &height, &nrComponents, 0);
     // stbi_load_16_from_memory
@@ -153,6 +176,8 @@ unsigned int Image::TextureFromMem(unsigned char* buffer, int len) {
         else if (nrComponents == 4)
             format = GL_RGBA;
 
+        
+        glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -168,6 +193,7 @@ unsigned int Image::TextureFromMem(unsigned char* buffer, int len) {
     {
         //std::cout << "Texture failed to load at path: " << filename << std::endl;
         stbi_image_free(data);
+        assert(0);
     }
 
     return textureID;

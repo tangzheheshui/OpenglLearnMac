@@ -90,6 +90,7 @@
 		65C3C0CA2B9DDCEA00ACB3F4 /* node.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = node.cpp; sourceTree = "<group>"; };
 		65C3C0CB2B9DDCEA00ACB3F4 /* node.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = node.hpp; sourceTree = "<group>"; };
 		65C3C0F52B9E14C600ACB3F4 /* time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = time.h; sourceTree = "<group>"; };
+		65D1BC1F2B9F3BFC0031AB8C /* taskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = taskQueue.h; sourceTree = "<group>"; };
 		65D475B42B42D355004AE289 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		65D475B52B42D355004AE289 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		65D475B82B42EFBB004AE289 /* image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
@@ -191,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				6581573A2B89E72200253663 /* math */,
+				65D1BC1F2B9F3BFC0031AB8C /* taskQueue.h */,
 			);
 			path = core;
 			sourceTree = "<group>";

@@ -18,7 +18,7 @@ typedef std::shared_ptr<std::vector<char>> ImageBuffer;
 struct Texture {
     std::string name; // 直接用作uniform纹理的名字
     std::string filepath;
-    std::shared_ptr<std::vector<char>> data;
+    ImageBuffer data;
 };
 
 struct MeshData {

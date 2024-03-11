@@ -23,6 +23,7 @@ public:
     virtual bool draw() override;
     static unsigned int TextureFromFile(const std::string &filename);
     static unsigned int TextureFromMem(unsigned char* buffer, int len);
+    static std::shared_ptr<std::vector<char>> GetTextureDataFromFile(const std::string &filename);
 private:
     void setData();
     unsigned int _texture = 0;

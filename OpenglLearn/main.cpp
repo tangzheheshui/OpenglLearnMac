@@ -16,6 +16,7 @@
 #include "render/scene.hpp"
 #include "camera.hpp"
 #include "input.hpp"
+#include "core/taskQueue.h"
  
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -106,8 +107,27 @@ int main()
     Camera::GetCamera().setPosition({0,0,20});
     // render loop
     // -----------
-    clock_t begin = clock();
-    clock_t frame_begin = 0;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    
+    TaskQueue& taskQueue = TaskQueue::instance();
+    std::vector<std::thread> workers;
+    for (int i = 0; i < 5; ++i) {
+        workers.emplace_back([&taskQueue]() {
+            taskQueue.executeTasks();
+        });
+    }
+    
+    auto a = Scene::getScene();
+    
+    while (!taskQueue.is_empty()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "load time = " << duration.count() << std::endl;
+    
     while (!glfwWindowShouldClose(window))
     {
         // input
@@ -115,21 +135,33 @@ int main()
         processInput(window);
  
         Scene::getScene().update();
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "frame_time1 = " << duration.count() << std::endl;
+        
         // render
         Scene::getScene().drawShadow();
+        
+        end = std::chrono::high_resolution_clock::now();
+        duration = end - start;
+        std::cout << "frame_time2 = " << duration.count() << std::endl;
+        
         Scene::getScene().draw();
+        
+        end = std::chrono::high_resolution_clock::now();
+        duration = end - start;
+        std::cout << "frame_time3 = " << duration.count() << std::endl;
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
         
-        if (frame_begin == 0) {
-            frame_begin = begin;
-        }
-        float fTime = (clock() - frame_begin) / (float)CLOCKS_PER_SEC;
-        std::cout << "frame_time = " << fTime << std::endl;
-        frame_begin = clock();
+        end = std::chrono::high_resolution_clock::now();
+        duration = end - start;
+        std::cout << "frame_time = " << duration.count() << std::endl;
+        start = end;
     }
  
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -138,6 +170,10 @@ int main()
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
     glfwTerminate();
+    
+    for (auto &work : workers) {
+        work.detach();
+    }
     return 0;
 }
  
