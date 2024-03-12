@@ -10,16 +10,9 @@
 
 #include <glm/detail/type_quat.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include "render/image.hpp"
 
 #define MAX_BONE_INFLUENCE 4
-
-typedef std::shared_ptr<std::vector<char>> ImageBuffer;
-
-struct Texture {
-    std::string name; // 直接用作uniform纹理的名字
-    std::string filepath;
-    ImageBuffer data;
-};
 
 struct MeshData {
     std::vector<glm::vec3> positions;

@@ -50,9 +50,6 @@ bool RenderPass::Draw(const std::vector<Matrix> &matModel, uint32_t flags) {
                 else if(tex.name == "texture_height0") {
                 }
             }
-            else {
-                texID = Image::TextureFromMem((unsigned char*)tex.data->data(), (int)tex.data->size());
-            }
             glActiveTexture(GL_TEXTURE0 + i);
             glBindTexture(GL_TEXTURE_2D, texID);
             shader->setInt(tex.name, i);

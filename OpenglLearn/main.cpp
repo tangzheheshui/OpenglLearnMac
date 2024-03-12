@@ -112,7 +112,8 @@ int main()
     
     TaskQueue& taskQueue = TaskQueue::instance();
     std::vector<std::thread> workers;
-    for (int i = 0; i < 5; ++i) {
+    unsigned int maxThreads = std::thread::hardware_concurrency();
+    for (int i = 0; i < maxThreads; ++i) {
         workers.emplace_back([&taskQueue]() {
             taskQueue.executeTasks();
         });
@@ -138,20 +139,20 @@ int main()
         
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
-        std::cout << "frame_time1 = " << duration.count() << std::endl;
+        //std::cout << "frame_time1 = " << duration.count() << std::endl;
         
         // render
         Scene::getScene().drawShadow();
         
         end = std::chrono::high_resolution_clock::now();
         duration = end - start;
-        std::cout << "frame_time2 = " << duration.count() << std::endl;
+        //std::cout << "frame_time2 = " << duration.count() << std::endl;
         
         Scene::getScene().draw();
         
         end = std::chrono::high_resolution_clock::now();
         duration = end - start;
-        std::cout << "frame_time3 = " << duration.count() << std::endl;
+        //std::cout << "frame_time3 = " << duration.count() << std::endl;
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -160,7 +161,7 @@ int main()
         
         end = std::chrono::high_resolution_clock::now();
         duration = end - start;
-        std::cout << "frame_time = " << duration.count() << std::endl;
+        //std::cout << "frame_time = " << duration.count() << std::endl;
         start = end;
     }
  

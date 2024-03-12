@@ -6,7 +6,6 @@
 //
 
 #include "model.hpp"
-#include "image.hpp"
 #include "core/taskQueue.h"
 #include <iostream>
 #include <filesystem>
@@ -57,8 +56,8 @@ void Model::processTexture(const aiScene* scene) {
         //image_data.name = texture->mFilename.C_Str();
         auto name = std::string("*") + std::to_string(i);
         //std::cout << "model data, image name = " << name << std::endl;
-        char* buf = (char*)texture->pcData;
-        std::shared_ptr<std::vector<char>> pData = std::make_shared<std::vector<char>>();
+        unsigned char* buf = (unsigned char*)texture->pcData;
+        auto pData = std::make_shared<std::vector<unsigned char>>();
         pData->assign(buf, buf + texture->mWidth);
         m_model_data.map_image[name] = pData;
     }
@@ -173,7 +172,7 @@ void Model::processNode(aiNode* node, const aiScene* scene, std::shared_ptr<Node
         nodeParent = std::make_shared<Node>();
     }
     nodeParent->name = node->mName.data;
-    printf("parserNode, nodeName = %s\n", nodeParent->name.c_str());
+    // printf("parserNode, nodeName = %s\n", nodeParent->name.c_str());
     nodeParent->transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(node->mTransformation);
     nodeParent->child.reserve(node->mNumChildren);
     for(unsigned int i = 0; i < node->mNumChildren; i++)
@@ -217,7 +216,7 @@ void Model::processBoneWeightForVertices(aiMesh *mesh, std::shared_ptr<MeshData>
         
         assert(boneID != -1);
         
-        printf("parser boneID, boneID = %d\n", boneID);
+        // printf("parser boneID, boneID = %d\n", boneID);
         
         int boneIDNew = boneID;
         auto weights = mesh->mBones[boneIndex]->mWeights;
@@ -347,11 +346,6 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
             }
             auto name = filename.substr(pos+1, filename.length() - pos);
             texture.filepath = m_filepath + name;
-            // 异步加载(opengl指令似乎不可以在其他线程执行)
-//            auto data = Image::GetTextureDataFromFile(m_filepath + name);
-//            texture.data = data;
-//            m_model_data.map_image[filename] = data;
-            
         }
         m_map_tempTexture[filename] = texture;
         textures.push_back(texture);
@@ -393,7 +387,7 @@ void Model::updateNode(Node* node, Node* nodeParent) {
         m_FinalBoneMatrices->at(indexBone) = node->matCur * offset;
     }
     
-    printf("checkNode, nodeName = %s\n", node->name.c_str());
+    // printf("checkNode, nodeName = %s\n", node->name.c_str());
     
     for (int i = 0; i < node->child.size(); i++) {
         updateNode(node->child.at(i).get(), node);

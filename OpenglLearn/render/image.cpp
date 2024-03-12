@@ -93,36 +93,75 @@ bool Image::draw() {
     return true;
 }
 
-std::shared_ptr<std::vector<char>> Image::GetTextureDataFromFile(const std::string &filename) {
+void Image::loadTexture(const std::string &filename) {
     if (filename.empty()) {
-        return nullptr;
+        return;
+    }
+    {
+        std::lock_guard<std::mutex> gurad(_image_mutex);
+        auto iter = s_map_image.find(filename);
+        if (iter != s_map_image.end()) {
+            return;
+        }
     }
     
-    // 读取图片文件的二进制数据到内存中
-    std::ifstream file(filename, std::ios::binary | std::ios::ate);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open image file." << std::endl;
-        return nullptr;
+    Texture tex;
+    unsigned char *data = stbi_load(filename.c_str(), &tex.width, &tex.height, &tex.format, 0);
+    ImageBuffer pData = std::make_shared<std::vector<unsigned char>>();
+    pData->assign(data, data + tex.width * tex.height * tex.format);
+    tex.data = std::move(pData);
+    tex.filepath = filename;
+    {
+        std::lock_guard<std::mutex> gurad(_image_mutex);
+        s_map_image[filename] = tex;
     }
-    
-    std::streampos fileSize = file.tellg();
-    file.seekg(0, std::ios::beg);
-    
-    std::shared_ptr<std::vector<char>> pData = std::make_shared<std::vector<char>>(fileSize);
-    file.read(pData->data(), fileSize);
-    
-    file.close();
-    
-    return pData;
+}
+
+unsigned int Image::genTexture(const Texture& tex) {
+    unsigned int textureID = -1;
+    if (!tex.data->empty()) {
+        glGenTextures(1, &textureID);
+        
+        GLenum format = 0;
+        if (tex.format == 1)
+            format = GL_RED;
+        else if (tex.format == 3)
+            format = GL_RGB;
+        else if (tex.format == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, tex.width, tex.height, 0, format, GL_UNSIGNED_BYTE, tex.data->data());
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        s_map_texture_cache[tex.filepath] = textureID;
+    }
+    return textureID;
 }
 
 unsigned int Image::TextureFromFile(const std::string &filename)
 {
+    // 先查s_map_texture_cache
     auto iter = s_map_texture_cache.find(filename);
     if (iter != s_map_texture_cache.end()) {
         return iter->second;
     }
 
+    // 再查image
+    {
+        std::lock_guard<std::mutex> gurad(_image_mutex);
+        auto iter = s_map_image.find(filename);
+        if (iter != s_map_image.end()) {
+            return genTexture(iter->second);
+        }
+    }
+    
+    // 最后再读文件
     int width, height, nrComponents;
     unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     // stbi_load_16_from_memory
@@ -140,7 +179,9 @@ unsigned int Image::TextureFromFile(const std::string &filename)
             format = GL_RGBA;
 
         glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        ImageBuffer pData = std::make_shared<std::vector<unsigned char>>();
+        pData->assign(data, data + width * height * nrComponents);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, pData->data());
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

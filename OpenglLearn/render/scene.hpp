@@ -8,10 +8,13 @@
 #ifndef scene_hpp
 #define scene_hpp
 
+#include <filesystem>
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include "core/math/matrix.hpp"
+
+namespace fs = std::filesystem;
 
 class BaseDraw;
 class Line;
@@ -21,6 +24,7 @@ class Scene {
 private:
     Scene();
     void createObjs();
+    void loadTexture(const fs::path& dirPath);
 public:
     static Scene& getScene();
     static GLuint GetShadowTexture() { return _depthTexture; }

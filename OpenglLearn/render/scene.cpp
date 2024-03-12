@@ -36,7 +36,36 @@ Scene::Scene() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    
+    // 加载贴图
+    fs::path pathPic("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/");
+    loadTexture(pathPic);
     createObjs();
+}
+
+void Scene::loadTexture(const fs::path& dirPath) {
+    // 遍历文件夹下的所有文件和子文件夹
+    for (const auto& entry : fs::directory_iterator(dirPath)) {
+        if (entry.is_directory()) {
+            // 如果是子文件夹，则递归遍历之
+            loadTexture(entry.path());
+        } else if (entry.is_regular_file()) {
+            // 如果是普通文件，则输出其路径
+            auto extension = entry.path().extension().string();
+            if (extension == ".png" || extension == ".jpg" || extension == ".tga") {
+                auto filename = entry.path().string();
+                
+                TaskQueue::instance().pushTask([filename, entry](){
+                    auto start = std::chrono::high_resolution_clock::now();
+                    Image::loadTexture(filename);
+                    std::thread::id threadId = std::this_thread::get_id();
+                    auto end = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> duration = end - start;
+                    std::cout << "threadID = " << threadId << ", detaT = " << duration.count() << ", " << entry.path().filename() << std::endl;
+                });
+            }
+        }
+    }
 }
 
 void Scene::createObjs() {
