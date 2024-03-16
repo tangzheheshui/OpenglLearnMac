@@ -19,6 +19,7 @@ namespace fs = std::filesystem;
 class BaseDraw;
 class Line;
 class Shader;
+class ImageRectangle;
 
 class Scene {
 private:
@@ -36,6 +37,7 @@ public:
     void processMouseClick(double x, double y);
 private:
     std::shared_ptr<Line> getTestLine();
+    std::vector<std::shared_ptr<ImageRectangle>> createGlass();
 private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
     GLuint _depthMapFBO = 0;

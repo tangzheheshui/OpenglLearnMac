@@ -37,6 +37,9 @@ public:
     
     bool getLightOpen() const { return _lightOpen; }
     void setLightOpen(const bool &b) { _lightOpen = b; }
+    
+    void setAlpha(float alpha) { _alpha = alpha; }
+    float getAlpha() { return _alpha; }
 protected:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
@@ -44,6 +47,7 @@ protected:
     bool _has_bind_vbo = false;
 private:
     bool _lightOpen = true;
+    float _alpha = 1.0f;
 };
 
 #endif /* BaseDraw_h */

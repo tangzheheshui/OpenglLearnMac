@@ -20,6 +20,7 @@
 		6581576D2B92F2D900253663 /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6581576B2B92F2D900253663 /* input.cpp */; };
 		6585AA962B944B2000841A5C /* math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6585AA942B944B2000841A5C /* math.cpp */; };
 		65C3C0CC2B9DDCEB00ACB3F4 /* node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65C3C0CA2B9DDCEA00ACB3F4 /* node.cpp */; };
+		65D1BC9B2BA18B450031AB8C /* MemPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D1BC992BA18B450031AB8C /* MemPool.cpp */; };
 		65D475B62B42D355004AE289 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B42B42D355004AE289 /* shader.cpp */; };
 		65D475BA2B42EFBB004AE289 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B82B42EFBB004AE289 /* image.cpp */; };
 		65F5CE302B9DADAD0011F599 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F5CE2E2B9DADAD0011F599 /* ParticleSystem.cpp */; };
@@ -91,6 +92,8 @@
 		65C3C0CB2B9DDCEA00ACB3F4 /* node.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = node.hpp; sourceTree = "<group>"; };
 		65C3C0F52B9E14C600ACB3F4 /* time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = time.h; sourceTree = "<group>"; };
 		65D1BC1F2B9F3BFC0031AB8C /* taskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = taskQueue.h; sourceTree = "<group>"; };
+		65D1BC992BA18B450031AB8C /* MemPool.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MemPool.cpp; sourceTree = "<group>"; };
+		65D1BC9A2BA18B450031AB8C /* MemPool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemPool.hpp; sourceTree = "<group>"; };
 		65D475B42B42D355004AE289 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		65D475B52B42D355004AE289 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		65D475B82B42EFBB004AE289 /* image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
@@ -191,6 +194,7 @@
 		658157392B89E71D00253663 /* core */ = {
 			isa = PBXGroup;
 			children = (
+				65D1BC982BA18B2D0031AB8C /* mem */,
 				6581573A2B89E72200253663 /* math */,
 				65D1BC1F2B9F3BFC0031AB8C /* taskQueue.h */,
 			);
@@ -235,6 +239,15 @@
 				658157672B922EA500253663 /* aabb.hpp */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		65D1BC982BA18B2D0031AB8C /* mem */ = {
+			isa = PBXGroup;
+			children = (
+				65D1BC992BA18B450031AB8C /* MemPool.cpp */,
+				65D1BC9A2BA18B450031AB8C /* MemPool.hpp */,
+			);
+			path = mem;
 			sourceTree = "<group>";
 		};
 		65D475B32B42D323004AE289 /* render */ = {
@@ -387,6 +400,7 @@
 			files = (
 				650751C22B5E96CB00BB2098 /* pass.cpp in Sources */,
 				65FA24282B625981006062DB /* ImageRectangle.cpp in Sources */,
+				65D1BC9B2BA18B450031AB8C /* MemPool.cpp in Sources */,
 				65D475B62B42D355004AE289 /* shader.cpp in Sources */,
 				65D475BA2B42EFBB004AE289 /* image.cpp in Sources */,
 				65FA241E2B623321006062DB /* Line.cpp in Sources */,

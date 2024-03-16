@@ -102,6 +102,13 @@ bool ImageRectangle::draw() {
     // auto cam_pos = Camera::GetCamera().getPossition();
     shader->setFloat3("uCameraPos", 15, 15, 0);
     
+    // 透明度
+    shader->setFloat("uAlpha", getAlpha());
+    
+    // 开启混合
+    glEnable(GL_BLEND);
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindVertexArray(_VAO);
     glDrawArrays(GL_TRIANGLES, 0, (int)m_buffer.size());
     return true;

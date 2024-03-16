@@ -39,7 +39,7 @@ Scene::Scene() {
     
     // 加载贴图
     fs::path pathPic("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/");
-    loadTexture(pathPic);
+    //loadTexture(pathPic);
     createObjs();
 }
 
@@ -66,6 +66,35 @@ void Scene::loadTexture(const fs::path& dirPath) {
             }
         }
     }
+}
+
+std::vector<std::shared_ptr<ImageRectangle>> Scene::createGlass() {
+    std::vector<std::shared_ptr<ImageRectangle>> vec_obj;
+    vec_obj.push_back(std::make_shared<ImageRectangle>());
+    vec_obj.push_back(std::make_shared<ImageRectangle>());
+    vec_obj.push_back(std::make_shared<ImageRectangle>());
+    float ground_width = 5;
+    
+    vec_obj[0]->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "window.png", "", "");
+    vec_obj[1]->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "block.png", "", "");
+    vec_obj[2]->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "grass.png", "", "");
+    TaskQueue::instance().pushTask([vec_obj, ground_width](){
+        for (int i = 0; i < vec_obj.size(); i++) {
+            auto obj = std::dynamic_pointer_cast<ImageRectangle>(vec_obj[i]);
+            
+            obj->setSetp(1, 1);
+            obj->setAlpha(0.5);
+            float step = i * 2;
+            glm::vec3 p1(0, 0, -step);
+            glm::vec3 p2(ground_width, 0, -step);
+            glm::vec3 p3(ground_width, ground_width, -step);
+            glm::vec3 p4(0, ground_width, -step);
+            obj->setPoints(p1, p2, p3, p4);
+            obj->calculate();
+        }
+    });
+    
+    return vec_obj;
 }
 
 void Scene::createObjs() {
@@ -114,7 +143,7 @@ void Scene::createObjs() {
     // 背包
     std::shared_ptr<Model> objModel = std::make_shared<Model>();
     TaskQueue::instance().pushTask([objModel, start](){
-        objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
+        //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
         
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
@@ -134,7 +163,7 @@ void Scene::createObjs() {
     // 鸭子
     std::shared_ptr<Model> objDuck = std::make_shared<Model>();
     TaskQueue::instance().pushTask([objDuck, start](){
-        objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+        //objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
        
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
@@ -172,13 +201,15 @@ void Scene::createObjs() {
     
     // push 
     m_vec_drawobj.push_back(objGround);
-    m_vec_drawobj.push_back(objDuck);
-    m_vec_drawobj.push_back(objModel);
+    //m_vec_drawobj.push_back(objDuck);
+    //m_vec_drawobj.push_back(objModel);
     m_vec_drawobj.push_back(objLight);
     m_vec_drawobj.push_back(line_x);
     m_vec_drawobj.push_back(line_y);
     m_vec_drawobj.push_back(line_z);
     m_vec_drawobj.push_back(objImage);
+    auto glass = createGlass();
+    m_vec_drawobj.insert(m_vec_drawobj.end(), glass.begin(), glass.end());
 }
 
 void Scene::update() {
@@ -191,13 +222,14 @@ void Scene::draw() {
     glViewport(0, 0, SCR_WIDTH*2, SCR_HEIGHT*2);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glDisable(GL_BLEND);
     for (auto obj : m_vec_drawobj) {
         obj->draw();
     }
     
     // 画debug线
     auto testLine = getTestLine();
-    testLine->draw();
+    //testLine->draw();
 }
 
 void Scene::drawShadow() {

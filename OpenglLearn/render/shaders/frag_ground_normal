@@ -26,6 +26,7 @@ uniform sampler2D uTextureNormal;
 uniform sampler2D uTextureHeight;
 uniform int uHasNormal;
 uniform int uHasHeight;
+uniform float uAlpha;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -93,5 +94,5 @@ void main()
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace); 
     float dark = 1 - shadow * 0.7;
     
-    FragColor = vec4(dark * result, 1.0);
+    FragColor = vec4(dark * result, uAlpha);
 }
