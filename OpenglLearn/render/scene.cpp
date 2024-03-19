@@ -25,17 +25,28 @@ Scene& Scene::getScene() {
 }
 
 Scene::Scene() {
+    // 创建阴影贴图
     glGenFramebuffers(1, &_depthMapFBO);
     glGenTextures(1, &_depthTexture);
     glBindTexture(GL_TEXTURE_2D, _depthTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 
-                 SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 
+                 0,
+                 GL_DEPTH_COMPONENT, 
+                 SHADOW_WIDTH, 
+                 SHADOW_HEIGHT,
+                 0, 
+                 GL_DEPTH_COMPONENT, 
+                 GL_FLOAT, 
+                 NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    
+    // 创建alpha链表纹理
+    creatBlendTexture();
     
     // 加载贴图
     fs::path pathPic("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/");
@@ -209,7 +220,7 @@ void Scene::createObjs() {
     m_vec_drawobj.push_back(line_z);
     m_vec_drawobj.push_back(objImage);
     auto glass = createGlass();
-    m_vec_drawobj.insert(m_vec_drawobj.end(), glass.begin(), glass.end());
+    m_vec_drawobj_blend.insert(m_vec_drawobj_blend.end(), glass.begin(), glass.end());
 }
 
 void Scene::update() {
@@ -226,6 +237,13 @@ void Scene::draw() {
     for (auto obj : m_vec_drawobj) {
         obj->draw();
     }
+    
+    // 半透明渲染到贴图上
+    for (auto obj : m_vec_drawobj_blend) {
+        obj->draw();
+    }
+    
+    // 渲染半透明效果
     
     // 画debug线
     auto testLine = getTestLine();
@@ -333,5 +351,59 @@ void Scene::processMouseClick(double x, double y) {
             modelObj->isClick(cameraPos, worldNear, deep);
         }
     }
+}
+
+void Scene::creatBlendTexture() {
+    // 2D纹理
+    GLuint _texture_blend;
+    glGenTextures(1, &_texture_blend);
+    glBindTexture(GL_TEXTURE_2D, _texture_blend);
+    glTexImage2D(GL_TEXTURE_2D, 0, 
+                 GL_R32UI,
+                 SHADOW_WIDTH,
+                 SHADOW_WIDTH,
+                 0,
+                 GL_RED_INTEGER,
+                 GL_UNSIGNED_INT,
+                 NULL);
+    
+    // pbo
+    int totalsize = SHADOW_WIDTH * SHADOW_HEIGHT * sizeof(GLuint);
+    glGenBuffers(1, &_pbo_head_pointer);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, _pbo_head_pointer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, totalsize, NULL, GL_STATIC_DRAW);
+    GLuint* data = (GLuint*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+    memset(data, 0xfFF, totalsize);
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    
+    // 原子计数器
+    GLuint _atomic_counter;
+    glGenBuffers(1, &_atomic_counter);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _atomic_counter);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), 0, GL_DYNAMIC_COPY);
+    
+    // 创建一个较大的buffer，存储每个像素的颜色深度信息
+    GLuint _fragment_alpha_buffer;
+    glGenBuffers(1, &_fragment_alpha_buffer);
+    glBindBuffer(GL_TEXTURE_BUFFER, _fragment_alpha_buffer);
+    glBufferData(GL_TEXTURE_BUFFER, 
+                 2 * SHADOW_WIDTH * SHADOW_HEIGHT * sizeof(glm::vec4),
+                 NULL,
+                 GL_DYNAMIC_COPY);
+}
+
+void Scene::clearBlendTexture() {
+    // 原子计数
+    const GLuint zero = 0;
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, _atomic_counter);
+    glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(zero), &zero);
+    
+    // 清空
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, _pbo_head_pointer);
+    glBindTexture(GL_TEXTURE_2D, _texture_blend);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32UI, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_RED_INTEGER, GL_UNSIGNED_INT, NULL);
+    
+    // 读写
+    glBindImageTexture(0, _texture_blend, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 }
 

@@ -38,11 +38,19 @@ public:
 private:
     std::shared_ptr<Line> getTestLine();
     std::vector<std::shared_ptr<ImageRectangle>> createGlass();
+    void creatBlendTexture();
+    void clearBlendTexture();
 private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
+    std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj_blend;
     GLuint _depthMapFBO = 0;
     inline static GLuint _depthTexture = 0;
     inline static Matrix* _lightVPMatrix = nullptr;
+    
+    GLuint _fragment_alpha_buffer;
+    GLuint _atomic_counter;
+    GLuint _texture_blend;
+    GLuint _pbo_head_pointer;
 };
 
 #endif /* scene_hpp */
