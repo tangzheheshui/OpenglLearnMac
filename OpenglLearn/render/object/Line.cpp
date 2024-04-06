@@ -38,12 +38,6 @@ bool Line::draw() {
 }
 
 void Line::calculate() {
-    if (_VBO == 0) {
-        glGenBuffers(1, &_EBO);
-        glGenBuffers(1, &_VBO);
-        glGenVertexArrays(1, &_VAO);
-    }
-    
     glBindVertexArray(_VAO);
     
     // bind 

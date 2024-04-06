@@ -14,7 +14,13 @@
 
 class BaseDraw {
 public:
-    BaseDraw() {}
+    BaseDraw() {
+        if (_VAO == 0) {
+            glGenVertexArrays(1, &_VAO);
+            glGenBuffers(1, &_VBO);
+            glGenBuffers(1, &_EBO);
+        }
+    }
     ~BaseDraw() {
         if (_VAO > 0) {
             glDeleteVertexArrays(1, &_VAO);

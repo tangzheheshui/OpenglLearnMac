@@ -14,6 +14,8 @@
 #include "BaseDraw.h"
 #include "shader.hpp"
 
+static const std::string STR_DEPTH_TEXTURE = "depth_texture";
+static const std::string STR_TEXTURE_PATH = "/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/";
 typedef std::shared_ptr<std::vector<unsigned char>> ImageBuffer;
 
 struct Texture {
@@ -24,8 +26,6 @@ struct Texture {
     int height = 0;
     int format = 0;
 };
-
-static const std::string STR_DEPTH_TEXTURE = "depth_texture";
 
 class TextureMng {
 public:
@@ -45,6 +45,7 @@ private:
     TextureMng& operator = (TextureMng&& mng) = delete;
 private:
     void createShadowTexture();
+    void createSkyTexture();
     unsigned int genTexture(const Texture& tex);
 private:
     inline static TextureMng* _instance = nullptr;

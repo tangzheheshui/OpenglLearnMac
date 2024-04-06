@@ -58,7 +58,11 @@ unsigned int TextureMng::getTexture(const std::string &filename) {
     
     auto iter1 = m_map_tex_data.find(filename);
     if (iter1 != m_map_tex_data.end()) {
-        return genTexture(iter1->second);
+        auto tex = genTexture(iter1->second);
+        
+        // 清掉临时内存
+        m_map_tex_data.erase(iter1);
+        return tex;
     }
     return -1;
 }
@@ -88,6 +92,10 @@ void TextureMng::createShadowTexture() {
     
     std::lock_guard guard(m_mutux);
     m_map_tetures[STR_DEPTH_TEXTURE] = _depthTexture;
+}
+
+void TextureMng::createSkyTexture() {
+    
 }
 
 unsigned int TextureMng::genTexture(const Texture& tex) {

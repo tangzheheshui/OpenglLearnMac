@@ -9,8 +9,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "model/model.hpp"
-#include "shape/ImageRectangle.hpp"
-#include "shape/Line.hpp"
+#include "object/ImageRectangle.hpp"
+#include "object/Line.hpp"
 #include "image.hpp"
 #include "Light.h"
 #include "core/taskQueue.h"
@@ -71,9 +71,9 @@ std::vector<std::shared_ptr<ImageRectangle>> Scene::createGlass() {
     vec_obj.push_back(std::make_shared<ImageRectangle>());
     float ground_width = 5;
     
-    vec_obj[0]->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "window.png", "", "");
-    vec_obj[1]->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "block.png", "", "");
-    vec_obj[2]->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "grass.png", "", "");
+    vec_obj[0]->setImagePath("window.png", "", "");
+    vec_obj[1]->setImagePath("block.png", "", "");
+    vec_obj[2]->setImagePath("grass.png", "", "");
     TaskQueue::instance().pushTask([vec_obj, ground_width](){
         for (int i = 0; i < vec_obj.size(); i++) {
             auto obj = std::dynamic_pointer_cast<ImageRectangle>(vec_obj[i]);
@@ -121,7 +121,7 @@ void Scene::createObjs() {
     float ground_width = 10;
     
     TaskQueue::instance().pushTask([objGround, start](){
-        objGround->setImagePath("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/textures/", "bricks2.jpg", "bricks2_normal.jpg", "bricks2_disp.jpg");
+        objGround->setImagePath("bricks2.jpg", "bricks2_normal.jpg", "bricks2_disp.jpg");
         
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
@@ -138,13 +138,7 @@ void Scene::createObjs() {
     
     // 背包
     std::shared_ptr<Model> objModel = std::make_shared<Model>();
-    TaskQueue::instance().pushTask([objModel, start](){
-        //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
-        
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end - start;
-        std::cout << " task2, time = " << duration.count() << std::endl;
-    });
+    //objModel->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/backpack/backpack.obj");
     
     objModel->setCount(3);
     objModel->setPosition(0, {0, 1, 0});

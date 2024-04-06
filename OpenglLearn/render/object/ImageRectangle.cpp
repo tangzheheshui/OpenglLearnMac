@@ -13,12 +13,6 @@
 #include "../Light.h"
 
 bool ImageRectangle::draw() {
-    if (_VBO == 0) {
-        glGenVertexArrays(1, &_VAO);
-        glGenBuffers(1, &_VBO);
-        glGenBuffers(1, &_EBO);
-    }
-    
     int texture_normal = TextureMng::getInstance().getTexture(m_image_normal);
     bool has_normal = (texture_normal > 0);
     
@@ -218,8 +212,8 @@ ImageRectangle::~ImageRectangle() {
     
 }
 
-void ImageRectangle::setImagePath(const std::string &path, const std::string &diffuseMap, const std::string &normalMap, const std::string &heightMap) {
-    m_image_diffuse = path + diffuseMap;
-    m_image_normal = path + normalMap;
-    m_image_height = path + heightMap;
+void ImageRectangle::setImagePath(const std::string &diffuseMap, const std::string &normalMap, const std::string &heightMap) {
+    m_image_diffuse = STR_TEXTURE_PATH + diffuseMap;
+    m_image_normal = STR_TEXTURE_PATH + normalMap;
+    m_image_height = STR_TEXTURE_PATH + heightMap;
 }

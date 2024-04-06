@@ -12,7 +12,7 @@
 #include <vector>
 #include "../BaseDraw.h"
 
-class Line : public BaseDraw{
+class Line : public BaseDraw {
 public:
     Line() {}
     void setData(const std::vector<glm::vec3> &points, const std::vector<unsigned int> &indices);

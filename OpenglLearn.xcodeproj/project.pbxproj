@@ -19,6 +19,7 @@
 		658157682B922EA500253663 /* aabb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 658157662B922EA500253663 /* aabb.cpp */; };
 		6581576D2B92F2D900253663 /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6581576B2B92F2D900253663 /* input.cpp */; };
 		6585AA962B944B2000841A5C /* math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6585AA942B944B2000841A5C /* math.cpp */; };
+		6595146B2BC1BF69004B97DB /* Sky.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 659514692BC1BF69004B97DB /* Sky.cpp */; };
 		65C3C0CC2B9DDCEB00ACB3F4 /* node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65C3C0CA2B9DDCEA00ACB3F4 /* node.cpp */; };
 		65D1BC9B2BA18B450031AB8C /* MemPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D1BC992BA18B450031AB8C /* MemPool.cpp */; };
 		65D475B62B42D355004AE289 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D475B42B42D355004AE289 /* shader.cpp */; };
@@ -86,6 +87,8 @@
 		6581576C2B92F2D900253663 /* input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = input.hpp; path = OpenglLearn/input/input.hpp; sourceTree = SOURCE_ROOT; };
 		6585AA942B944B2000841A5C /* math.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = math.cpp; sourceTree = "<group>"; };
 		6585AA952B944B2000841A5C /* math.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = math.hpp; sourceTree = "<group>"; };
+		659514692BC1BF69004B97DB /* Sky.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sky.cpp; sourceTree = "<group>"; };
+		6595146A2BC1BF69004B97DB /* Sky.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Sky.hpp; sourceTree = "<group>"; };
 		65ABD0012B5FED75007552FD /* model_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_data.h; sourceTree = "<group>"; };
 		65ABD02C2B60DF2B007552FD /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		65C3C0CA2B9DDCEA00ACB3F4 /* node.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = node.cpp; sourceTree = "<group>"; };
@@ -254,7 +257,7 @@
 			isa = PBXGroup;
 			children = (
 				65F5CE2D2B9DAD6A0011F599 /* priticle */,
-				65FA241F2B623328006062DB /* shape */,
+				65FA241F2B623328006062DB /* object */,
 				65ABD02A2B60DCF8007552FD /* model */,
 				65FD8F0B2B43F7A300A06A38 /* shaders */,
 				65D475B42B42D355004AE289 /* shader.cpp */,
@@ -298,15 +301,17 @@
 			path = priticle;
 			sourceTree = "<group>";
 		};
-		65FA241F2B623328006062DB /* shape */ = {
+		65FA241F2B623328006062DB /* object */ = {
 			isa = PBXGroup;
 			children = (
 				65FA241C2B623321006062DB /* Line.cpp */,
 				65FA241D2B623321006062DB /* Line.hpp */,
 				65FA24262B625980006062DB /* ImageRectangle.cpp */,
 				65FA24272B625980006062DB /* ImageRectangle.hpp */,
+				659514692BC1BF69004B97DB /* Sky.cpp */,
+				6595146A2BC1BF69004B97DB /* Sky.hpp */,
 			);
-			path = shape;
+			path = object;
 			sourceTree = "<group>";
 		};
 		65FD8F0A2B43F77A00A06A38 /* res */ = {
@@ -413,6 +418,7 @@
 				6585AA962B944B2000841A5C /* math.cpp in Sources */,
 				65FD8F102B44588A00A06A38 /* camera.cpp in Sources */,
 				65C3C0CC2B9DDCEB00ACB3F4 /* node.cpp in Sources */,
+				6595146B2BC1BF69004B97DB /* Sky.cpp in Sources */,
 				6581576D2B92F2D900253663 /* input.cpp in Sources */,
 				650751C82B5EA62D00BB2098 /* PassTexture.cpp in Sources */,
 				6581573D2B89E7FD00253663 /* matrix.cpp in Sources */,

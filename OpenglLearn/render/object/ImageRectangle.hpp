@@ -19,7 +19,7 @@ public:
     ~ImageRectangle();
     virtual bool draw() override;
     void setPoints(const glm::vec3 &pos1, const glm::vec3 &pos2, const glm::vec3 &pos3, const glm::vec3 &pos4);
-    void setImagePath(const std::string &path, const std::string &diffuseMap, const std::string &normalMap, const std::string &heightMap);
+    void setImagePath(const std::string &diffuseMap, const std::string &normalMap, const std::string &heightMap);
     void setSetp(float w, float h);
     void calculate();
 private:
