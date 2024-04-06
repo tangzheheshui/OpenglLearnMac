@@ -50,7 +50,7 @@ Scene::Scene() {
     
     // 加载贴图
     fs::path pathPic("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/");
-    //loadTexture(pathPic);
+    loadTexture(pathPic);
     createObjs();
 }
 
@@ -174,7 +174,7 @@ void Scene::createObjs() {
     // 鸭子
     std::shared_ptr<Model> objDuck = std::make_shared<Model>();
     TaskQueue::instance().pushTask([objDuck, start](){
-        //objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+        objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
        
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
@@ -212,7 +212,7 @@ void Scene::createObjs() {
     
     // push 
     m_vec_drawobj.push_back(objGround);
-    //m_vec_drawobj.push_back(objDuck);
+    m_vec_drawobj.push_back(objDuck);
     //m_vec_drawobj.push_back(objModel);
     m_vec_drawobj.push_back(objLight);
     m_vec_drawobj.push_back(line_x);
@@ -366,6 +366,7 @@ void Scene::creatBlendTexture() {
                  GL_RED_INTEGER,
                  GL_UNSIGNED_INT,
                  NULL);
+    glBindTexture(GL_TEXTURE_2D, 0);
     
     // pbo
     int totalsize = SHADOW_WIDTH * SHADOW_HEIGHT * sizeof(GLuint);
@@ -375,8 +376,9 @@ void Scene::creatBlendTexture() {
     GLuint* data = (GLuint*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
     memset(data, 0xfFF, totalsize);
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-    
-    // 原子计数器
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+//    
+//    // 原子计数器
     GLuint _atomic_counter;
     glGenBuffers(1, &_atomic_counter);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _atomic_counter);
