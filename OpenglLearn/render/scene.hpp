@@ -28,7 +28,6 @@ private:
     void loadTexture(const fs::path& dirPath);
 public:
     static Scene& getScene();
-    static GLuint GetShadowTexture() { return _depthTexture; }
     static Matrix GetLightVPMatrix();
     void drawShadow();
     void draw();
@@ -44,7 +43,6 @@ private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj_blend;
     GLuint _depthMapFBO = 0;
-    inline static GLuint _depthTexture = 0;
     inline static Matrix* _lightVPMatrix = nullptr;
     
     GLuint _fragment_alpha_buffer;

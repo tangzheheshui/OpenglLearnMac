@@ -25,27 +25,10 @@ Scene& Scene::getScene() {
 }
 
 Scene::Scene() {
+    // 在主线程初始化一些纹理
+    TextureMng::getInstance();
     // 创建阴影贴图
     glGenFramebuffers(1, &_depthMapFBO);
-    glGenTextures(1, &_depthTexture);
-    glBindTexture(GL_TEXTURE_2D, _depthTexture);
-    glTexImage2D(GL_TEXTURE_2D, 
-                 0,
-                 GL_DEPTH_COMPONENT, 
-                 SHADOW_WIDTH, 
-                 SHADOW_HEIGHT,
-                 0, 
-                 GL_DEPTH_COMPONENT, 
-                 GL_FLOAT, 
-                 NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_GREATER);
-    GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
     
     // 创建alpha链表纹理
     creatBlendTexture();
@@ -255,6 +238,8 @@ void Scene::draw() {
 void Scene::drawShadow() {
     // attach到fbo
     glBindFramebuffer(GL_FRAMEBUFFER, _depthMapFBO);
+    auto _depthTexture = TextureMng::getInstance().getTexture(STR_DEPTH_TEXTURE);
+    assert(_depthTexture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depthTexture, 0);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);

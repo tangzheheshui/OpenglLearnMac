@@ -25,6 +25,8 @@ struct Texture {
     int format = 0;
 };
 
+static const std::string STR_DEPTH_TEXTURE = "depth_texture";
+
 class TextureMng {
 public:
     static TextureMng& getInstance() {

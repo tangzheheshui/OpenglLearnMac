@@ -66,7 +66,7 @@ bool ImageRectangle::draw() {
     
     int indexTex = 1;
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, Scene::GetShadowTexture());
+    glBindTexture(GL_TEXTURE_2D, TextureMng::getInstance().getTexture(STR_DEPTH_TEXTURE));
     shader->setInt("uTextureShadowMap", indexTex++);
     
     if (has_normal) {
