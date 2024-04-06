@@ -70,7 +70,7 @@ void Scene::loadTexture(const fs::path& dirPath) {
                 
                 TaskQueue::instance().pushTask([filename, entry](){
                     auto start = std::chrono::high_resolution_clock::now();
-                    Image::loadTexture(filename);
+                    TextureMng::getInstance().loadTexture(filename);
                     std::thread::id threadId = std::this_thread::get_id();
                     auto end = std::chrono::high_resolution_clock::now();
                     std::chrono::duration<double> duration = end - start;
@@ -208,9 +208,9 @@ void Scene::createObjs() {
     objLight->setScale(0, 0.5);
     
     // debug deep
-    std::shared_ptr<Image> objImage = std::make_shared<Image>();
-    objImage->setTextureID(GetShadowTexture());
-    objImage->setShaderType(ShaderType::Debug_DeepTexture);
+//    std::shared_ptr<Image> objImage = std::make_shared<Image>();
+//    objImage->setTextureID(GetShadowTexture());
+//    objImage->setShaderType(ShaderType::Debug_DeepTexture);
     
     // push 
     m_vec_drawobj.push_back(objGround);
@@ -220,7 +220,7 @@ void Scene::createObjs() {
     m_vec_drawobj.push_back(line_x);
     m_vec_drawobj.push_back(line_y);
     m_vec_drawobj.push_back(line_z);
-    m_vec_drawobj.push_back(objImage);
+    //m_vec_drawobj.push_back(objImage);
     auto glass = createGlass();
     m_vec_drawobj_blend.insert(m_vec_drawobj_blend.end(), glass.begin(), glass.end());
 }

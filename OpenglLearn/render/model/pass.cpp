@@ -35,7 +35,7 @@ bool RenderPass::Draw(const std::vector<Matrix> &matModel, uint32_t flags) {
             auto tex = m_materail->textures[i];
             int texID = 0;
             if (!tex.filepath.empty()) {
-                texID = Image::TextureFromFile(tex.filepath);
+                texID = TextureMng::getInstance().getTexture(tex.filepath);
                 if(tex.name == "texture_diffuse0") {
                     
                 }

@@ -19,10 +19,10 @@ bool ImageRectangle::draw() {
         glGenBuffers(1, &_EBO);
     }
     
-    int texture_normal = Image::TextureFromFile(m_image_normal);
+    int texture_normal = TextureMng::getInstance().getTexture(m_image_normal);
     bool has_normal = (texture_normal > 0);
     
-    int texture_height = Image::TextureFromFile(m_image_height);
+    int texture_height = TextureMng::getInstance().getTexture(m_image_height);
     bool has_height = (texture_height > 0);
     
     if (!_has_bind_vbo) {
@@ -59,7 +59,7 @@ bool ImageRectangle::draw() {
     
     shader->use();
     
-    int texture = Image::TextureFromFile(m_image_diffuse);
+    int texture = TextureMng::getInstance().getTexture(m_image_diffuse);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     shader->setInt("uTexture", 0);
