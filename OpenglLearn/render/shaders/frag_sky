@@ -1,0 +1,14 @@
+#version 330 core
+
+//layout(early_fragment_tests) in;
+
+in vec3 pCoord;
+
+uniform samplerCube uTexture;
+
+out vec4 FragColor;
+
+void main()
+{
+    FragColor = texture(uTexture, pCoord);
+}

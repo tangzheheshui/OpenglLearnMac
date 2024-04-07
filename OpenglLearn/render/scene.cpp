@@ -11,6 +11,7 @@
 #include "model/model.hpp"
 #include "object/ImageRectangle.hpp"
 #include "object/Line.hpp"
+#include "object/Sky.hpp"
 #include "image.hpp"
 #include "Light.h"
 #include "core/taskQueue.h"
@@ -119,14 +120,7 @@ void Scene::createObjs() {
     // 地面
     std::shared_ptr<ImageRectangle> objGround = std::make_shared<ImageRectangle>();
     float ground_width = 10;
-    
-    TaskQueue::instance().pushTask([objGround, start](){
-        objGround->setImagePath("bricks2.jpg", "bricks2_normal.jpg", "bricks2_disp.jpg");
-        
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end - start;
-        std::cout << " task1, time = " << duration.count() << std::endl;
-    });
+    objGround->setImagePath("bricks2.jpg", "bricks2_normal.jpg", "bricks2_disp.jpg");
     
     objGround->setSetp(5, 5);
     glm::vec3 p1(-ground_width, 0,  ground_width);
@@ -152,8 +146,9 @@ void Scene::createObjs() {
     
     // 鸭子
     std::shared_ptr<Model> objDuck = std::make_shared<Model>();
-    TaskQueue::instance().pushTask([objDuck, start](){
-        objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+    objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
+    TaskQueue::instance().pushTask([start](){
+        
        
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
@@ -170,13 +165,7 @@ void Scene::createObjs() {
     
     // 光源模型
     std::shared_ptr<Model> objLight = std::make_shared<Model>();
-    TaskQueue::instance().pushTask([objLight, start](){
-        objLight->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/box.obj");
-        
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end - start;
-        std::cout << " task4, time = " << duration.count() << std::endl;
-    });
+    objLight->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/OBJ/box.obj");
     
     objLight->setCount(1);
     objLight->setLightOpen(false);
@@ -184,6 +173,9 @@ void Scene::createObjs() {
     objLight->setPosition(0, {lightPos.x, lightPos.y, lightPos.z});
     objLight->setScale(0, 0.5);
     
+    // 天空盒
+    std::shared_ptr<Sky> objSky = std::make_shared<Sky>();
+    objSky->setCubeImage({"skybox/right.jpg", "skybox/left.jpg", "skybox/top.jpg", "skybox/bottom.jpg", "skybox/front.jpg", "skybox/back.jpg"});
     // debug deep
 //    std::shared_ptr<Image> objImage = std::make_shared<Image>();
 //    objImage->setTextureID(GetShadowTexture());
@@ -200,6 +192,9 @@ void Scene::createObjs() {
     //m_vec_drawobj.push_back(objImage);
     auto glass = createGlass();
     m_vec_drawobj_blend.insert(m_vec_drawobj_blend.end(), glass.begin(), glass.end());
+    
+    // 最后绘制天空盒
+    m_vec_drawobj.push_back(objSky);
 }
 
 void Scene::update() {

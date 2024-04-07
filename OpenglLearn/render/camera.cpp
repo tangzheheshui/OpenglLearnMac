@@ -50,6 +50,18 @@ Matrix Camera::GetVPMatrix() {
     return projection * lookat;
 }
 
+Matrix Camera::GetViewMatrix() {
+    caculate();
+    Matrix lookat = LookAt(_position, glm::vec3(0), _worldUp);
+    return lookat;
+}
+
+Matrix Camera::GetProjectMatrix() {
+    caculate();
+    Matrix projection = Camera::perspective(degrees_to_radians(_fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, _near, _far);
+    return projection;
+}
+
 void Camera::caculate() {
     if (!_needCal) {
         return;

@@ -36,6 +36,7 @@ public:
 
     void loadTexture(const std::string &filename);
     unsigned int getTexture(const std::string &filename);
+    unsigned int getCubeTexture(std::array<std::string, 6> faces);
 private:
     TextureMng();
     ~TextureMng() {}

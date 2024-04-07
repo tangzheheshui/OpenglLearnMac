@@ -27,6 +27,8 @@ public:
     
     void caculate();
     Matrix GetVPMatrix();
+    Matrix GetViewMatrix();
+    Matrix GetProjectMatrix();
     static Camera& GetCamera();
     static Matrix LookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up);
     static Matrix ortho(float left, float right, float bottom, float top, float near, float far);
