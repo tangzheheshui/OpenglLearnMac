@@ -15,8 +15,8 @@ public:
     using RenderPass::RenderPass;
     
 private:
-    virtual void setup(const std::vector<Matrix> &matModel) override;
-    virtual Shader* getShader(bool shadow) override;
+    virtual void setup(const std::vector<Matrix> &matModel, uint32_t flags) override;
+    virtual Shader* getShader(uint32_t flags) override;
 };
 
 #endif /* PassTexture_hpp */

@@ -148,20 +148,19 @@ void Scene::createObjs() {
     std::shared_ptr<Model> objDuck = std::make_shared<Model>();
     objDuck->LoadFile("/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/model/duck.dae");
     TaskQueue::instance().pushTask([start](){
-        
-       
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end - start;
-        std::cout << " task3, time = " << duration.count() << std::endl;
     });
     
-    objDuck->setCount(3);
+    //objDuck->setMultiViewportNum(2);
+    objDuck->setCount(4);
     objDuck->setPosition(0, {0, 0, 2});
     objDuck->setScale(0, 0.01);
     objDuck->setPosition(1, {-2, 0, 2});
     objDuck->setScale(1, 0.01);
     objDuck->setPosition(2, {2, 0, 2});
     objDuck->setScale(2, 0.01);
+    objDuck->setPosition(3, {0, 0, -2});
+    objDuck->setScale(3, 0.01);
+    objDuck->setRotateY(3, 90);
     
     // 光源模型
     std::shared_ptr<Model> objLight = std::make_shared<Model>();
@@ -208,6 +207,8 @@ void Scene::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glDisable(GL_BLEND);
+    
+    // set4Viewport();
     for (auto obj : m_vec_drawobj) {
         obj->draw();
     }
@@ -385,3 +386,12 @@ void Scene::clearBlendTexture() {
     glBindImageTexture(0, _texture_blend, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
 }
 
+void Scene::set4Viewport() {
+    const float w = SCR_WIDTH;
+    const float h = SCR_HEIGHT;
+    
+    glViewportIndexedf(0, 0, 0, w, h);
+    glViewportIndexedf(1, w, 0, w, h);
+    glViewportIndexedf(2, 0, h, w, h);
+    glViewportIndexedf(3, w, h, w, h);
+}

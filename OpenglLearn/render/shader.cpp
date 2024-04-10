@@ -14,7 +14,7 @@
 
 const std::string g_file_path = "/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/render/shaders/";
 
-Shader::Shader(const std::string &vertPath, const std::string &fragPath) {
+Shader::Shader(const std::string &vertPath, const std::string &fragPath, const std::string &geomPath) {
     std::ifstream vertFile;
     std::ifstream fragFile;
     vertFile.open(g_file_path + vertPath);
@@ -62,8 +62,33 @@ Shader::Shader(const std::string &vertPath, const std::string &fragPath) {
         assert(0);
     }
     
-    // program
     _ID = glCreateProgram();
+    
+    if (!geomPath.empty()) {
+        std::ifstream geomFile;
+        geomFile.open(g_file_path + geomPath);
+        std::string str;
+        if (geomFile.is_open()) {
+            std::stringstream vShaderStream;
+            vShaderStream << geomFile.rdbuf();
+            std::string strVert = vShaderStream.str();
+            const char* str = strVert.c_str();
+            
+            // geom
+            unsigned int iGepom = glCreateShader(GL_GEOMETRY_SHADER);
+            glShaderSource(iGepom, 1, &str, nullptr);
+            glCompileShader(iGepom);
+            glGetShaderiv(iGepom, GL_COMPILE_STATUS, &success);
+            if (!success) {
+                glGetShaderInfoLog(iGepom, 512, nullptr, infoLog);
+                std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+                assert(0);
+            }
+            glAttachShader(_ID, iGepom);
+            geomFile.close();
+        } 
+    }
+    // program
     glAttachShader(_ID, iVertexShader);
     glAttachShader(_ID, iFragment);
     glLinkProgram(_ID);
@@ -109,6 +134,12 @@ void Shader::setFloat4(const std::string &name, float v1, float v2, float v3, fl
 
 void Shader::setMat4(const std::string &name, const Matrix &value) const {
     glUniformMatrix4fv(glGetUniformLocation(_ID, name.c_str()), 1, GL_FALSE, value.buffer());
+}
+
+void Shader::setMat4Array(const std::string &name, const std::vector<Matrix> &value) const {
+    assert(value.size() > 1);
+    int loc = glGetUniformLocation(_ID, name.c_str());
+    glUniformMatrix4fv(loc, (int)value.size(), GL_FALSE, value.at(0).buffer());
 }
 
 // 目前存在多线程问题，暂不考虑
@@ -160,6 +191,10 @@ ShaderCache::ShaderCache() {
     
     if (auto shader = new Shader("vert_sky", "frag_sky")) {
         m_map_shader.insert(std::make_pair(ShaderType::Sky, shader));
+    }
+    
+    if (auto shader = new Shader("model_multiview.vert", "frag_model", "model_multiview.geom")) {
+        m_map_shader.insert(std::make_pair(ShaderType::Model_Texture_MultiView, shader));
     }
 }
 

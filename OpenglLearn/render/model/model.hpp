@@ -66,6 +66,7 @@ public:
     void setRotateX(int index, float angle);
     void setRotateY(int index, float angle);
     void setRotateZ(int index, float angle);
+    void setMultiViewportNum(int n) { m_nMultiViewport = n; }
 private:
     void processNode(aiNode* node, const aiScene* scene, std::shared_ptr<Node> nodeParent);
     std::shared_ptr<Mesh> processMesh(aiMesh *mesh, const aiScene *scene);
@@ -87,6 +88,7 @@ private:
     float m_anim_ratio = 0.f;
     int m_BoneCounter = 0;
     AABB m_aabb;
+    int m_nMultiViewport = 0;
 };
 
 #endif /* model_hpp */

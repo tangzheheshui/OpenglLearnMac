@@ -15,9 +15,9 @@ RenderPass::RenderPass(std::shared_ptr<MeshData> meshData, std::shared_ptr<Mater
     m_materail = matData;
 }
 
-bool RenderPass::Draw(const std::vector<Matrix> &matModel, uint32_t flags) {
+bool RenderPass::Draw(const std::vector<Matrix> &matModel, uint32_t flags, int numViewpoit) {
     bool bDrawShadow = (flags & DrawOption::DRAW_SHADOW);
-    auto shader = getShader(bDrawShadow);
+    auto shader = getShader(flags);
     if (!shader) {
         return false;
     }
@@ -61,9 +61,12 @@ bool RenderPass::Draw(const std::vector<Matrix> &matModel, uint32_t flags) {
         auto mpMatrix = Camera::GetCamera().GetVPMatrix();
         shader->setMat4("uMatrixVP", mpMatrix);
         
+        if (numViewpoit > 1) {
+            shader->setMat4Array("uMatrixModel", matModel);
+            shader->setInt("uNumViewport", numViewpoit);
+        }
         // 灯光
         bool lightOpen = flags&DrawOption::LIGHT_OPEN;
-        auto light = Light::GlobalLight();
         shader->setBool("uLight.is_open", lightOpen);
         Scene scene = Scene::getScene();
         scene.setLightUniform(shader);
@@ -88,7 +91,7 @@ bool RenderPass::Draw(const std::vector<Matrix> &matModel, uint32_t flags) {
         }
     }
     
-    setup(matModel);
+    setup(matModel, flags);
   
     // 绘制网格
     glEnable(GL_DEPTH_TEST);

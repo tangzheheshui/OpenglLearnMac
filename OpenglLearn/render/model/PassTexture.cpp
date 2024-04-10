@@ -10,20 +10,25 @@
 #include "../Light.h"
 #include "../scene.hpp"
 
-Shader* PassTexture::getShader(bool shadow) {
+Shader* PassTexture::getShader(uint32_t flags) {
+    bool shadow = (flags & DrawOption::DRAW_SHADOW);
+    bool multi_view = (flags & DrawOption::MULTI_VIEWPORT);
     Shader* pShadow = nullptr;
     if (shadow) {
         pShadow = ShaderCache::GetInstance().GetShader(ShaderType::Shadow_Texture);
     } else {
-        pShadow = ShaderCache::GetInstance().GetShader(ShaderType::Model_Texture);
-        if (m_matBone) {
+        if (multi_view) {
+            pShadow = ShaderCache::GetInstance().GetShader(ShaderType::Model_Texture_MultiView);
+        } else if (m_matBone){
             pShadow = ShaderCache::GetInstance().GetShader(ShaderType::Model_Texture_Anim);
+        } else {
+            pShadow = ShaderCache::GetInstance().GetShader(ShaderType::Model_Texture);
         }
     }
     return pShadow;
 }
 
-void PassTexture::setup(const std::vector<Matrix> &matModel) {
+void PassTexture::setup(const std::vector<Matrix> &matModel, uint32_t flags) {
     if (_VBO == 0) {
         glGenVertexArrays(1, &_VAO);
         glGenBuffers(1, &_VBO);
@@ -33,21 +38,25 @@ void PassTexture::setup(const std::vector<Matrix> &matModel) {
     glBindVertexArray(_VAO);
     
     bool hasAnim = (m_matBone && !m_matBone->empty());
-    
+    bool multi_view = (flags | DrawOption::MULTI_VIEWPORT);
     size_t size1 = m_mesh_data->positions.size() * sizeof(glm::vec3);
     size_t size2 = m_mesh_data->normals.size() * sizeof(glm::vec3);
     size_t size3 = m_mesh_data->coords.size() * sizeof(glm::vec2);
     size_t size4 = m_mesh_data->boneIDs.size() * sizeof(glm::ivec4);
     size_t size5 = m_mesh_data->weights.size() * sizeof(glm::vec4);
     size_t size6 = sizeof(Matrix) * matModel.size();
-    size_t totalsize = size1 + size2 + size3 + size4 + size5 + size6;
-    
+    size_t totalsize = size1 + size2 + size3 + size4 + size5;
+    if (multi_view) {
+        totalsize += size6;
+    }
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glBufferData(GL_ARRAY_BUFFER, totalsize, nullptr, GL_STATIC_DRAW);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size1, m_mesh_data->positions.data());
     glBufferSubData(GL_ARRAY_BUFFER, size1, size2, m_mesh_data->normals.data());
     glBufferSubData(GL_ARRAY_BUFFER, size1 + size2, size3, m_mesh_data->coords.data());
-    glBufferSubData(GL_ARRAY_BUFFER, size1 + size2 + size3 + size4 + size5, size6, matModel.data());
+    if (multi_view) {
+        glBufferSubData(GL_ARRAY_BUFFER, size1 + size2 + size3 + size4 + size5, size6, matModel.data());
+    }
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh_data->indices.size() * sizeof(unsigned int), m_mesh_data->indices.data(), GL_STATIC_DRAW);

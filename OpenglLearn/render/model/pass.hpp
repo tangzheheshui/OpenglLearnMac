@@ -33,10 +33,10 @@ public:
         }
     }
     
-    bool Draw(const std::vector<Matrix> &matModel, uint32_t flags);
+    bool Draw(const std::vector<Matrix> &matModel, uint32_t flags, int numViewpoit);
 protected:
-    virtual Shader* getShader(bool shadow) { return nullptr; }
-    virtual void setup(const std::vector<Matrix> &matModel) {}
+    virtual Shader* getShader(uint32_t flags) { return nullptr; }
+    virtual void setup(const std::vector<Matrix> &matModel, uint32_t flags) {}
 public:
     std::shared_ptr<Materail> m_materail;
     std::shared_ptr<MeshData> m_mesh_data;

@@ -91,6 +91,8 @@
 		6595146A2BC1BF69004B97DB /* Sky.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Sky.hpp; sourceTree = "<group>"; };
 		6595146C2BC2622C004B97DB /* frag_sky */ = {isa = PBXFileReference; lastKnownFileType = text; path = frag_sky; sourceTree = "<group>"; };
 		6595146D2BC26235004B97DB /* vert_sky */ = {isa = PBXFileReference; lastKnownFileType = text; path = vert_sky; sourceTree = "<group>"; };
+		65A89EBF2BC6888C00ABCF63 /* model_multiview.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = model_multiview.geom; sourceTree = "<group>"; };
+		65A89EC02BC6888C00ABCF63 /* model_multiview.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = model_multiview.vert; sourceTree = "<group>"; };
 		65ABD0012B5FED75007552FD /* model_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_data.h; sourceTree = "<group>"; };
 		65ABD02C2B60DF2B007552FD /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		65C3C0CA2B9DDCEA00ACB3F4 /* node.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = node.cpp; sourceTree = "<group>"; };
@@ -326,6 +328,8 @@
 		65FD8F0B2B43F7A300A06A38 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				65A89EBF2BC6888C00ABCF63 /* model_multiview.geom */,
+				65A89EC02BC6888C00ABCF63 /* model_multiview.vert */,
 				6595146D2BC26235004B97DB /* vert_sky */,
 				6595146C2BC2622C004B97DB /* frag_sky */,
 				6507D6802B8642A50029654C /* vert_model_anim */,

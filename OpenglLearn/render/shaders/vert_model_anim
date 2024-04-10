@@ -14,7 +14,7 @@ uniform mat4 uFinalBonesMatrices[MAX_BONES];
 
 out vec3 pFragPos;
 out vec3 pNormal; 
-out vec2 TexCoord;
+out vec2 pTexCoord;
 out mat3 pMatNormal;
 
 void main()
@@ -36,6 +36,6 @@ void main()
     pFragPos = (aInstanceMatrix * vec4(aPos, 1.0)).xyz;
     pMatNormal = mat3(transpose(inverse(aInstanceMatrix)));
     pNormal = pMatNormal * aNormal;
-    TexCoord = aTexCoord;
+    pTexCoord = aTexCoord;
     gl_Position = uMatrixVP * aInstanceMatrix * totalPosition;// vec4(aPos, 1.0);
 }

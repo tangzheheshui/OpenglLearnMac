@@ -3,7 +3,7 @@ out vec4 FragColor;
 
 in vec3 pFragPos;
 in vec3 pNormal; 
-in vec2 TexCoord;
+in vec2 pTexCoord;
 in mat3 pMatNormal;
 
 struct Materail {
@@ -35,7 +35,7 @@ uniform sampler2D texture_normal0;
 
 void main()
 {
-    vec3 color = texture(texture_diffuse0, TexCoord).xyz;
+    vec3 color = texture(texture_diffuse0, pTexCoord).xyz;
     vec3 result = color;
     if (uLight.is_open) {
         // 计算光照
@@ -44,7 +44,7 @@ void main()
         float cos = dot(-dirLight, normalize(uLight.direction));
         
         if (uMaterail.has_normal_tex == 1) { // 需要考虑正负切线 todo
-            normal = texture(texture_normal0, TexCoord).xyz;
+            normal = texture(texture_normal0, pTexCoord).xyz;
             normal = normalize(normal * 2.0 - 1.0);
             normal = normalize(pMatNormal * normal);
         }
@@ -63,7 +63,7 @@ void main()
             float spec = pow(max(dot(normal, halfwayDir), 0.0), uMaterail.shininess);
             vec3 specular = uLight.specular * spec * uMaterail.specular;
             if (uMaterail.has_specular_tex == 1) {
-                specular = uLight.specular * spec * vec3(texture(texture_specular0, TexCoord));
+                specular = uLight.specular * spec * vec3(texture(texture_specular0, pTexCoord));
             }
             result += specular;
         }

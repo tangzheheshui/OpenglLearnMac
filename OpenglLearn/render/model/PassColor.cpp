@@ -9,7 +9,8 @@
 #include "../Light.h"
 #include "../scene.hpp"
 
-Shader* PassColor::getShader(bool shadow) {
+Shader* PassColor::getShader(uint32_t flags) {
+    bool shadow = (flags & DrawOption::DRAW_SHADOW);
     Shader* pShadow = nullptr;
     if (shadow) {
         pShadow = ShaderCache::GetInstance().GetShader(ShaderType::Shadow_Color);
@@ -19,7 +20,7 @@ Shader* PassColor::getShader(bool shadow) {
     return pShadow;
 }
 
-void PassColor::setup(const std::vector<Matrix> &matModel) {
+void PassColor::setup(const std::vector<Matrix> &matModel, uint32_t flags) {
     if (_VBO == 0) {
         glGenVertexArrays(1, &_VAO);
         glGenBuffers(1, &_VBO);

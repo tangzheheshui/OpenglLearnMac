@@ -39,6 +39,7 @@ private:
     std::vector<std::shared_ptr<ImageRectangle>> createGlass();
     void creatBlendTexture();
     void clearBlendTexture();
+    void set4Viewport();
 private:
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj;
     std::vector<std::shared_ptr<BaseDraw>> m_vec_drawobj_blend;

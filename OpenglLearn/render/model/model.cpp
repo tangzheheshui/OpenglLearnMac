@@ -417,9 +417,14 @@ bool Model::draw() {
     if (getLightOpen()) {
         flags |= DrawOption::LIGHT_OPEN;
     }
+    
+    if (m_nMultiViewport > 1) {
+        flags |= DrawOption::MULTI_VIEWPORT;
+    }
+    
     for (auto mesh : m_mesh) {
         mesh->setBoneMat(m_FinalBoneMatrices);
-        mesh->Draw(m_vec_modelMat, flags);
+        mesh->Draw(m_vec_modelMat, flags, m_nMultiViewport);
     }
     glDisable(GL_CULL_FACE);
     return true;
