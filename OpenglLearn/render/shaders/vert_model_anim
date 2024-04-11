@@ -12,10 +12,13 @@ const int MAX_BONE_INFLUENCE = 4;
 uniform mat4 uMatrixVP;
 uniform mat4 uFinalBonesMatrices[MAX_BONES];
 
-out vec3 pFragPos;
-out vec3 pNormal; 
-out vec2 pTexCoord;
-out mat3 pMatNormal;
+out VS_OUT
+{
+    vec3 pFragPos;
+    vec3 pNormal; 
+    vec2 pTexCoord;
+    mat3 pMatNormal;
+} vs_out;
 
 void main()
 {
@@ -33,9 +36,9 @@ void main()
         totalPosition += localPosition * aWeights[i];
    }
    
-    pFragPos = (aInstanceMatrix * vec4(aPos, 1.0)).xyz;
-    pMatNormal = mat3(transpose(inverse(aInstanceMatrix)));
-    pNormal = pMatNormal * aNormal;
-    pTexCoord = aTexCoord;
+    vs_out.pFragPos = (aInstanceMatrix * vec4(aPos, 1.0)).xyz;
+    vs_out.pMatNormal = mat3(transpose(inverse(aInstanceMatrix)));
+    vs_out.pNormal = vs_out.pMatNormal * aNormal;
+    vs_out.pTexCoord = aTexCoord;
     gl_Position = uMatrixVP * aInstanceMatrix * totalPosition;// vec4(aPos, 1.0);
 }

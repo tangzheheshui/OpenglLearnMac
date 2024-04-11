@@ -1,10 +1,14 @@
 #version 330 core
+
 out vec4 FragColor;
 
-in vec3 pFragPos;
-in vec3 pNormal; 
-in vec2 pTexCoord;
-in mat3 pMatNormal;
+in VS_OUT
+{
+    vec3 pFragPos;
+    vec3 pNormal; 
+    vec2 pTexCoord;
+    mat3 pMatNormal;
+} fs_in;
 
 struct Materail {
     vec3 ambient;
@@ -35,18 +39,18 @@ uniform sampler2D texture_normal0;
 
 void main()
 {
-    vec3 color = texture(texture_diffuse0, pTexCoord).xyz;
+    vec3 color = texture(texture_diffuse0, fs_in.pTexCoord).xyz;
     vec3 result = color;
     if (uLight.is_open) {
         // 计算光照
-        vec3 normal = normalize(pNormal);
-        vec3 dirLight = normalize(uLight.position.xyz - pFragPos);
+        vec3 normal = normalize(fs_in.pNormal);
+        vec3 dirLight = normalize(uLight.position.xyz - fs_in.pFragPos);
         float cos = dot(-dirLight, normalize(uLight.direction));
         
         if (uMaterail.has_normal_tex == 1) { // 需要考虑正负切线 todo
-            normal = texture(texture_normal0, pTexCoord).xyz;
+            normal = texture(texture_normal0, fs_in.pTexCoord).xyz;
             normal = normalize(normal * 2.0 - 1.0);
-            normal = normalize(pMatNormal * normal);
+            normal = normalize(fs_in.pMatNormal * normal);
         }
     
         // ambient
@@ -58,12 +62,12 @@ void main()
             result += uLight.diffuse * color * diff;
             
             // specular
-            vec3 viewDir = normalize(uCameraPos - pFragPos);
+            vec3 viewDir = normalize(uCameraPos - fs_in.pFragPos);
             vec3 halfwayDir = normalize(dirLight + viewDir);  
             float spec = pow(max(dot(normal, halfwayDir), 0.0), uMaterail.shininess);
             vec3 specular = uLight.specular * spec * uMaterail.specular;
             if (uMaterail.has_specular_tex == 1) {
-                specular = uLight.specular * spec * vec3(texture(texture_specular0, pTexCoord));
+                specular = uLight.specular * spec * vec3(texture(texture_specular0, fs_in.pTexCoord));
             }
             result += specular;
         }
