@@ -12,7 +12,7 @@
 #include <sstream>
 #include <iostream>
 
-const std::string g_file_path = "/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/render/shaders/";
+const std::string g_file_path = "/Users/liuhaifeng/personal/OpenglLearnMac/OpenglLearn/res/shaders/";
 
 Shader::Shader(const std::string &vertPath, const std::string &fragPath, const std::string &geomPath) {
     std::ifstream vertFile;
